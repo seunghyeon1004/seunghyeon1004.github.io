@@ -1,0 +1,75 @@
+{
+  "updated": "2026-03-13 22:00:00 KST",
+  "bots": [
+    {
+      "stats": {
+        "bot": "v3.1 (수동봇)",
+        "total_trades": 3,
+        "wins": 0,
+        "losses": 3,
+        "win_rate": 0,
+        "total_pnl": -12.05,
+        "roi_pct": -0.12,
+        "balance": 9987.95,
+        "avg_pnl_pct": -0.4,
+        "max_drawdown": 0.12,
+        "best_trade": -3.07,
+        "worst_trade": -4.57,
+        "max_streak_win": 0,
+        "max_streak_loss": 3
+      },
+      "trades": [
+        {"id":1,"direction":"SHORT","entry_time":"2026-03-10 22:37:29 KST","entry_price":70012,"exit_time":"2026-03-10 22:52:31 KST","exit_price":70265,"exit_reason":"💥 손절(SL)","pnl_dollar":-4.41,"pnl_pct":-0.44,"balance_after":9995.59},
+        {"id":2,"direction":"SHORT","entry_time":"2026-03-12 13:53:30 KST","entry_price":69340,"exit_time":"2026-03-12 14:43:35 KST","exit_price":69498,"exit_reason":"💥 손절(SL)","pnl_dollar":-3.07,"pnl_pct":-0.31,"balance_after":9992.52},
+        {"id":3,"direction":"LONG","entry_time":"2026-03-12 18:48:42 KST","entry_price":69923,"exit_time":"2026-03-12 22:48:50 KST","exit_price":69659,"exit_reason":"💥 손절(SL)","pnl_dollar":-4.57,"pnl_pct":-0.46,"balance_after":9987.95}
+      ],
+      "daily": [
+        {"date":"2026-03-10","pnl":-4.41},
+        {"date":"2026-03-12","pnl":-12.05}
+      ],
+      "open_trades": []
+    },
+    {
+      "stats": {
+        "bot": "Non-AI (Freqtrade)",
+        "total_trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0,
+        "total_pnl": 0,
+        "roi_pct": 0,
+        "balance": 10000,
+        "avg_pnl_pct": 0,
+        "max_drawdown": 0,
+        "best_trade": 0,
+        "worst_trade": 0,
+        "max_streak_win": 0,
+        "max_streak_loss": 0
+      },
+      "trades": [],
+      "daily": [],
+      "open_trades": []
+    },
+    {
+      "stats": {
+        "bot": "FreqAI (LightGBM)",
+        "total_trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0,
+        "total_pnl": 0,
+        "roi_pct": 0,
+        "balance": 10000,
+        "avg_pnl_pct": 0,
+        "max_drawdown": 0,
+        "best_trade": 0,
+        "worst_trade": 0,
+        "max_streak_win": 0,
+        "max_streak_loss": 0
+      },
+      "trades": [],
+      "daily": [],
+      "open_trades": []
+    }
+  ]
+}

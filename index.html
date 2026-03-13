@@ -591,6 +591,7 @@
                 <a onclick="scrollToSection(1)" data-section="1" data-i18n="nav-about">About</a>
                 <a onclick="scrollToSection(2)" data-section="2" data-i18n="nav-projects">Projects</a>
                 <a onclick="scrollToSection(3)" data-section="3" data-i18n="nav-contact">Contact</a>
+                <a href="dashboard.html" style="color:var(--accent);font-weight:600;">Dashboard</a>
                 <li>
                     <div class="lang-toggle">
                         <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
@@ -610,6 +611,7 @@
         <a onclick="scrollToSection(1); closeMobile()" data-section="1" data-i18n="nav-about">About</a>
         <a onclick="scrollToSection(2); closeMobile()" data-section="2" data-i18n="nav-projects">Projects</a>
         <a onclick="scrollToSection(3); closeMobile()" data-section="3" data-i18n="nav-contact">Contact</a>
+        <a href="dashboard.html" style="color:var(--accent);font-weight:600;">Dashboard ↗</a>
         <div class="lang-toggle" style="align-self: flex-start;">
             <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
             <button class="lang-btn" data-lang="kr" onclick="setLang('kr')">KR</button>
@@ -733,6 +735,24 @@
                             <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </a>
                     </div>
+                    <div class="project-card reveal" style="transition-delay: 0.4s;">
+                        <div>
+                            <p class="project-category">Build in Public</p>
+                            <h3 class="project-name">BTC Signal Bot</h3>
+                            <p class="project-desc" data-i18n="project4-desc">An AI-powered BTC trading signal bot built from scratch in public. 3 bots competing live: manual strategy (v3.1), Freqtrade with optimized parameters, and FreqAI with LightGBM ML predictions. Live dashboard tracks performance in real-time.</p>
+                            <div class="project-tags">
+                                <span class="project-tag">Python</span>
+                                <span class="project-tag">Freqtrade</span>
+                                <span class="project-tag">LightGBM</span>
+                                <span class="project-tag">Trading Bot</span>
+                                <span class="project-tag">Build in Public</span>
+                            </div>
+                        </div>
+                        <a href="dashboard.html" class="btn-secondary" style="background:var(--accent);color:#fff;border-color:var(--accent);">
+                            <span data-i18n="project4-btn">Live Dashboard →</span>
+                            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -779,6 +799,8 @@
                 'project2-btn': 'View on X',
                 'project3-desc': 'A Chrome extension that displays cookie.fun campaign leaderboard rankings directly on X (Twitter) profiles. Features real-time rankings, global/regional leaderboards, and dark/light mode support.',
                 'project3-btn': 'Chrome Web Store',
+                'project4-desc': 'An AI-powered BTC trading signal bot built from scratch in public. 3 bots competing live: manual strategy (v3.1), Freqtrade with optimized parameters, and FreqAI with LightGBM ML predictions. Live dashboard tracks performance in real-time.',
+                'project4-btn': 'Live Dashboard →',
                 'contact-heading': 'Let\'s build<br>something together.',
                 'contact-sub': 'Have a project idea or want to collaborate? Feel free to reach out.',
                 'contact-x': 'Follow on X',
@@ -803,6 +825,8 @@
                 'project2-btn': 'X에서 보기',
                 'project3-desc': 'X(트위터) 프로필에서 cookie.fun 캠페인 리더보드 순위를 바로 확인할 수 있는 크롬 확장 프로그램. 실시간 순위, 글로벌/지역 리더보드, 다크/라이트 모드를 지원합니다.',
                 'project3-btn': '크롬 웹스토어',
+                'project4-desc': '처음부터 공개적으로 만들어가는 AI 기반 BTC 트레이딩 시그널 봇. 수동 전략(v3.1), 파라미터 최적화(Freqtrade), ML 예측(FreqAI+LightGBM) 3개 봇이 실시간 경쟁 중. 라이브 대시보드에서 성과를 확인할 수 있습니다.',
+                'project4-btn': '라이브 대시보드 →',
                 'contact-heading': '함께<br>만들어갑시다.',
                 'contact-sub': '프로젝트 아이디어가 있거나 협업을 원하시면 편하게 연락주세요.',
                 'contact-x': 'X 팔로우하기',
