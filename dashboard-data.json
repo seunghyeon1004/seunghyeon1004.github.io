@@ -1,5 +1,5 @@
 {
-  "updated": "2026-03-14 19:25:14 KST",
+  "updated": "2026-03-14 19:35:18 KST",
   "bots": [
     {
       "stats": {
@@ -103,7 +103,15 @@
       },
       "trades": [],
       "daily": [],
-      "open_trades": []
+      "open_trades": [
+        {
+          "id": 1,
+          "direction": "SHORT",
+          "entry_time": "2026-03-14 10:35:11.395761",
+          "entry_price": 70404.2,
+          "stake": 3300.0
+        }
+      ]
     },
     {
       "stats": {
