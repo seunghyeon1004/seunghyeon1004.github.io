@@ -1,5 +1,5 @@
 {
-  "updated": "2026-03-14 19:35:18 KST",
+  "updated": "2026-03-14 19:45:19 KST",
   "bots": [
     {
       "stats": {
@@ -109,7 +109,7 @@
           "direction": "SHORT",
           "entry_time": "2026-03-14 10:35:11.395761",
           "entry_price": 70404.2,
-          "stake": 3300.0
+          "stake": 3238.5932
         }
       ]
     },
