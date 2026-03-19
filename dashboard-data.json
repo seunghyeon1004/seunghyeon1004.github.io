@@ -1,5 +1,5 @@
 {
-  "updated": "2026-03-19 16:18:25 KST",
+  "updated": "2026-03-19 16:28:26 KST",
   "bots": [
     {
       "stats": {
@@ -251,31 +251,41 @@
     {
       "stats": {
         "bot": "Non-AI (Freqtrade)",
-        "total_trades": 0,
-        "wins": 0,
+        "total_trades": 1,
+        "wins": 1,
         "losses": 0,
-        "win_rate": 0,
-        "total_pnl": 0,
-        "roi_pct": 0,
-        "balance": 10000.0,
-        "avg_pnl_pct": 0,
+        "win_rate": 100.0,
+        "total_pnl": 32.53,
+        "roi_pct": 0.33,
+        "balance": 10032.53,
+        "avg_pnl_pct": 1.0,
         "max_drawdown": 0,
-        "best_trade": 0,
-        "worst_trade": 0,
-        "max_streak_win": 0,
+        "best_trade": 32.53,
+        "worst_trade": 32.53,
+        "max_streak_win": 1,
         "max_streak_loss": 0
       },
-      "trades": [],
-      "daily": [],
-      "open_trades": [
+      "trades": [
         {
           "id": 1,
           "direction": "SHORT",
           "entry_time": "2026-03-14 10:35:11.395761",
           "entry_price": 70404.2,
-          "stake": 3238.5932
+          "exit_time": "2026-03-19 07:21:11.199000",
+          "exit_price": 69660.0,
+          "exit_reason": "roi",
+          "pnl_dollar": 32.53,
+          "pnl_pct": 1.0,
+          "balance_after": 10032.53
         }
-      ]
+      ],
+      "daily": [
+        {
+          "date": "2026-03-19",
+          "pnl": 32.53
+        }
+      ],
+      "open_trades": []
     },
     {
       "stats": {
