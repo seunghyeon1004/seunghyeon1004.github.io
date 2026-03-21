@@ -308,6 +308,28 @@
         <div class="chart-wrap"><canvas id="roiChart"></canvas></div>
     </div>
 
+    <!-- ══ 1년 백테스트 섹션 ══ -->
+    <div style="text-align:center; margin:48px 0 32px;">
+        <p style="font-size:14px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px;">Backtesting</p>
+        <h2 style="font-size:clamp(28px,4vw,40px); font-weight:800; letter-spacing:-1.5px;">1년 시뮬레이션 결과</h2>
+        <p style="font-size:15px; color:var(--text-secondary); margin-top:8px;" id="btPeriod">로딩 중...</p>
+    </div>
+
+    <!-- 백테스트 요약 카드 3개 -->
+    <div class="scoreboard" id="btScoreboard" style="margin-bottom:24px;"></div>
+
+    <!-- 수익 곡선 차트 -->
+    <div class="chart-card fade-in">
+        <div class="chart-title">📈 잔고 성장 곡선 ($) — 초기 $10,000</div>
+        <div class="chart-wrap" style="height:360px;"><canvas id="btEquityChart"></canvas></div>
+    </div>
+
+    <!-- BTC 가격 오버레이 차트 -->
+    <div class="chart-card fade-in">
+        <div class="chart-title">₿ BTC 가격 vs 봇 ROI (%)</div>
+        <div class="chart-wrap" style="height:320px;"><canvas id="btRoiVsBtcChart"></canvas></div>
+    </div>
+
     <div class="trades-card fade-in">
         <div class="chart-title">📋 최근 거래</div>
         <div class="tab-bar" id="tabBar"></div>
@@ -459,7 +481,145 @@ async function fetchData() {
     }
 }
 
+// ══ 백테스트 데이터 로딩 ══
+let btEquityChart = null, btRoiVsBtcChart = null;
+
+function renderBtScoreboard(bots) {
+    const EMOJIS = ['🔧', '⚡', '🤖'];
+    document.getElementById('btScoreboard').innerHTML = bots.map((b, i) => {
+        const s = b.summary;
+        const roi = s.roi_pct;
+        return `<div class="bot-card fade-in">
+            <div class="bot-emoji">${EMOJIS[i]}</div>
+            <div class="bot-name">${b.name}</div>
+            <div class="roi-value ${roiClass(roi)}">${roi >= 0 ? '+' : ''}${roi}%</div>
+            <div class="balance-text">최종 $${(s.final_bal||10000).toLocaleString()}</div>
+            <div class="stats-grid">
+                <div class="stat-item"><div class="stat-label">거래수</div><div class="stat-value">${s.trades}회</div></div>
+                <div class="stat-item"><div class="stat-label">승률</div><div class="stat-value">${s.win_rate}%</div></div>
+                <div class="stat-item"><div class="stat-label">MDD</div><div class="stat-value">${s.max_dd}%</div></div>
+                <div class="stat-item"><div class="stat-label">PF</div><div class="stat-value">${s.pf}</div></div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function renderBtEquityChart(bots) {
+    const ctx = document.getElementById('btEquityChart').getContext('2d');
+    const allDates = new Set();
+    bots.forEach(b => (b.equity||[]).forEach(d => allDates.add(d.date)));
+    const labels = [...allDates].sort();
+
+    const datasets = bots.map((b, i) => {
+        const map = {};
+        (b.equity||[]).forEach(d => map[d.date] = d.balance);
+        let last = 10000;
+        return {
+            label: b.name,
+            data: labels.map(l => { if (map[l] !== undefined) last = map[l]; return last; }),
+            borderColor: BOT_COLORS[i],
+            backgroundColor: BOT_COLORS[i] + '12',
+            borderWidth: 2, pointRadius: 0, tension: 0.3, fill: false,
+        };
+    });
+
+    // 기준선 ($10,000)
+    datasets.push({
+        label: '초기 잔고 ($10,000)',
+        data: labels.map(() => 10000),
+        borderColor: '#D2D2D7', borderWidth: 1, borderDash: [6, 3],
+        pointRadius: 0, fill: false,
+    });
+
+    if (btEquityChart) btEquityChart.destroy();
+    btEquityChart = new Chart(ctx, {
+        type: 'line', data: { labels, datasets },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { labels: { color: '#86868B', font: { family: 'Pretendard', size: 12 } } },
+                tooltip: { backgroundColor: '#1D1D1F', callbacks: {
+                    label: c => `${c.dataset.label}: $${c.parsed.y.toLocaleString(undefined, {minimumFractionDigits:0, maximumFractionDigits:0})}`
+                }}
+            },
+            scales: {
+                x: { ticks: { color: '#86868B', font: {size:10}, maxTicksLimit: 12 }, grid: { color: '#F5F5F7' } },
+                y: { ticks: { color: '#86868B', font: {size:11}, callback: v => '$' + v.toLocaleString() }, grid: { color: '#F5F5F7' } }
+            }
+        }
+    });
+}
+
+function renderBtRoiVsBtc(bots, btcPrices) {
+    const ctx = document.getElementById('btRoiVsBtcChart').getContext('2d');
+    const allDates = new Set();
+    bots.forEach(b => (b.equity||[]).forEach(d => allDates.add(d.date)));
+    (btcPrices||[]).forEach(d => allDates.add(d.date));
+    const labels = [...allDates].sort();
+
+    const datasets = bots.map((b, i) => {
+        const init = 10000;
+        const map = {};
+        (b.equity||[]).forEach(d => map[d.date] = ((d.balance - init) / init * 100));
+        let last = 0;
+        return {
+            label: b.name,
+            data: labels.map(l => { if (map[l] !== undefined) last = map[l]; return +last.toFixed(2); }),
+            borderColor: BOT_COLORS[i], backgroundColor: 'transparent',
+            borderWidth: 2, pointRadius: 0, tension: 0.3, yAxisID: 'y',
+        };
+    });
+
+    // BTC 가격 변화율
+    const btcMap = {};
+    (btcPrices||[]).forEach(d => btcMap[d.date] = d.pct);
+    let lastBtc = 0;
+    datasets.push({
+        label: 'BTC 가격 변화율',
+        data: labels.map(l => { if (btcMap[l] !== undefined) lastBtc = btcMap[l]; return +lastBtc.toFixed(2); }),
+        borderColor: '#F7931A', backgroundColor: 'rgba(247,147,26,0.07)',
+        borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: true, yAxisID: 'y',
+        borderDash: [4, 2],
+    });
+
+    if (btRoiVsBtcChart) btRoiVsBtcChart.destroy();
+    btRoiVsBtcChart = new Chart(ctx, {
+        type: 'line', data: { labels, datasets },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { labels: { color: '#86868B', font: { family: 'Pretendard', size: 12 } } },
+                tooltip: { backgroundColor: '#1D1D1F', callbacks: {
+                    label: c => `${c.dataset.label}: ${c.parsed.y >= 0 ? '+' : ''}${c.parsed.y}%`
+                }}
+            },
+            scales: {
+                x: { ticks: { color: '#86868B', font: {size:10}, maxTicksLimit: 12 }, grid: { color: '#F5F5F7' } },
+                y: { ticks: { color: '#86868B', font: {size:11}, callback: v => v + '%' }, grid: { color: '#F5F5F7' } }
+            }
+        }
+    });
+}
+
+async function fetchBacktest() {
+    try {
+        const res = await fetch('backtest-history.json?t=' + Date.now());
+        const bt = await res.json();
+        document.getElementById('btPeriod').textContent =
+            `${bt.period.start} ~ ${bt.period.end} · 초기 잔고 $${bt.initial_balance.toLocaleString()} · ${bt.generated}`;
+        renderBtScoreboard(bt.bots);
+        renderBtEquityChart(bt.bots);
+        renderBtRoiVsBtc(bt.bots, bt.btc_price);
+    } catch(e) {
+        console.error('백테스트 데이터 로드 실패:', e);
+        document.getElementById('btPeriod').textContent = '⚠️ 백테스트 데이터 로드 실패';
+    }
+}
+
 fetchData();
+fetchBacktest();
 setInterval(fetchData, 60000);
 </script>
 </body>
