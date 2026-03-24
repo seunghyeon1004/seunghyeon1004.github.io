@@ -1,5 +1,5 @@
 {
-  "updated": "2026-03-25 01:44:15 KST",
+  "updated": "2026-03-25 01:54:16 KST",
   "bots": [
     {
       "stats": {
@@ -401,7 +401,15 @@
           "pnl": 134.01
         }
       ],
-      "open_trades": []
+      "open_trades": [
+        {
+          "id": 5,
+          "direction": "SHORT",
+          "entry_time": "2026-03-24 16:45:06.428530",
+          "entry_price": 69566.0,
+          "stake": 3339.168
+        }
+      ]
     },
     {
       "stats": {
