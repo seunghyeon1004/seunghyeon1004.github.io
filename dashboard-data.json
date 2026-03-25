@@ -1,36 +1,24 @@
 {
-  "updated": "2026-03-26 00:17:24 KST",
+  "updated": "2026-03-26 00:27:25 KST",
   "bots": [
     {
       "stats": {
         "bot": "v3.1 (수동봇)",
-        "total_trades": 26,
-        "wins": 5,
+        "total_trades": 27,
+        "wins": 6,
         "losses": 21,
-        "win_rate": 19.2,
-        "total_pnl": -49.35,
-        "roi_pct": -0.49,
-        "balance": 9950.64,
-        "avg_pnl_pct": -0.19,
+        "win_rate": 22.2,
+        "total_pnl": -36.98,
+        "roi_pct": -0.37,
+        "balance": 9963.0,
+        "avg_pnl_pct": -0.14,
         "max_drawdown": 0.49,
-        "best_trade": 10.27,
+        "best_trade": 12.37,
         "worst_trade": -6.94,
         "max_streak_win": 1,
         "max_streak_loss": 7
       },
       "trades": [
-        {
-          "id": 7,
-          "direction": "SHORT",
-          "entry_time": "2026-03-16 01:18:12 KST",
-          "entry_price": 71373.97,
-          "exit_time": "2026-03-16 02:13:16 KST",
-          "exit_price": 71502.06,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -2.59,
-          "pnl_pct": -0.26,
-          "balance_after": 9985.43
-        },
         {
           "id": 8,
           "direction": "LONG",
@@ -258,6 +246,18 @@
           "pnl_dollar": -4.51,
           "pnl_pct": -0.45,
           "balance_after": 9950.64
+        },
+        {
+          "id": 27,
+          "direction": "SHORT",
+          "entry_time": "2026-03-25 23:09:05 KST",
+          "entry_price": 71502.78,
+          "exit_time": "2026-03-26 00:19:08 KST",
+          "exit_price": 70557.44,
+          "exit_reason": "✨ 익절(TP)",
+          "pnl_dollar": 12.37,
+          "pnl_pct": 1.24,
+          "balance_after": 9963.0
         }
       ],
       "daily": [
@@ -316,6 +316,10 @@
         {
           "date": "2026-03-25",
           "pnl": -49.35
+        },
+        {
+          "date": "2026-03-26",
+          "pnl": -36.98
         }
       ],
       "open_trades": []
