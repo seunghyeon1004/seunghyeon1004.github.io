@@ -287,6 +287,35 @@
         @keyframes fadeIn {
             to { opacity:1; transform:translateY(0); }
         }
+
+        /* ============ PROJECT CLOSED BANNER ============ */
+        .closed-banner {
+            background: linear-gradient(135deg, #1D1D1F 0%, #2C2C2E 100%);
+            color: #fff;
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .closed-banner-text h3 {
+            font-size: 16px; font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .closed-banner-text p {
+            font-size: 13px; color: #A1A1A6;
+            line-height: 1.5;
+        }
+        .closed-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.12);
+            padding: 6px 16px; border-radius: 980px;
+            font-size: 12px; font-weight: 700;
+            letter-spacing: 0.5px; white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -297,18 +326,26 @@
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="dashboard.html" class="active">Dashboard</a></li>
-            <li><span class="live-dot" id="liveStatus">Live</span></li>
+            <li><span class="closed-badge" style="font-size:13px; color:#FF9500; background:rgba(255,149,0,0.12);">Archived</span></li>
         </ul>
     </div>
 </nav>
 
 <div class="container">
 
+    <div class="closed-banner fade-in">
+        <div class="closed-banner-text">
+            <h3>This project has been archived.</h3>
+            <p>2026.03.13 ~ 03.26 (14일간) 운영 후 마감. 아래 데이터는 최종 스냅샷이며 더 이상 업데이트되지 않습니다.<br>
+            새로운 프로젝트를 준비 중입니다.</p>
+        </div>
+        <span class="closed-badge">COMPLETED</span>
+    </div>
+
     <div class="page-header">
         <p class="page-label">Build in Public</p>
         <h1 class="page-title">Bot Dashboard</h1>
-        <p class="page-sub">3개의 BTC 트레이딩 봇이 실시간으로 경쟁 중입니다.<br>
-            누가 이길까요?</p>
+        <p class="page-sub">3개의 BTC 트레이딩 봇이 14일간 경쟁한 최종 기록입니다.</p>
         <div class="update-time" id="updateTime">Loading...</div>
     </div>
 
@@ -708,7 +745,7 @@ async function fetchBacktest() {
 
 fetchData();
 fetchBacktest();
-setInterval(fetchData, 60000);
+// setInterval(fetchData, 60000); // Archived — no longer auto-refreshing
 </script>
 </body>
 </html>

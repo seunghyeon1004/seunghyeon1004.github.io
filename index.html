@@ -737,21 +737,31 @@
                     </div>
                     <div class="project-card reveal" style="transition-delay: 0.4s;">
                         <div>
-                            <p class="project-category">Build in Public</p>
+                            <p class="project-category" style="color:var(--text-secondary);">Build in Public <span style="background:#86868B;color:#fff;font-size:10px;padding:2px 8px;border-radius:980px;margin-left:6px;font-weight:700;">COMPLETED</span></p>
                             <h3 class="project-name">BTC Signal Bot</h3>
-                            <p class="project-desc" data-i18n="project4-desc">An AI-powered BTC trading signal bot built from scratch in public. 3 bots competing live: manual strategy (v3.1), Freqtrade with optimized parameters, and FreqAI with LightGBM ML predictions. Live dashboard tracks performance in real-time.</p>
+                            <p class="project-desc" data-i18n="project4-desc">An AI-powered BTC trading signal bot built from scratch in public over 14 days. 3 bots competed: manual strategy (v3.1), Freqtrade with optimized parameters, and FreqAI with LightGBM ML predictions. Integrated CVD indicators, Kelly Criterion sizing, and dual LLM ensemble (Gemma3 + Qwen2.5).</p>
                             <div class="project-tags">
                                 <span class="project-tag">Python</span>
                                 <span class="project-tag">Freqtrade</span>
                                 <span class="project-tag">LightGBM</span>
-                                <span class="project-tag">Trading Bot</span>
+                                <span class="project-tag">Ollama LLM</span>
                                 <span class="project-tag">Build in Public</span>
                             </div>
                         </div>
-                        <a href="dashboard.html" class="btn-secondary" style="background:var(--accent);color:#fff;border-color:var(--accent);">
-                            <span data-i18n="project4-btn">Live Dashboard →</span>
+                        <a href="dashboard.html" class="btn-secondary">
+                            <span data-i18n="project4-btn">View Results →</span>
                             <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </a>
+                    </div>
+                    <div class="project-card reveal" style="transition-delay: 0.5s; border:2px dashed var(--border);">
+                        <div>
+                            <p class="project-category" style="color:var(--accent);">Coming Soon <span style="background:var(--accent);color:#fff;font-size:10px;padding:2px 8px;border-radius:980px;margin-left:6px;font-weight:700;">NEW</span></p>
+                            <h3 class="project-name">Next Project</h3>
+                            <p class="project-desc" data-i18n="project5-desc">A new project is in the works. Stay tuned for updates.</p>
+                            <div class="project-tags">
+                                <span class="project-tag" style="border-style:dashed;">TBA</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -799,8 +809,9 @@
                 'project2-btn': 'View on X',
                 'project3-desc': 'A Chrome extension that displays cookie.fun campaign leaderboard rankings directly on X (Twitter) profiles. Features real-time rankings, global/regional leaderboards, and dark/light mode support.',
                 'project3-btn': 'Chrome Web Store',
-                'project4-desc': 'An AI-powered BTC trading signal bot built from scratch in public. 3 bots competing live: manual strategy (v3.1), Freqtrade with optimized parameters, and FreqAI with LightGBM ML predictions. Live dashboard tracks performance in real-time.',
-                'project4-btn': 'Live Dashboard →',
+                'project4-desc': 'An AI-powered BTC trading signal bot built from scratch in public over 14 days. 3 bots competed: manual strategy (v3.1), Freqtrade with optimized parameters, and FreqAI with LightGBM ML predictions. Integrated CVD indicators, Kelly Criterion sizing, and dual LLM ensemble (Gemma3 + Qwen2.5).',
+                'project4-btn': 'View Results →',
+                'project5-desc': 'A new project is in the works. Stay tuned for updates.',
                 'contact-heading': 'Let\'s build<br>something together.',
                 'contact-sub': 'Have a project idea or want to collaborate? Feel free to reach out.',
                 'contact-x': 'Follow on X',
@@ -825,8 +836,9 @@
                 'project2-btn': 'X에서 보기',
                 'project3-desc': 'X(트위터) 프로필에서 cookie.fun 캠페인 리더보드 순위를 바로 확인할 수 있는 크롬 확장 프로그램. 실시간 순위, 글로벌/지역 리더보드, 다크/라이트 모드를 지원합니다.',
                 'project3-btn': '크롬 웹스토어',
-                'project4-desc': '처음부터 공개적으로 만들어가는 AI 기반 BTC 트레이딩 시그널 봇. 수동 전략(v3.1), 파라미터 최적화(Freqtrade), ML 예측(FreqAI+LightGBM) 3개 봇이 실시간 경쟁 중. 라이브 대시보드에서 성과를 확인할 수 있습니다.',
-                'project4-btn': '라이브 대시보드 →',
+                'project4-desc': '14일간 공개적으로 만들어간 AI 기반 BTC 트레이딩 시그널 봇. 수동 전략(v3.1), 파라미터 최적화(Freqtrade), ML 예측(FreqAI+LightGBM) 3개 봇이 경쟁. CVD 지표, 켈리 기준 포지션 사이징, 듀얼 LLM 앙상블(Gemma3 + Qwen2.5) 통합.',
+                'project4-btn': '결과 보기 →',
+                'project5-desc': '새로운 프로젝트를 준비 중입니다. 곧 업데이트 예정.',
                 'contact-heading': '함께<br>만들어갑시다.',
                 'contact-sub': '프로젝트 아이디어가 있거나 협업을 원하시면 편하게 연락주세요.',
                 'contact-x': 'X 팔로우하기',
