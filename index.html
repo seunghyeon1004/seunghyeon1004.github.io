@@ -751,15 +751,23 @@
                             <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </a>
                     </div>
-                    <div class="project-card reveal" style="transition-delay: 0.5s; border:2px dashed var(--border);">
+                    <div class="project-card reveal" style="transition-delay: 0.5s;">
                         <div>
-                            <p class="project-category" style="color:var(--accent);">Coming Soon <span style="background:var(--accent);color:#fff;font-size:10px;padding:2px 8px;border-radius:980px;margin-left:6px;font-weight:700;">NEW</span></p>
-                            <h3 class="project-name">Next Project</h3>
-                            <p class="project-desc" data-i18n="project5-desc">A new project is in the works. Stay tuned for updates.</p>
+                            <p class="project-category" style="color:var(--accent);">Build in Public <span style="background:var(--accent);color:#fff;font-size:10px;padding:2px 8px;border-radius:980px;margin-left:6px;font-weight:700;">LIVE</span></p>
+                            <h3 class="project-name">KRX Stock Screener</h3>
+                            <p class="project-desc" data-i18n="project5-desc">AI-powered Korean stock screener with real-time automated trading. Uses a local LLM 3-role chain (Bull/Bear/CIO) for market consensus, Kelly Criterion sizing, and 7-point invalidation system. Screens KRX top 300 stocks daily.</p>
                             <div class="project-tags">
-                                <span class="project-tag" style="border-style:dashed;">TBA</span>
+                                <span class="project-tag">Python</span>
+                                <span class="project-tag">Ollama LLM</span>
+                                <span class="project-tag">Real-time Trading</span>
+                                <span class="project-tag">KRX</span>
+                                <span class="project-tag">Build in Public</span>
                             </div>
                         </div>
+                        <a href="krx-dashboard.html" class="btn-secondary">
+                            <span data-i18n="project5-btn">View Dashboard</span>
+                            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -809,7 +817,8 @@
                 'project3-btn': 'Chrome Web Store',
                 'project4-desc': 'An AI-powered BTC trading signal bot built from scratch in public over 14 days. 3 bots competed: manual strategy (v3.1), Freqtrade with optimized parameters, and FreqAI with LightGBM ML predictions. Integrated CVD indicators, Kelly Criterion sizing, and dual LLM ensemble (Gemma3 + Qwen2.5).',
                 'project4-btn': 'View Results →',
-                'project5-desc': 'A new project is in the works. Stay tuned for updates.',
+                'project5-desc': 'AI-powered Korean stock screener with real-time automated trading. Uses a local LLM 3-role chain (Bull/Bear/CIO) for market consensus, Kelly Criterion sizing, and 7-point invalidation system. Screens KRX top 300 stocks daily.',
+                'project5-btn': 'View Dashboard',
                 'contact-heading': 'Let\'s build<br>something together.',
                 'contact-sub': 'Have a project idea or want to collaborate? Feel free to reach out.',
                 'contact-x': 'Follow on X',
@@ -836,7 +845,8 @@
                 'project3-btn': '크롬 웹스토어',
                 'project4-desc': '14일간 공개적으로 만들어간 AI 기반 BTC 트레이딩 시그널 봇. 수동 전략(v3.1), 파라미터 최적화(Freqtrade), ML 예측(FreqAI+LightGBM) 3개 봇이 경쟁. CVD 지표, 켈리 기준 포지션 사이징, 듀얼 LLM 앙상블(Gemma3 + Qwen2.5) 통합.',
                 'project4-btn': '결과 보기 →',
-                'project5-desc': '새로운 프로젝트를 준비 중입니다. 곧 업데이트 예정.',
+                'project5-desc': 'AI 기반 한국 주식 자동매매 스크리너. 로컬 LLM 3역할 체인(강세론/약세론/CIO)으로 시장 합의를 도출하고, 켈리 기준 포지션 사이징과 7가지 무효화 시스템을 적용. KRX 상위 300종목을 매일 스크리닝합니다.',
+                'project5-btn': '대시보드 보기',
                 'contact-heading': '함께<br>만들어갑시다.',
                 'contact-sub': '프로젝트 아이디어가 있거나 협업을 원하시면 편하게 연락주세요.',
                 'contact-x': 'X 팔로우하기',

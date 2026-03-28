@@ -1,0 +1,69 @@
+{
+  "updated": "2026-03-28 18:51",
+  "portfolio": {
+    "total_invested": 2000000,
+    "current_value": 1992468,
+    "total_pnl": -7325,
+    "roi_pct": -0.37,
+    "cash": 1992468,
+    "positions_count": 0,
+    "win_rate": 0.0,
+    "total_trades": 2,
+    "max_drawdown": -0.37
+  },
+  "ai_opinion": {
+    "stance": "neutral",
+    "summary": "AI 분석 대기 중",
+    "bull_case": "",
+    "bear_case": "",
+    "reasoning": "",
+    "confidence": "medium",
+    "caution": "",
+    "model": ""
+  },
+  "positions": [],
+  "recent_trades": [
+    {
+      "name": "CR홀딩스",
+      "entry_date": "2026-03-20",
+      "exit_date": "2026-03-26",
+      "pnl_pct": -2.92,
+      "pnl_amount": -6967,
+      "exit_reason": "stoploss"
+    },
+    {
+      "name": "유화증권",
+      "entry_date": "2026-03-19",
+      "exit_date": "2026-03-24",
+      "pnl_pct": -0.08,
+      "pnl_amount": -357,
+      "exit_reason": "trailing_stop"
+    }
+  ],
+  "equity_curve": [
+    {
+      "date": "2026-03-20",
+      "value": 1999794
+    },
+    {
+      "date": "2026-03-23",
+      "value": 1999794
+    },
+    {
+      "date": "2026-03-24",
+      "value": 1999436
+    },
+    {
+      "date": "2026-03-25",
+      "value": 1999436
+    },
+    {
+      "date": "2026-03-26",
+      "value": 1992468
+    },
+    {
+      "date": "2026-03-27",
+      "value": 1992468
+    }
+  ]
+}
