@@ -1,5 +1,5 @@
 {
-  "updated": "2026-03-30 19:45",
+  "updated": "2026-03-31 16:15",
   "portfolio": {
     "total_invested": 10000000,
     "current_value": 10000000,
@@ -23,5 +23,14 @@
   },
   "positions": [],
   "recent_trades": [],
-  "equity_curve": []
+  "equity_curve": [
+    {
+      "date": "2026-03-30",
+      "value": 10000000
+    },
+    {
+      "date": "2026-03-31",
+      "value": 10000000
+    }
+  ]
 }
