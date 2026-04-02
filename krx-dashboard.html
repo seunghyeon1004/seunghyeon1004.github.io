@@ -287,6 +287,36 @@
         }
         .empty-state .icon { font-size:40px; margin-bottom:12px; }
 
+        /* ============ SIGNAL BAR ============ */
+        .signal-bar {
+            display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+            background:var(--card-bg); border:1px solid var(--border);
+            border-radius:16px; padding:16px 24px; margin-bottom:24px;
+        }
+        .signal-chip {
+            display:inline-flex; align-items:center; gap:6px;
+            padding:6px 16px; border-radius:980px; font-size:13px; font-weight:700;
+            border:1px solid var(--border); background:var(--bg);
+        }
+        .signal-chip.buy  { background:rgba(52,199,89,0.1);  color:var(--green);  border-color:rgba(52,199,89,0.2); }
+        .signal-chip.watch{ background:rgba(0,113,227,0.1);  color:var(--accent); border-color:rgba(0,113,227,0.2); }
+        .signal-chip.block{ background:rgba(255,59,48,0.1);  color:var(--red);    border-color:rgba(255,59,48,0.2); }
+        .signal-chip.mode-aggressive { background:rgba(52,199,89,0.12); color:var(--green); }
+        .signal-chip.mode-normal     { background:rgba(0,113,227,0.08); color:var(--accent); }
+        .signal-chip.mode-defensive  { background:rgba(255,149,0,0.12); color:var(--orange); }
+        .signal-divider { width:1px; height:24px; background:var(--border); }
+
+        /* ============ CANDIDATES TABLE ============ */
+        .candidates-card {
+            background:var(--card-bg); border:1px solid var(--border);
+            border-radius:20px; padding:28px; margin-bottom:24px;
+        }
+        .score-bar-wrap { display:flex; align-items:center; gap:8px; }
+        .score-bar {
+            height:6px; border-radius:3px; background:var(--accent);
+            min-width:4px; transition:width 0.4s;
+        }
+
         /* ============ FOOTER ============ */
         footer {
             text-align:center; padding:40px 0 32px;
@@ -349,8 +379,14 @@
     <!-- PORTFOLIO SUMMARY -->
     <div class="card-grid" id="summaryCards"></div>
 
+    <!-- SIGNAL BAR -->
+    <div class="signal-bar fade-in" id="signalBar" style="display:none;"></div>
+
     <!-- AI OPINION -->
     <div class="opinion-card fade-in" id="opinionCard" style="display:none;"></div>
+
+    <!-- ENTRY CANDIDATES -->
+    <div class="candidates-card fade-in" id="candidatesCard" style="display:none;"></div>
 
     <!-- EQUITY CURVE -->
     <div class="chart-card fade-in">
@@ -718,6 +754,122 @@ function renderTrades(trades) {
     </table>`;
 }
 
+// ── Signal Bar ──
+
+function renderSignalBar(data) {
+    const el = document.getElementById('signalBar');
+    const signals = data.signals_today || [];
+    const watchlist = data.watchlist || [];
+    const mode = data.strategy_mode || 'normal';
+    const modeLabel = { aggressive: '공격', normal: '일반', defensive: '방어' }[mode] || mode;
+    const modeEmoji = { aggressive: '🚀', normal: '⚖️', defensive: '🛡️' }[mode] || '';
+    const ms = data.market_status || {};
+    const blocked = ms.block_buy;
+    const vix = ms.vix;
+
+    let chips = '';
+    chips += `<span class="signal-chip mode-${mode}">${modeEmoji} ${modeLabel} 모드</span>`;
+    chips += '<span class="signal-divider"></span>';
+
+    if (blocked) {
+        chips += `<span class="signal-chip block">🚫 매수차단 (외국인 3일 연속 매도)</span>`;
+    } else {
+        chips += `<span class="signal-chip buy">📈 매수 ${signals.length}종목</span>`;
+    }
+
+    chips += `<span class="signal-chip watch">👁 관심 ${watchlist.length}종목</span>`;
+
+    if (vix != null) {
+        const vixClass = vix > 25 ? 'block' : 'watch';
+        chips += '<span class="signal-divider"></span>';
+        chips += `<span class="signal-chip ${vixClass}">VIX ${vix.toFixed(1)}</span>`;
+    }
+
+    el.innerHTML = chips;
+    el.style.display = 'flex';
+}
+
+// ── Entry Candidates ──
+
+function renderCandidates(data) {
+    const el = document.getElementById('candidatesCard');
+    const signals = data.signals_today || [];
+    const watchlist = data.watchlist || [];
+
+    if (!signals.length && !watchlist.length) {
+        el.style.display = 'none';
+        return;
+    }
+
+    el.style.display = 'block';
+
+    let html = '<div class="chart-title">🎯 오늘의 진입 후보</div>';
+
+    if (signals.length) {
+        html += `<div style="margin-bottom:8px;">
+            <div class="card-label" style="margin-bottom:12px;">매수 시그널 (${signals.length})</div>
+            <table class="trade-table">
+                <thead><tr>
+                    <th>종목명</th>
+                    <th>등급</th>
+                    <th>점수</th>
+                    <th>현재가</th>
+                    <th>시그널</th>
+                    <th>티어</th>
+                </tr></thead>
+                <tbody>${signals.slice(0, 10).map(s => {
+                    const scoreWidth = Math.round((s.score || 0) / 100 * 80);
+                    return `<tr>
+                        <td><strong>${s.name || '-'}</strong><br><span style="font-size:12px;color:var(--text-secondary);">${s.code || ''}</span></td>
+                        <td><span class="tag ${gradeClass(s.grade)}">${s.grade || '-'}</span></td>
+                        <td>
+                            <div class="score-bar-wrap">
+                                <div class="score-bar" style="width:${scoreWidth}px;"></div>
+                                <span style="font-size:12px;color:var(--text-secondary);">${s.score || 0}</span>
+                            </div>
+                        </td>
+                        <td>${s.price ? fmtWonPlain(s.price) : '-'}</td>
+                        <td style="font-size:12px;color:var(--text-secondary);">${(s.signals || []).join(', ') || '-'}</td>
+                        <td style="font-size:12px;color:var(--accent);">${s.tier_tag || ''}</td>
+                    </tr>`;
+                }).join('')}</tbody>
+            </table>
+        </div>`;
+    }
+
+    if (watchlist.length) {
+        html += `<div style="margin-top:20px;">
+            <div class="card-label" style="margin-bottom:12px;">관심 종목 VCP 셋업 (${watchlist.length})</div>
+            <table class="trade-table">
+                <thead><tr>
+                    <th>종목명</th>
+                    <th>등급</th>
+                    <th>점수</th>
+                    <th>현재가</th>
+                    <th>시그널</th>
+                </tr></thead>
+                <tbody>${watchlist.slice(0, 8).map(s => {
+                    const scoreWidth = Math.round((s.score || 0) / 100 * 80);
+                    return `<tr>
+                        <td><strong>${s.name || '-'}</strong><br><span style="font-size:12px;color:var(--text-secondary);">${s.code || ''}</span></td>
+                        <td><span class="tag ${gradeClass(s.grade)}">${s.grade || '-'}</span></td>
+                        <td>
+                            <div class="score-bar-wrap">
+                                <div class="score-bar" style="width:${scoreWidth}px;background:var(--accent);"></div>
+                                <span style="font-size:12px;color:var(--text-secondary);">${s.score || 0}</span>
+                            </div>
+                        </td>
+                        <td>${s.price ? fmtWonPlain(s.price) : '-'}</td>
+                        <td style="font-size:12px;color:var(--text-secondary);">${(s.signals || []).join(', ') || '-'}</td>
+                    </tr>`;
+                }).join('')}</tbody>
+            </table>
+        </div>`;
+    }
+
+    el.innerHTML = html;
+}
+
 // ── Fetch & Render ──
 
 async function fetchData() {
@@ -728,7 +880,9 @@ async function fetchData() {
         document.getElementById('updateTime').textContent = '🕐 ' + (krxData.updated || '—');
 
         renderSummary(krxData.portfolio || {});
+        renderSignalBar(krxData);
         renderOpinion(krxData.ai_opinion || {});
+        renderCandidates(krxData);
         renderEquityChart(krxData.equity_curve || []);
         renderHoldings(krxData.positions || []);
         renderTrades(krxData.recent_trades || []);
@@ -749,7 +903,7 @@ async function fetchData() {
 }
 
 fetchData();
-setInterval(fetchData, 60000);
+setInterval(fetchData, 30000);
 </script>
 </body>
 </html>
