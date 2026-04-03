@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-02 16:30",
+  "updated": "2026-04-03 16:30",
   "portfolio": {
     "total_invested": 10000000,
     "current_value": 10000000,
@@ -39,6 +39,74 @@
     {
       "date": "2026-04-02",
       "value": 10000000
+    },
+    {
+      "date": "2026-04-03",
+      "value": 10000000
     }
-  ]
+  ],
+  "strategy_mode": "defensive",
+  "signals_today": [],
+  "watchlist": [
+    {
+      "name": "대원강업",
+      "code": "000430",
+      "grade": "A",
+      "score": 54
+    },
+    {
+      "name": "DB하이텍",
+      "code": "000990",
+      "grade": "A",
+      "score": 61
+    },
+    {
+      "name": "SK증권",
+      "code": "001510",
+      "grade": "S",
+      "score": 77
+    },
+    {
+      "name": "알루코",
+      "code": "001780",
+      "grade": "S",
+      "score": 76
+    },
+    {
+      "name": "도화엔지니어링",
+      "code": "002150",
+      "grade": "S",
+      "score": 76
+    },
+    {
+      "name": "흥아해운",
+      "code": "003280",
+      "grade": "A",
+      "score": 60
+    },
+    {
+      "name": "LS",
+      "code": "006260",
+      "grade": "A",
+      "score": 60
+    },
+    {
+      "name": "GS건설",
+      "code": "006360",
+      "grade": "A",
+      "score": 62
+    },
+    {
+      "name": "삼성SDI",
+      "code": "006400",
+      "grade": "S",
+      "score": 68
+    }
+  ],
+  "market_status": {
+    "vix": 23.8700008392334,
+    "kospi": 5377.2998046875,
+    "block_buy": true,
+    "ai_stance": "defensive"
+  }
 }
