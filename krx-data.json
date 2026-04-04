@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-03 16:30",
+  "updated": "2026-04-04 21:25",
   "portfolio": {
     "total_invested": 10000000,
     "current_value": 10000000,
@@ -106,7 +106,7 @@
   "market_status": {
     "vix": 23.8700008392334,
     "kospi": 5377.2998046875,
-    "block_buy": true,
+    "block_buy": false,
     "ai_stance": "defensive"
   }
 }
