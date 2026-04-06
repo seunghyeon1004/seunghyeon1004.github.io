@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-04 21:25",
+  "updated": "2026-04-06 16:30",
   "portfolio": {
     "total_invested": 10000000,
     "current_value": 10000000,
@@ -43,28 +43,30 @@
     {
       "date": "2026-04-03",
       "value": 10000000
+    },
+    {
+      "date": "2026-04-06",
+      "value": 10000000
     }
   ],
-  "strategy_mode": "defensive",
-  "signals_today": [],
-  "watchlist": [
-    {
-      "name": "대원강업",
-      "code": "000430",
-      "grade": "A",
-      "score": 54
-    },
-    {
-      "name": "DB하이텍",
-      "code": "000990",
-      "grade": "A",
-      "score": 61
-    },
+  "strategy_mode": "neutral",
+  "signals_today": [
     {
       "name": "SK증권",
       "code": "001510",
       "grade": "S",
-      "score": 77
+      "score": 77,
+      "signals": [
+        "classic_entry"
+      ]
+    }
+  ],
+  "watchlist": [
+    {
+      "name": "DB하이텍",
+      "code": "000990",
+      "grade": "A",
+      "score": 63
     },
     {
       "name": "알루코",
@@ -73,40 +75,52 @@
       "score": 76
     },
     {
-      "name": "도화엔지니어링",
-      "code": "002150",
+      "name": "KISCO홀딩스",
+      "code": "001940",
+      "grade": "A",
+      "score": 63
+    },
+    {
+      "name": "삼아알미늄",
+      "code": "006110",
       "grade": "S",
-      "score": 76
+      "score": 71
     },
     {
-      "name": "흥아해운",
-      "code": "003280",
+      "name": "대구백화점",
+      "code": "006370",
       "grade": "A",
       "score": 60
-    },
-    {
-      "name": "LS",
-      "code": "006260",
-      "grade": "A",
-      "score": 60
-    },
-    {
-      "name": "GS건설",
-      "code": "006360",
-      "grade": "A",
-      "score": 62
     },
     {
       "name": "삼성SDI",
       "code": "006400",
       "grade": "S",
+      "score": 65
+    },
+    {
+      "name": "인스코비",
+      "code": "006490",
+      "grade": "S",
       "score": 68
+    },
+    {
+      "name": "우성",
+      "code": "006980",
+      "grade": "A",
+      "score": 60
+    },
+    {
+      "name": "남선알미늄",
+      "code": "008350",
+      "grade": "A",
+      "score": 60
     }
   ],
   "market_status": {
     "vix": 23.8700008392334,
-    "kospi": 5377.2998046875,
+    "kospi": 5450.330078125,
     "block_buy": false,
-    "ai_stance": "defensive"
+    "ai_stance": "neutral"
   }
 }
