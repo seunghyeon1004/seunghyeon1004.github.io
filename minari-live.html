@@ -276,6 +276,37 @@
         .tech-item-desc { font-size: 14px; line-height: 1.65; }
         .hl { color: var(--accent); font-weight: 600; }
 
+        /* ── TRADE HISTORY ───────────────────────────── */
+        .history-wrap {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+        .history-wrap table {
+            width: 100%; border-collapse: collapse; font-size: 13px;
+        }
+        .history-wrap thead th {
+            padding: 13px 20px; text-align: left;
+            font-size: 11px; font-weight: 600; letter-spacing: .6px;
+            text-transform: uppercase; color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+        .history-wrap tbody td {
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            vertical-align: middle;
+        }
+        .history-wrap tbody tr:last-child td { border-bottom: none; }
+        .history-wrap tbody tr:hover { background: rgba(0,0,0,0.02); }
+        .fill-time { color: var(--text-secondary); font-size: 12px; }
+        .pnl-pos { color: var(--green); font-weight: 700; }
+        .pnl-neg { color: var(--red);   font-weight: 700; }
+        .no-history {
+            padding: 40px 24px; text-align: center;
+            color: var(--text-secondary); font-size: 14px;
+        }
+
         /* ── PNL CHART ────────────────────────────────── */
         .chart-wrap {
             background: var(--card-bg);
@@ -443,6 +474,30 @@
         </table>
     </div>
 
+    <!-- TRADE HISTORY -->
+    <div class="section-header">
+        <div class="section-title">거래 히스토리</div>
+        <span class="section-badge badge-gray" id="fillCount">최근 20건</span>
+    </div>
+    <div class="history-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>코인</th>
+                    <th>방향</th>
+                    <th>체결가</th>
+                    <th>수량</th>
+                    <th>실현 손익</th>
+                    <th>수수료</th>
+                    <th>체결 시각</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody">
+                <tr><td colspan="7" class="no-history">로딩 중...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
     <!-- PNL CHART -->
     <div class="section-header">
         <div class="section-title">일간 PnL 추이</div>
@@ -519,6 +574,64 @@
 </main>
 
 <script>
+    // ── Trade History ─────────────────────────────────────
+    async function loadTradeHistory() {
+        const tbody = document.getElementById("historyBody");
+        try {
+            const r = await fetchHL({ type: "userFills", user: WALLET });
+            const fills = Array.isArray(r) ? r : [];
+
+            // 최근 20건만, 최신순
+            const recent = fills.slice(-20).reverse();
+
+            document.getElementById("fillCount").textContent = `총 ${fills.length}건`;
+
+            if (!recent.length) {
+                tbody.innerHTML = `<tr><td colspan="7" class="no-history">거래 기록이 없습니다</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = recent.map(f => {
+                const coin    = f.coin || "?";
+                const isLong  = f.side === "B";  // B=Buy=Long close or entry
+                // closedPnl이 있으면 청산, 없으면 진입
+                const cpnl    = f.closedPnl !== undefined ? parseFloat(f.closedPnl) : null;
+                const fee     = parseFloat(f.fee || 0);
+                const px      = parseFloat(f.px || 0);
+                const sz      = parseFloat(f.sz || 0);
+                const ts      = f.time ? new Date(f.time).toLocaleString("ko-KR", {timeZone:"Asia/Seoul", hour12:false}) : "—";
+                const dir     = isLong ? "BUY" : "SELL";
+                const dirCls  = isLong ? "dir-long" : "dir-short";
+                const cl = COLORS[coin] || {bg:"#F5F5F7", color:"#86868B"};
+
+                let pnlCell = "—";
+                if (cpnl !== null) {
+                    const cls = cpnl >= 0 ? "pnl-pos" : "pnl-neg";
+                    const sign = cpnl >= 0 ? "+" : "";
+                    pnlCell = `<span class="${cls}">${sign}$${p(Math.abs(cpnl), 3)}</span>`;
+                }
+
+                return `<tr>
+                    <td>
+                        <div class="coin-cell">
+                            <div class="coin-avatar" style="background:${cl.bg};color:${cl.color};width:24px;height:24px;font-size:9px;">${coin.slice(0,3)}</div>
+                            <span style="font-weight:600">${coin}</span>
+                        </div>
+                    </td>
+                    <td class="${dirCls}" style="font-size:12px;font-weight:700">${dir}</td>
+                    <td>${fmtPrice(px)}</td>
+                    <td>${sz}</td>
+                    <td>${pnlCell}</td>
+                    <td style="color:var(--text-secondary)">$${p(fee,4)}</td>
+                    <td class="fill-time">${ts}</td>
+                </tr>`;
+            }).join("");
+
+        } catch(e) {
+            tbody.innerHTML = `<tr><td colspan="7" class="no-history">⚠️ 히스토리 로드 실패: ${e.message}</td></tr>`;
+        }
+    }
+
     // ── PnL Chart ─────────────────────────────────────────
     let pnlChartInstance = null;
     let chartHistory = [];
@@ -801,10 +914,12 @@
     }
 
     refresh();
+    loadTradeHistory();
     loadReport();
     loadPnlHistory();
     setInterval(refresh, 60_000);
-    setInterval(loadPnlHistory, 300_000);  // 5분마다 히스토리 갱신
+    setInterval(loadTradeHistory, 120_000);  // 2분마다 히스토리 갱신
+    setInterval(loadPnlHistory, 300_000);    // 5분마다 차트 갱신
 </script>
 </body>
 </html>
