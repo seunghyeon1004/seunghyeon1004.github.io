@@ -425,6 +425,10 @@
                 <div class="pnl-sub-value" id="heroBalance"><span class="skel">$0.00</span></div>
             </div>
             <div class="pnl-sub-item">
+                <div class="pnl-sub-label">실현 손익 (누적)</div>
+                <div class="pnl-sub-value" id="heroRPnL"><span class="skel">$0.00</span></div>
+            </div>
+            <div class="pnl-sub-item">
                 <div class="pnl-sub-label">포지션 마진</div>
                 <div class="pnl-sub-value" id="heroMargin"><span class="skel">$0.00</span></div>
             </div>
@@ -581,6 +585,14 @@
             const r = await fetchHL({ type: "userFills", user: WALLET });
             const fills = Array.isArray(r) ? r : [];
 
+            // 누적 실현손익 계산 (수수료 제외, closedPnl 합산)
+            const totalRPnL = fills.reduce((s, f) => s + parseFloat(f.closedPnl || "0"), 0);
+            const rpnlEl = document.getElementById("heroRPnL");
+            if (rpnlEl) {
+                const sign = totalRPnL >= 0 ? "+" : "";
+                rpnlEl.innerHTML = `<span style="color:${totalRPnL >= 0 ? 'var(--green)' : 'var(--red)'}">${sign}$${p(Math.abs(totalRPnL), 2)}</span>`;
+            }
+
             // 최근 20건만, 최신순
             const recent = fills.slice(-20).reverse();
 
@@ -593,20 +605,29 @@
 
             tbody.innerHTML = recent.map(f => {
                 const coin    = f.coin || "?";
-                const isLong  = f.side === "B";  // B=Buy=Long close or entry
-                // closedPnl이 있으면 청산, 없으면 진입
-                const cpnl    = f.closedPnl !== undefined ? parseFloat(f.closedPnl) : null;
+                const cpnl    = parseFloat(f.closedPnl || "0");
+                const isClose = Math.abs(cpnl) > 0.0001;  // closedPnl != 0 → 청산, 0 → 진입
+                const isBuy   = f.side === "B";            // B=매수, A=매도
                 const fee     = parseFloat(f.fee || 0);
                 const px      = parseFloat(f.px || 0);
                 const sz      = parseFloat(f.sz || 0);
                 const ts      = f.time ? new Date(f.time).toLocaleString("ko-KR", {timeZone:"Asia/Seoul", hour12:false}) : "—";
-                const dir     = isLong ? "BUY" : "SELL";
-                const dirCls  = isLong ? "dir-long" : "dir-short";
-                const cl = COLORS[coin] || {bg:"#F5F5F7", color:"#86868B"};
+                const cl      = COLORS[coin] || {bg:"#F5F5F7", color:"#86868B"};
 
-                let pnlCell = "—";
-                if (cpnl !== null) {
-                    const cls = cpnl >= 0 ? "pnl-pos" : "pnl-neg";
+                // 레이블: 진입(롱/숏) vs 청산
+                let dir, dirCls;
+                if (!isClose) {
+                    dir    = isBuy ? "롱 진입" : "숏 진입";
+                    dirCls = isBuy ? "dir-long" : "dir-short";
+                } else {
+                    dir    = isBuy ? "숏 청산" : "롱 청산";
+                    dirCls = cpnl >= 0 ? "pnl-pos" : "pnl-neg";
+                }
+
+                // 실현손익: 청산 시만 표시, 진입은 "—"
+                let pnlCell = `<span style="color:var(--text-secondary)">—</span>`;
+                if (isClose) {
+                    const cls  = cpnl >= 0 ? "pnl-pos" : "pnl-neg";
                     const sign = cpnl >= 0 ? "+" : "";
                     pnlCell = `<span class="${cls}">${sign}$${p(Math.abs(cpnl), 3)}</span>`;
                 }
@@ -875,15 +896,21 @@
 
     async function refresh() {
         try {
-            const [state, mids] = await Promise.all([
+            const [state, mids, spot] = await Promise.all([
                 fetchHL({type:"clearinghouseState", user: WALLET}),
-                fetchHL({type:"allMids"})
+                fetchHL({type:"allMids"}),
+                fetchHL({type:"spotClearinghouseState", user: WALLET})
             ]);
 
-            // ── 잔고: isolated 마진은 marginSummary에 있음 ──
+            // ── 잔고: perp marginSummary + spot USDC 합산 ──
             const ms   = state.marginSummary || {};
             const acct = parseFloat(ms.accountValue      || "0");
             const used = parseFloat(ms.totalMarginUsed   || "0");
+
+            // spot USDC 잔고 (청산 후 수익이 여기로)
+            const spotBals = spot.balances || [];
+            const spotUSDC = parseFloat(spotBals.find(b => b.coin === "USDC")?.total || "0");
+            const totalBalance = acct + spotUSDC;
 
             // ── 오픈 포지션 필터 ──
             const positions = (state.assetPositions || []).filter(p =>
@@ -894,7 +921,7 @@
             const totalUPnL = positions.reduce((s, p) => s + parseFloat(p.position?.unrealizedPnl || "0"), 0);
 
             // ── 렌더 ──
-            renderHero(totalUPnL, acct, used);
+            renderHero(totalUPnL, totalBalance, used);
             renderPositions(positions, mids);
 
             document.getElementById("statPos").textContent = positions.length;

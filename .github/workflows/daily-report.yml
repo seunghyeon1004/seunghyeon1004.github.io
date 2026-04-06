@@ -27,17 +27,26 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{\"type\":\"clearinghouseState\",\"user\":\"$WALLET\"}" || echo "{}")
 
+          SPOT=$(curl -s -X POST "https://api.hyperliquid.xyz/info" \
+            -H "Content-Type: application/json" \
+            -d "{\"type\":\"spotClearinghouseState\",\"user\":\"$WALLET\"}" || echo "{}")
+
           MIDS=$(curl -s -X POST "https://api.hyperliquid.xyz/info" \
             -H "Content-Type: application/json" \
             -d '{"type":"allMids"}' || echo "{}")
 
-          # marginSummary 사용 (isolated 마진 계좌)
-          ACCOUNT_VALUE=$(echo "$POSITIONS" | python3 -c "
-import sys,json
-d=json.load(sys.stdin)
-ms=d.get('marginSummary',{})
-print(round(float(ms.get('accountValue','0')),4))
-" 2>/dev/null || echo "0")
+          # perp marginSummary + spot USDC 합산 (청산 후 수익은 spot으로)
+          echo "$POSITIONS" > /tmp/perp.json
+          echo "$SPOT"      > /tmp/spot.json
+          ACCOUNT_VALUE=$(python3 - << 'PYINLINE'
+import json
+perp = json.load(open('/tmp/perp.json'))
+spot = json.load(open('/tmp/spot.json'))
+perp_val   = float(perp.get('marginSummary', {}).get('accountValue', '0'))
+spot_usdc  = float(next((b['total'] for b in spot.get('balances', []) if b['coin'] == 'USDC'), '0'))
+print(round(perp_val + spot_usdc, 4))
+PYINLINE
+)
 
           TOTAL_UPNL=$(echo "$POSITIONS" | python3 -c "
 import sys,json
