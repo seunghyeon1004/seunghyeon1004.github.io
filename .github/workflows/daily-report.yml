@@ -4,7 +4,7 @@ on:
   schedule:
     # 매일 09:00 KST = 00:00 UTC
     - cron: "0 0 * * *"
-  workflow_dispatch:  # 수동 실행 가능
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,84 +16,150 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fetch Hyperliquid Data & Generate Report
-        id: report
+      - name: Fetch Hyperliquid Data
         run: |
           set -e
           WALLET="0x9c81aF1b4097891AE5aA29EC1d7fC64926dd9c30"
           TODAY=$(TZ=Asia/Seoul date "+%Y-%m-%d")
           GENERATED=$(TZ=Asia/Seoul date "+%Y-%m-%d %H:%M KST")
 
-          # 포지션 데이터 조회
           POSITIONS=$(curl -s -X POST "https://api.hyperliquid.xyz/info" \
             -H "Content-Type: application/json" \
             -d "{\"type\":\"clearinghouseState\",\"user\":\"$WALLET\"}" || echo "{}")
 
-          # 전체 가격 조회
           MIDS=$(curl -s -X POST "https://api.hyperliquid.xyz/info" \
             -H "Content-Type: application/json" \
             -d '{"type":"allMids"}' || echo "{}")
 
-          # 주요 지표 추출
-          BTC_PRICE=$(echo "$MIDS" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round(float(d.get('BTC',0)),0))" 2>/dev/null || echo "0")
-          ETH_PRICE=$(echo "$MIDS" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round(float(d.get('ETH',0)),2))" 2>/dev/null || echo "0")
-          ACCOUNT_VALUE=$(echo "$POSITIONS" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round(float(d.get('crossMarginSummary',{}).get('accountValue','0')),2))" 2>/dev/null || echo "0")
-          OPEN_COUNT=$(echo "$POSITIONS" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len([p for p in d.get('assetPositions',[]) if abs(float(p['position'].get('szi','0')))>0]))" 2>/dev/null || echo "0")
-          TOTAL_UPNL=$(echo "$POSITIONS" | python3 -c "
-          import sys,json
-          d=json.load(sys.stdin)
-          total=sum(float(p['position'].get('unrealizedPnl','0')) for p in d.get('assetPositions',[]) if abs(float(p['position'].get('szi','0')))>0)
-          print(round(total,2))
-          " 2>/dev/null || echo "0")
+          # marginSummary 사용 (isolated 마진 계좌)
+          ACCOUNT_VALUE=$(echo "$POSITIONS" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+ms=d.get('marginSummary',{})
+print(round(float(ms.get('accountValue','0')),4))
+" 2>/dev/null || echo "0")
 
-          # 리포트 텍스트 생성 (간결, 핵심 정보만)
+          TOTAL_UPNL=$(echo "$POSITIONS" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+pos=[p for p in d.get('assetPositions',[]) if abs(float(p['position'].get('szi','0')))>0]
+print(round(sum(float(p['position'].get('unrealizedPnl','0')) for p in pos),4))
+" 2>/dev/null || echo "0")
+
+          OPEN_COUNT=$(echo "$POSITIONS" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+print(len([p for p in d.get('assetPositions',[]) if abs(float(p['position'].get('szi','0')))>0]))
+" 2>/dev/null || echo "0")
+
+          BTC_PRICE=$(echo "$MIDS" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round(float(d.get('BTC',0)),1))" 2>/dev/null || echo "0")
+          ETH_PRICE=$(echo "$MIDS" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round(float(d.get('ETH',0)),2))" 2>/dev/null || echo "0")
+
+          # 환경변수로 전달
+          echo "TODAY=$TODAY" >> $GITHUB_ENV
+          echo "GENERATED=$GENERATED" >> $GITHUB_ENV
+          echo "ACCOUNT_VALUE=$ACCOUNT_VALUE" >> $GITHUB_ENV
+          echo "TOTAL_UPNL=$TOTAL_UPNL" >> $GITHUB_ENV
+          echo "OPEN_COUNT=$OPEN_COUNT" >> $GITHUB_ENV
+          echo "BTC_PRICE=$BTC_PRICE" >> $GITHUB_ENV
+          echo "ETH_PRICE=$ETH_PRICE" >> $GITHUB_ENV
+
+      - name: Update PnL History
+        run: |
+          python3 << 'PYEOF'
+import json, os
+from pathlib import Path
+
+today        = os.environ['TODAY']
+acct         = float(os.environ['ACCOUNT_VALUE'])
+upnl         = float(os.environ['TOTAL_UPNL'])
+open_pos     = int(os.environ['OPEN_COUNT'])
+
+hist_file = Path('pnl-history.json')
+if hist_file.exists():
+    with open(hist_file) as f:
+        data = json.load(f)
+else:
+    data = {'start_date': today, 'note': '매일 09:00 KST GitHub Actions가 자동 갱신', 'history': []}
+
+# 오늘 날짜가 이미 있으면 업데이트, 없으면 추가
+history = data.get('history', [])
+existing = next((i for i, h in enumerate(history) if h['date'] == today), None)
+entry = {
+    'date': today,
+    'account_value': acct,
+    'unrealized_pnl': upnl,
+    'open_positions': open_pos
+}
+if existing is not None:
+    history[existing] = entry
+else:
+    history.append(entry)
+
+data['history'] = history
+with open(hist_file, 'w') as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+
+print(f"PnL history updated: {today} | acct={acct} upnl={upnl}")
+PYEOF
+
+      - name: Generate Daily Report
+        run: |
           if (( $(echo "$TOTAL_UPNL >= 0" | bc -l) )); then
             PNL_EMOJI="📈"
           else
             PNL_EMOJI="📉"
           fi
 
-          REPORT="🌿 미나리 일일 트레이딩 리포트 — $TODAY
+          python3 << PYEOF
+import json, os
+
+today     = os.environ['TODAY']
+generated = os.environ['GENERATED']
+btc       = os.environ['BTC_PRICE']
+eth       = os.environ['ETH_PRICE']
+acct      = float(os.environ['ACCOUNT_VALUE'])
+upnl      = float(os.environ['TOTAL_UPNL'])
+open_pos  = int(os.environ['OPEN_COUNT'])
+pnl_sign  = '+' if upnl >= 0 else ''
+pnl_emoji = '📈' if upnl >= 0 else '📉'
+
+report = f"""🌿 미나리 일일 트레이딩 리포트 — {today}
 
 시장 현황
-• BTC: \$$BTC_PRICE | ETH: \$$ETH_PRICE
+• BTC: \${btc} | ETH: \${eth}
 
 포트폴리오
-• 총 자산: \$$ACCOUNT_VALUE USDC
-• 오픈 포지션: ${OPEN_COUNT}개
-• 미실현 손익: $PNL_EMOJI \$$TOTAL_UPNL
+• 총 자산: \${acct:.2f} USDC
+• 오픈 포지션: {open_pos}개
+• 미실현 손익: {pnl_emoji} {pnl_sign}\${upnl:.2f}
 
 운용 전략
 • 26B 파라미터 LLM이 5대 코인 시장을 실시간 분석
 • Optuna 자동 최적화 파라미터 적용 중
 • Walk-Forward 검증 통과 전략만 실전 투입
 
-다음 업데이트: 내일 09:00 KST"
+다음 업데이트: 내일 09:00 KST"""
 
-          # JSON 파일 생성
-          python3 -c "
-          import json, sys
-          report = sys.argv[1]
-          data = {
-              'date': '$TODAY',
-              'generated_at': '$GENERATED',
-              'btc_price': $BTC_PRICE,
-              'eth_price': $ETH_PRICE,
-              'account_value': $ACCOUNT_VALUE,
-              'open_positions': $OPEN_COUNT,
-              'unrealized_pnl': $TOTAL_UPNL,
-              'report': report
-          }
-          print(json.dumps(data, ensure_ascii=False, indent=2))
-          " "\$REPORT" > daily-report.json
+data = {
+    'date': today,
+    'generated_at': generated,
+    'btc_price': float(btc),
+    'eth_price': float(eth),
+    'account_value': acct,
+    'open_positions': open_pos,
+    'unrealized_pnl': upnl,
+    'report': report
+}
+with open('daily-report.json', 'w') as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+print(f"Report generated for {today}")
+PYEOF
 
-          echo "Report generated for $TODAY"
-          cat daily-report.json
-
-      - name: Commit & Push Report
+      - name: Commit & Push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add daily-report.json
-          git diff --staged --quiet || git commit -m "chore: daily trading report $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M KST')"
+          git add daily-report.json pnl-history.json
+          git diff --staged --quiet || git commit -m "chore: daily report & pnl history $(TZ=Asia/Seoul date '+%Y-%m-%d')"
           git push
