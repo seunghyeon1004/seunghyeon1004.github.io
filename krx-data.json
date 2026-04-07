@@ -1,14 +1,14 @@
 {
-  "updated": "2026-04-06 16:30",
+  "updated": "2026-04-07 16:30",
   "portfolio": {
     "total_invested": 10000000,
-    "current_value": 10000000,
-    "total_pnl": 0,
-    "roi_pct": 0.0,
-    "cash": 10000000,
+    "current_value": 10075103,
+    "total_pnl": 75347,
+    "roi_pct": 0.75,
+    "cash": 10075103,
     "positions_count": 0,
-    "win_rate": 0.0,
-    "total_trades": 0,
+    "win_rate": 100.0,
+    "total_trades": 1,
     "max_drawdown": 0.0
   },
   "ai_opinion": {
@@ -22,7 +22,16 @@
     "model": ""
   },
   "positions": [],
-  "recent_trades": [],
+  "recent_trades": [
+    {
+      "name": "SK증권",
+      "entry_date": "2026-04-07",
+      "exit_date": "2026-04-07",
+      "pnl_pct": 4.65,
+      "pnl_amount": 75347,
+      "exit_reason": "trailing_stop"
+    }
+  ],
   "equity_curve": [
     {
       "date": "2026-03-30",
@@ -47,15 +56,19 @@
     {
       "date": "2026-04-06",
       "value": 10000000
+    },
+    {
+      "date": "2026-04-07",
+      "value": 10075103
     }
   ],
   "strategy_mode": "neutral",
   "signals_today": [
     {
-      "name": "SK증권",
-      "code": "001510",
+      "name": "한솔로지스틱스",
+      "code": "009180",
       "grade": "S",
-      "score": 77,
+      "score": 70,
       "signals": [
         "classic_entry"
       ]
@@ -71,8 +84,8 @@
     {
       "name": "알루코",
       "code": "001780",
-      "grade": "S",
-      "score": 76
+      "grade": "A",
+      "score": 60
     },
     {
       "name": "KISCO홀딩스",
@@ -118,8 +131,8 @@
     }
   ],
   "market_status": {
-    "vix": 23.8700008392334,
-    "kospi": 5450.330078125,
+    "vix": 24.170000076293945,
+    "kospi": 5494.77978515625,
     "block_buy": false,
     "ai_stance": "neutral"
   }
