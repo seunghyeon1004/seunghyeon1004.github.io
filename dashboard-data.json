@@ -1,439 +1,47 @@
 {
-  "updated": "2026-03-27 09:42:26 KST",
+  "updated": "2026-04-08 07:31:41 KST",
   "bots": [
     {
       "stats": {
         "bot": "v3.1 (수동봇)",
-        "total_trades": 32,
-        "wins": 7,
-        "losses": 25,
-        "win_rate": 21.9,
-        "total_pnl": -45.76,
-        "roi_pct": -0.46,
-        "balance": 9954.22,
-        "avg_pnl_pct": -0.14,
-        "max_drawdown": 0.49,
-        "best_trade": 12.37,
-        "worst_trade": -6.94,
-        "max_streak_win": 1,
-        "max_streak_loss": 7
+        "total_trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0,
+        "total_pnl": 0,
+        "roi_pct": 0,
+        "balance": 10000.0,
+        "avg_pnl_pct": 0,
+        "max_drawdown": 0,
+        "best_trade": 0,
+        "worst_trade": 0,
+        "max_streak_win": 0,
+        "max_streak_loss": 0
       },
-      "trades": [
-        {
-          "id": 13,
-          "direction": "LONG",
-          "entry_time": "2026-03-18 12:28:46 KST",
-          "entry_price": 74539.82,
-          "exit_time": "2026-03-18 13:18:49 KST",
-          "exit_price": 74369.69,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -3.07,
-          "pnl_pct": -0.31,
-          "balance_after": 9973.56
-        },
-        {
-          "id": 14,
-          "direction": "SHORT",
-          "entry_time": "2026-03-18 23:29:14 KST",
-          "entry_price": 71640.81,
-          "exit_time": "2026-03-19 03:09:20 KST",
-          "exit_price": 71953.37,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -5.15,
-          "pnl_pct": -0.52,
-          "balance_after": 9968.4
-        },
-        {
-          "id": 15,
-          "direction": "SHORT",
-          "entry_time": "2026-03-19 14:34:39 KST",
-          "entry_price": 70716.81,
-          "exit_time": "2026-03-19 14:44:40 KST",
-          "exit_price": 70867.42,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -2.92,
-          "pnl_pct": -0.29,
-          "balance_after": 9965.48
-        },
-        {
-          "id": 16,
-          "direction": "SHORT",
-          "entry_time": "2026-03-19 15:39:42 KST",
-          "entry_price": 70677.21,
-          "exit_time": "2026-03-19 16:14:44 KST",
-          "exit_price": 70123.9,
-          "exit_reason": "✨ 익절(TP)",
-          "pnl_dollar": 7.01,
-          "pnl_pct": 0.7,
-          "balance_after": 9972.49
-        },
-        {
-          "id": 17,
-          "direction": "LONG",
-          "entry_time": "2026-03-20 00:09:57 KST",
-          "entry_price": 69712.42,
-          "exit_time": "2026-03-20 00:24:58 KST",
-          "exit_price": 69361.2,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -5.82,
-          "pnl_pct": -0.58,
-          "balance_after": 9966.67
-        },
-        {
-          "id": 18,
-          "direction": "LONG",
-          "entry_time": "2026-03-21 23:11:07 KST",
-          "entry_price": 70850.34,
-          "exit_time": "2026-03-21 23:16:08 KST",
-          "exit_price": 71056.99,
-          "exit_reason": "✨ 익절(TP)",
-          "pnl_dollar": 2.11,
-          "pnl_pct": 0.21,
-          "balance_after": 9968.78
-        },
-        {
-          "id": 19,
-          "direction": "SHORT",
-          "entry_time": "2026-03-22 20:26:35 KST",
-          "entry_price": 68491.01,
-          "exit_time": "2026-03-22 21:26:40 KST",
-          "exit_price": 68621.11,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -2.69,
-          "pnl_pct": -0.27,
-          "balance_after": 9966.09
-        },
-        {
-          "id": 20,
-          "direction": "LONG",
-          "entry_time": "2026-03-23 00:16:45 KST",
-          "entry_price": 68942.48,
-          "exit_time": "2026-03-23 00:41:47 KST",
-          "exit_price": 68782.17,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -3.11,
-          "pnl_pct": -0.31,
-          "balance_after": 9962.97
-        },
-        {
-          "id": 21,
-          "direction": "LONG",
-          "entry_time": "2026-03-23 22:52:24 KST",
-          "entry_price": 71554.92,
-          "exit_time": "2026-03-24 00:22:27 KST",
-          "exit_price": 71113.63,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -6.94,
-          "pnl_pct": -0.7,
-          "balance_after": 9956.03
-        },
-        {
-          "id": 22,
-          "direction": "LONG",
-          "entry_time": "2026-03-25 05:28:21 KST",
-          "entry_price": 69991.29,
-          "exit_time": "2026-03-25 08:33:27 KST",
-          "exit_price": 70753.97,
-          "exit_reason": "✨ 익절(TP)",
-          "pnl_dollar": 10.05,
-          "pnl_pct": 1.01,
-          "balance_after": 9966.08
-        },
-        {
-          "id": 23,
-          "direction": "LONG",
-          "entry_time": "2026-03-25 08:33:28 KST",
-          "entry_price": 70730.57,
-          "exit_time": "2026-03-25 09:33:31 KST",
-          "exit_price": 70522.7,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -3.73,
-          "pnl_pct": -0.37,
-          "balance_after": 9962.36
-        },
-        {
-          "id": 24,
-          "direction": "LONG",
-          "entry_time": "2026-03-25 09:43:33 KST",
-          "entry_price": 70931.92,
-          "exit_time": "2026-03-25 10:28:35 KST",
-          "exit_price": 70724.69,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -3.71,
-          "pnl_pct": -0.37,
-          "balance_after": 9958.65
-        },
-        {
-          "id": 25,
-          "direction": "LONG",
-          "entry_time": "2026-03-25 17:33:49 KST",
-          "entry_price": 71499.28,
-          "exit_time": "2026-03-25 17:38:51 KST",
-          "exit_price": 71305.14,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -3.5,
-          "pnl_pct": -0.35,
-          "balance_after": 9955.15
-        },
-        {
-          "id": 26,
-          "direction": "LONG",
-          "entry_time": "2026-03-25 22:03:59 KST",
-          "entry_price": 71768.58,
-          "exit_time": "2026-03-25 23:04:03 KST",
-          "exit_price": 71500.51,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -4.51,
-          "pnl_pct": -0.45,
-          "balance_after": 9950.64
-        },
-        {
-          "id": 27,
-          "direction": "SHORT",
-          "entry_time": "2026-03-25 23:09:05 KST",
-          "entry_price": 71502.78,
-          "exit_time": "2026-03-26 00:19:08 KST",
-          "exit_price": 70557.44,
-          "exit_reason": "✨ 익절(TP)",
-          "pnl_dollar": 12.37,
-          "pnl_pct": 1.24,
-          "balance_after": 9963.0
-        },
-        {
-          "id": 28,
-          "direction": "SHORT",
-          "entry_time": "2026-03-26 02:29:13 KST",
-          "entry_price": 71171.21,
-          "exit_time": "2026-03-26 07:44:24 KST",
-          "exit_price": 71429.69,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -4.42,
-          "pnl_pct": -0.44,
-          "balance_after": 9958.59
-        },
-        {
-          "id": 29,
-          "direction": "LONG",
-          "entry_time": "2026-03-26 09:49:29 KST",
-          "entry_price": 71420.01,
-          "exit_time": "2026-03-26 09:54:30 KST",
-          "exit_price": 71281.07,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -2.73,
-          "pnl_pct": -0.27,
-          "balance_after": 9955.85
-        },
-        {
-          "id": 30,
-          "direction": "SHORT",
-          "entry_time": "2026-03-26 14:09:40 KST",
-          "entry_price": 70594.8,
-          "exit_time": "2026-03-26 14:54:42 KST",
-          "exit_price": 70147.33,
-          "exit_reason": "✨ 익절(TP)",
-          "pnl_dollar": 5.52,
-          "pnl_pct": 0.55,
-          "balance_after": 9961.37
-        },
-        {
-          "id": 31,
-          "direction": "SHORT",
-          "entry_time": "2026-03-26 18:34:51 KST",
-          "entry_price": 69467.76,
-          "exit_time": "2026-03-26 19:19:51 KST",
-          "exit_price": 69677.5,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -3.81,
-          "pnl_pct": -0.38,
-          "balance_after": 9957.56
-        },
-        {
-          "id": 32,
-          "direction": "SHORT",
-          "entry_time": "2026-03-26 20:29:56 KST",
-          "entry_price": 69321.36,
-          "exit_time": "2026-03-26 22:10:01 KST",
-          "exit_price": 69498.55,
-          "exit_reason": "💥 손절(SL)",
-          "pnl_dollar": -3.34,
-          "pnl_pct": -0.34,
-          "balance_after": 9954.22
-        }
-      ],
-      "daily": [
-        {
-          "date": "2026-03-10",
-          "pnl": -4.41
-        },
-        {
-          "date": "2026-03-12",
-          "pnl": -12.05
-        },
-        {
-          "date": "2026-03-14",
-          "pnl": -14.89
-        },
-        {
-          "date": "2026-03-15",
-          "pnl": -11.97
-        },
-        {
-          "date": "2026-03-16",
-          "pnl": -8.11
-        },
-        {
-          "date": "2026-03-17",
-          "pnl": -23.37
-        },
-        {
-          "date": "2026-03-18",
-          "pnl": -26.44
-        },
-        {
-          "date": "2026-03-19",
-          "pnl": -27.5
-        },
-        {
-          "date": "2026-03-20",
-          "pnl": -33.32
-        },
-        {
-          "date": "2026-03-21",
-          "pnl": -31.21
-        },
-        {
-          "date": "2026-03-22",
-          "pnl": -33.9
-        },
-        {
-          "date": "2026-03-23",
-          "pnl": -37.01
-        },
-        {
-          "date": "2026-03-24",
-          "pnl": -43.95
-        },
-        {
-          "date": "2026-03-25",
-          "pnl": -49.35
-        },
-        {
-          "date": "2026-03-26",
-          "pnl": -45.76
-        }
-      ],
+      "trades": [],
+      "daily": [],
       "open_trades": []
     },
     {
       "stats": {
         "bot": "Non-AI (Freqtrade)",
-        "total_trades": 5,
-        "wins": 5,
+        "total_trades": 0,
+        "wins": 0,
         "losses": 0,
-        "win_rate": 100.0,
-        "total_pnl": 166.71,
-        "roi_pct": 1.67,
-        "balance": 10166.71,
-        "avg_pnl_pct": 1.02,
+        "win_rate": 0,
+        "total_pnl": 0,
+        "roi_pct": 0,
+        "balance": 10000.0,
+        "avg_pnl_pct": 0,
         "max_drawdown": 0,
-        "best_trade": 36.33,
-        "worst_trade": 32.22,
-        "max_streak_win": 5,
+        "best_trade": 0,
+        "worst_trade": 0,
+        "max_streak_win": 0,
         "max_streak_loss": 0
       },
-      "trades": [
-        {
-          "id": 1,
-          "direction": "SHORT",
-          "entry_time": "2026-03-14 10:35:11.395761",
-          "entry_price": 70404.2,
-          "exit_time": "2026-03-19 07:21:11.199000",
-          "exit_price": 69660.0,
-          "exit_reason": "roi",
-          "pnl_dollar": 32.53,
-          "pnl_pct": 1.0,
-          "balance_after": 10032.53
-        },
-        {
-          "id": 2,
-          "direction": "SHORT",
-          "entry_time": "2026-03-19 13:05:06.362601",
-          "entry_price": 69390.5,
-          "exit_time": "2026-03-21 23:57:46.643000",
-          "exit_price": 68570.3,
-          "exit_reason": "roi",
-          "pnl_dollar": 36.33,
-          "pnl_pct": 1.11,
-          "balance_after": 10068.86
-        },
-        {
-          "id": 3,
-          "direction": "LONG",
-          "entry_time": "2026-03-22 02:30:06.441260",
-          "entry_price": 69282.7,
-          "exit_time": "2026-03-23 11:06:06.201000",
-          "exit_price": 70000.0,
-          "exit_reason": "roi",
-          "pnl_dollar": 32.93,
-          "pnl_pct": 1.01,
-          "balance_after": 10101.79
-        },
-        {
-          "id": 4,
-          "direction": "SHORT",
-          "entry_time": "2026-03-23 15:55:06.347030",
-          "entry_price": 70283.6,
-          "exit_time": "2026-03-24 14:50:16.360000",
-          "exit_price": 69554.9,
-          "exit_reason": "roi",
-          "pnl_dollar": 32.22,
-          "pnl_pct": 0.98,
-          "balance_after": 10134.01
-        },
-        {
-          "id": 5,
-          "direction": "SHORT",
-          "entry_time": "2026-03-24 16:45:06.428530",
-          "entry_price": 69566.0,
-          "exit_time": "2026-03-26 15:20:02.807000",
-          "exit_price": 68844.9,
-          "exit_reason": "roi",
-          "pnl_dollar": 32.7,
-          "pnl_pct": 0.98,
-          "balance_after": 10166.71
-        }
-      ],
-      "daily": [
-        {
-          "date": "2026-03-19",
-          "pnl": 32.53
-        },
-        {
-          "date": "2026-03-21",
-          "pnl": 68.86
-        },
-        {
-          "date": "2026-03-23",
-          "pnl": 101.79
-        },
-        {
-          "date": "2026-03-24",
-          "pnl": 134.01
-        },
-        {
-          "date": "2026-03-26",
-          "pnl": 166.71
-        }
-      ],
-      "open_trades": [
-        {
-          "id": 6,
-          "direction": "SHORT",
-          "entry_time": "2026-03-26 18:10:01.446392",
-          "entry_price": 68441.8,
-          "stake": 3353.6482
-        }
-      ]
+      "trades": [],
+      "daily": [],
+      "open_trades": []
     },
     {
       "stats": {
