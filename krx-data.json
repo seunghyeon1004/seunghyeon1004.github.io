@@ -1,15 +1,15 @@
 {
-  "updated": "2026-04-07 16:30",
+  "updated": "2026-04-08 16:30",
   "portfolio": {
     "total_invested": 10000000,
-    "current_value": 10075103,
+    "current_value": 10074858,
     "total_pnl": 75347,
     "roi_pct": 0.75,
-    "cash": 10075103,
-    "positions_count": 0,
+    "cash": 8438608,
+    "positions_count": 1,
     "win_rate": 100.0,
     "total_trades": 1,
-    "max_drawdown": 0.0
+    "max_drawdown": -0.0
   },
   "ai_opinion": {
     "stance": "neutral",
@@ -21,7 +21,17 @@
     "caution": "",
     "model": ""
   },
-  "positions": [],
+  "positions": [
+    {
+      "name": "한솔로지스틱스",
+      "code": "009180",
+      "entry_price": 2975,
+      "current_pnl_pct": 0.0,
+      "invested": 1636250,
+      "entry_date": "2026-04-08",
+      "conviction": "S"
+    }
+  ],
   "recent_trades": [
     {
       "name": "SK증권",
@@ -60,80 +70,175 @@
     {
       "date": "2026-04-07",
       "value": 10075103
+    },
+    {
+      "date": "2026-04-08",
+      "value": 10074858
     }
   ],
-  "strategy_mode": "neutral",
+  "strategy_mode": "aggressive",
   "signals_today": [
+    {
+      "name": "삼아알미늄",
+      "code": "006110",
+      "grade": "S",
+      "score": 83,
+      "signals": [
+        "classic_entry",
+        "momentum_buy"
+      ]
+    },
     {
       "name": "한솔로지스틱스",
       "code": "009180",
+      "grade": "S",
+      "score": 80,
+      "signals": [
+        "classic_entry",
+        "momentum_buy"
+      ]
+    },
+    {
+      "name": "삼성제약",
+      "code": "001360",
+      "grade": "S",
+      "score": 78,
+      "signals": [
+        "classic_entry",
+        "momentum_buy"
+      ]
+    },
+    {
+      "name": "한신공영",
+      "code": "004960",
+      "grade": "S",
+      "score": 77,
+      "signals": [
+        "classic_entry"
+      ]
+    },
+    {
+      "name": "알루코",
+      "code": "001780",
       "grade": "S",
       "score": 70,
       "signals": [
         "classic_entry"
       ]
-    }
-  ],
-  "watchlist": [
-    {
-      "name": "DB하이텍",
-      "code": "000990",
-      "grade": "A",
-      "score": 63
     },
     {
-      "name": "알루코",
-      "code": "001780",
-      "grade": "A",
-      "score": 60
-    },
-    {
-      "name": "KISCO홀딩스",
-      "code": "001940",
-      "grade": "A",
-      "score": 63
-    },
-    {
-      "name": "삼아알미늄",
-      "code": "006110",
+      "name": "현대제철",
+      "code": "004020",
       "grade": "S",
-      "score": 71
-    },
-    {
-      "name": "대구백화점",
-      "code": "006370",
-      "grade": "A",
-      "score": 60
-    },
-    {
-      "name": "삼성SDI",
-      "code": "006400",
-      "grade": "S",
-      "score": 65
-    },
-    {
-      "name": "인스코비",
-      "code": "006490",
-      "grade": "S",
-      "score": 68
+      "score": 70,
+      "signals": [
+        "classic_entry",
+        "momentum_buy"
+      ]
     },
     {
       "name": "우성",
       "code": "006980",
-      "grade": "A",
-      "score": 60
+      "grade": "S",
+      "score": 70,
+      "signals": [
+        "momentum_buy"
+      ]
     },
     {
-      "name": "남선알미늄",
-      "code": "008350",
+      "name": "DL",
+      "code": "000210",
+      "grade": "S",
+      "score": 69,
+      "signals": [
+        "momentum_buy"
+      ]
+    },
+    {
+      "name": "현대건설",
+      "code": "000720",
+      "grade": "S",
+      "score": 65,
+      "signals": [
+        "momentum_buy"
+      ]
+    },
+    {
+      "name": "동국홀딩스",
+      "code": "001230",
+      "grade": "S",
+      "score": 65,
+      "signals": [
+        "momentum_buy"
+      ]
+    }
+  ],
+  "watchlist": [
+    {
+      "name": "기아",
+      "code": "000270",
+      "grade": "B",
+      "score": 48
+    },
+    {
+      "name": "롯데손해보험",
+      "code": "000400",
       "grade": "A",
-      "score": 60
+      "score": 55
+    },
+    {
+      "name": "SK하이닉스",
+      "code": "000660",
+      "grade": "S",
+      "score": 67
+    },
+    {
+      "name": "한화",
+      "code": "000880",
+      "grade": "A",
+      "score": 63
+    },
+    {
+      "name": "DB하이텍",
+      "code": "000990",
+      "grade": "S",
+      "score": 70
+    },
+    {
+      "name": "유진투자증권",
+      "code": "001200",
+      "grade": "A",
+      "score": 58
+    },
+    {
+      "name": "대한전선",
+      "code": "001440",
+      "grade": "S",
+      "score": 77
+    },
+    {
+      "name": "현대차증권",
+      "code": "001500",
+      "grade": "S",
+      "score": 65
+    },
+    {
+      "name": "신영증권",
+      "code": "001720",
+      "grade": "A",
+      "score": 58
+    },
+    {
+      "name": "KISCO홀딩스",
+      "code": "001940",
+      "grade": "S",
+      "score": 70
     }
   ],
   "market_status": {
     "vix": 24.170000076293945,
-    "kospi": 5494.77978515625,
+    "kospi": 5872.33984375,
     "block_buy": false,
-    "ai_stance": "neutral"
+    "ai_stance": "aggressive"
   }
 }
