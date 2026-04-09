@@ -1,14 +1,14 @@
 {
-  "updated": "2026-04-08 16:30",
+  "updated": "2026-04-09 21:15",
   "portfolio": {
     "total_invested": 10000000,
-    "current_value": 10074858,
-    "total_pnl": 75347,
-    "roi_pct": 0.75,
-    "cash": 8438608,
-    "positions_count": 1,
+    "current_value": 10184542,
+    "total_pnl": 185596,
+    "roi_pct": 1.86,
+    "cash": 7035892,
+    "positions_count": 2,
     "win_rate": 100.0,
-    "total_trades": 1,
+    "total_trades": 3,
     "max_drawdown": -0.0
   },
   "ai_opinion": {
@@ -23,6 +23,15 @@
   },
   "positions": [
     {
+      "name": "삼성제약",
+      "code": "001360",
+      "entry_price": 1900,
+      "current_pnl_pct": 0.0,
+      "invested": 1512400,
+      "entry_date": "2026-04-09",
+      "conviction": "S"
+    },
+    {
       "name": "한솔로지스틱스",
       "code": "009180",
       "entry_price": 2975,
@@ -33,6 +42,22 @@
     }
   ],
   "recent_trades": [
+    {
+      "name": "한신공영",
+      "entry_date": "2026-04-09",
+      "exit_date": "2026-04-09",
+      "pnl_pct": 5.75,
+      "pnl_amount": 70684,
+      "exit_reason": "trailing_stop"
+    },
+    {
+      "name": "알루코",
+      "entry_date": "2026-04-09",
+      "exit_date": "2026-04-09",
+      "pnl_pct": 3.9,
+      "pnl_amount": 39564,
+      "exit_reason": "trailing_stop"
+    },
     {
       "name": "SK증권",
       "entry_date": "2026-04-07",
