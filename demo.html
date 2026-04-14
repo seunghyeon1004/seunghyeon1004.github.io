@@ -336,7 +336,7 @@
 <script>
     let currentIndustry = 'dentist';
     let currentPackage = 'basic';
-    const OLLAMA_URL = 'http://100.107.56.103:11434/api/chat';
+    const OLLAMA_URL = 'http://100.107.56.103:11435/api/chat';
     const industryNames = { dentist: '치과', cafe: '카페', academy: '학원' };
     const systemPrompts = {
         dentist: '당신은 강남 소재 치과의 AI 상담 비서입니다. 이름은 "AI 비서"입니다. 진료시간: 평일 09:00~18:00, 토 09:00~13:00, 일/공휴일 휴무. 위치: 강남역 5번 출구 테헤란로 123. 임플란트: 120~150만원. 주차: 건물 지하 무료. 전화: 02-1234-5678. 친절하고 전문적으로, 2~3문장으로 간결하게 답하세요. 예약을 유도하세요.',
@@ -507,7 +507,7 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    model: 'gemma4:26b',
+                    model: 'gemma4:e4b',
                     messages: messages,
                     think: false,
                     stream: false,
