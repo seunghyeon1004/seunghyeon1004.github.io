@@ -79,6 +79,14 @@
         .industry-btn { display: block; width: 100%; padding: 14px; margin-bottom: 10px; background: var(--card); border: 1px solid #d2d2d7; border-radius: 12px; font-size: 15px; cursor: pointer; text-align: left; transition: 0.2s; }
         .industry-btn.active { border-color: var(--accent); color: var(--accent); }
         .industry-btn:hover { border-color: var(--accent); }
+        .package-divider { margin: 20px 0 10px; font-size: 12px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+        .package-btn { display: block; width: 100%; padding: 12px; margin-bottom: 8px; background: var(--card); border: 1px solid #d2d2d7; border-radius: 12px; font-size: 14px; cursor: pointer; text-align: left; transition: 0.2s; }
+        .package-btn.active { border-color: var(--accent); color: var(--accent); }
+        .package-btn:hover { border-color: var(--accent); }
+        .package-btn .pkg-price { font-size: 11px; color: var(--dim); }
+        .package-btn.premium { background: linear-gradient(135deg, #f8f0ff, #f0f0ff); }
+        .package-btn.premium.active { border-color: #7c3aed; color: #7c3aed; }
+        .ai-badge { display: inline-block; background: linear-gradient(135deg, #7c3aed, #0071E3); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 6px; margin-left: 6px; }
         .demo-wrapper { display: flex; gap: 30px; }
         .tabs-container .tab-buttons { display: flex; justify-content: center; gap: 40px; margin-bottom: 40px; }
         .input-wrapper { display: flex; gap: 8px; }
@@ -228,6 +236,10 @@
                         <button class="industry-btn active" onclick="setIndustry('dentist', this)">치과</button>
                         <button class="industry-btn" onclick="setIndustry('cafe', this)">카페</button>
                         <button class="industry-btn" onclick="setIndustry('academy', this)">학원</button>
+                        <div class="package-divider">요금제 선택</div>
+                        <button class="package-btn active" onclick="setPackage('basic', this)">Basic <span class="pkg-price">29만/월</span></button>
+                        <button class="package-btn" onclick="setPackage('standard', this)">Standard <span class="pkg-price">49만/월</span></button>
+                        <button class="package-btn premium" onclick="setPackage('premium', this)">Premium <span class="ai-badge">AI</span> <span class="pkg-price">79만/월</span></button>
                     </div>
                     <div class="demo-right">
                         <div class="chat-container">
@@ -323,7 +335,15 @@
 
 <script>
     let currentIndustry = 'dentist';
+    let currentPackage = 'basic';
+    const OLLAMA_URL = 'http://100.107.56.103:11434/api/chat';
     const industryNames = { dentist: '치과', cafe: '카페', academy: '학원' };
+    const systemPrompts = {
+        dentist: '당신은 강남 소재 치과의 AI 상담 비서입니다. 이름은 "AI 비서"입니다. 진료시간: 평일 09:00~18:00, 토 09:00~13:00, 일/공휴일 휴무. 위치: 강남역 5번 출구 테헤란로 123. 임플란트: 120~150만원. 주차: 건물 지하 무료. 전화: 02-1234-5678. 친절하고 전문적으로, 2~3문장으로 간결하게 답하세요. 예약을 유도하세요.',
+        cafe: '당신은 역삼동 카페의 AI 상담 비서입니다. 이름은 "AI 비서"입니다. 영업시간: 매일 08:00~22:00. 위치: 역삼동 카페거리. 아메리카노 4,500원, 카페라떼 5,000원. 시그니처: 크림 아인슈페너. 단체석 1일전 예약. 친절하게, 2~3문장으로 간결하게 답하세요.',
+        academy: '당신은 강남 학원의 AI 상담 비서입니다. 이름은 "AI 비서"입니다. 수업시간: 평일 14:00~22:00, 토 오전. 위치: 강남역 학원가. 1:1 맞춤 커리큘럼. 방문상담 예약제. 친절하게, 2~3문장으로 간결하게 답하세요. 상담 예약을 유도하세요.'
+    };
+    let chatHistory = {};
     
     const scenarios = {
         dentist: {
@@ -380,22 +400,50 @@
         }
     };
 
-    function setIndustry(ind, btn) {
-        currentIndustry = ind;
-        document.querySelectorAll('.industry-btn').forEach(b => b.classList.remove('active'));
+    function setPackage(pkg, btn) {
+        currentPackage = pkg;
+        document.querySelectorAll('.package-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        
+        const header = document.querySelector('.chat-header');
+        if (pkg === 'premium') {
+            header.textContent = '';
+            header.appendChild(document.createTextNode('AI 비서 서비스 '));
+            const badge = document.createElement('span');
+            badge.className = 'ai-badge';
+            badge.textContent = 'Premium AI';
+            header.appendChild(badge);
+        } else {
+            header.textContent = 'AI 비서 서비스';
+        }
+        resetChat();
+    }
+
+    function resetChat() {
+        chatHistory[currentIndustry] = [];
         const chipsContainer = document.getElementById('chips');
-        chipsContainer.innerHTML = '';
-        scenarios[ind].chips.forEach(chip => {
+        chipsContainer.textContent = '';
+        scenarios[currentIndustry].chips.forEach(chip => {
             const span = document.createElement('span');
             span.className = 'chip';
             span.textContent = chip;
             span.onclick = () => sendMsg(chip);
             chipsContainer.appendChild(span);
         });
+        const chatBody = document.getElementById('chatBody');
+        chatBody.textContent = '';
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble bot';
+        bubble.textContent = currentPackage === 'premium'
+            ? '안녕하세요! ' + industryNames[currentIndustry] + ' Premium AI 상담입니다. 무엇이든 자유롭게 물어보세요!'
+            : '안녕하세요! ' + industryNames[currentIndustry] + ' 문의사항을 말씀해주세요.';
+        chatBody.appendChild(bubble);
+    }
 
-        document.getElementById('chatBody').innerHTML = `<div class="bubble bot">안녕하세요! ${industryNames[ind]} 문의사항을 말씀해주세요.</div>`;
+    function setIndustry(ind, btn) {
+        currentIndustry = ind;
+        document.querySelectorAll('.industry-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        resetChat();
     }
 
     function switchTab(idx) {
@@ -418,34 +466,66 @@
         if (!text.trim()) return;
         addBubble(text, 'user');
         document.getElementById('chatInput').value = '';
-        
+
         const typing = document.getElementById('typingDots');
         typing.style.display = 'block';
         document.getElementById('chatBody').scrollTop = document.getElementById('chatBody').scrollHeight;
 
-        setTimeout(() => {
-            typing.style.display = 'none';
-            let response = "죄송합니다. 해당 내용에 대해 확인 후 안내해 드리겠습니다.";
-            
-            const scene = scenarios[currentIndustry];
-            // Keyword matching
-            for (let key in scene.keywords) {
-                if (text.includes(key)) {
-                    const targetKey = scene.keywords[key];
-                    response = scene.responses[targetKey] || response;
-                    break;
+        if (currentPackage === 'premium') {
+            sendPremiumAI(text);
+        } else {
+            setTimeout(function() {
+                typing.style.display = 'none';
+                var response = '죄송합니다. 해당 내용에 대해 확인 후 안내해 드리겠습니다.';
+                var scene = scenarios[currentIndustry];
+                for (var key in scene.keywords) {
+                    if (text.includes(key)) {
+                        var targetKey = scene.keywords[key];
+                        response = scene.responses[targetKey] || response;
+                        break;
+                    }
                 }
-            }
-            // Direct match
-            if (scene.responses[text]) {
-                response = scene.responses[text];
-            }
-
-            addBubble(response, 'bot');
-        }, 1000);
+                if (scene.responses[text]) {
+                    response = scene.responses[text];
+                }
+                addBubble(response, 'bot');
+            }, 1000);
+        }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    async function sendPremiumAI(text) {
+        var typing = document.getElementById('typingDots');
+        if (!chatHistory[currentIndustry]) chatHistory[currentIndustry] = [];
+        chatHistory[currentIndustry].push({ role: 'user', content: text });
+
+        var messages = [
+            { role: 'system', content: systemPrompts[currentIndustry] }
+        ].concat(chatHistory[currentIndustry].slice(-10));
+
+        try {
+            var res = await fetch(OLLAMA_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: 'gemma4:26b',
+                    messages: messages,
+                    think: false,
+                    stream: false,
+                    options: { num_predict: 300, temperature: 0.7 }
+                })
+            });
+            var data = await res.json();
+            var reply = (data.message && data.message.content) ? data.message.content.trim() : '잠시 후 다시 시도해주세요.';
+            chatHistory[currentIndustry].push({ role: 'assistant', content: reply });
+            typing.style.display = 'none';
+            addBubble(reply, 'bot');
+        } catch (err) {
+            typing.style.display = 'none';
+            addBubble('AI 서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.', 'bot');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
         setIndustry('dentist', document.querySelector('.industry-btn'));
         
         const input = document.getElementById('chatInput');
