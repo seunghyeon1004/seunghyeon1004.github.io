@@ -1,14 +1,14 @@
 {
-  "updated": "2026-04-09 21:15",
+  "updated": "2026-04-14 15:31",
   "portfolio": {
     "total_invested": 10000000,
-    "current_value": 10184542,
-    "total_pnl": 185596,
-    "roi_pct": 1.86,
-    "cash": 7035892,
-    "positions_count": 2,
+    "current_value": 10316586,
+    "total_pnl": 318739,
+    "roi_pct": 3.19,
+    "cash": 4005662,
+    "positions_count": 5,
     "win_rate": 100.0,
-    "total_trades": 3,
+    "total_trades": 6,
     "max_drawdown": -0.0
   },
   "ai_opinion": {
@@ -23,25 +23,76 @@
   },
   "positions": [
     {
+      "name": "신송홀딩스",
+      "code": "006880",
+      "entry_price": 7230,
+      "current_pnl_pct": 0.0,
+      "invested": 867600,
+      "entry_date": "2026-04-14",
+      "conviction": "S"
+    },
+    {
       "name": "삼성제약",
       "code": "001360",
-      "entry_price": 1900,
+      "entry_price": 1788,
       "current_pnl_pct": 0.0,
-      "invested": 1512400,
-      "entry_date": "2026-04-09",
+      "invested": 1847004,
+      "entry_date": "2026-04-13",
+      "conviction": "S"
+    },
+    {
+      "name": "한신공영",
+      "code": "004960",
+      "entry_price": 16120,
+      "current_pnl_pct": 0.0,
+      "invested": 1515280,
+      "entry_date": "2026-04-13",
       "conviction": "S"
     },
     {
       "name": "한솔로지스틱스",
       "code": "009180",
-      "entry_price": 2975,
+      "entry_price": 3160,
       "current_pnl_pct": 0.0,
-      "invested": 1636250,
-      "entry_date": "2026-04-08",
+      "invested": 1241880,
+      "entry_date": "2026-04-13",
+      "conviction": "S"
+    },
+    {
+      "name": "고려산업",
+      "code": "002140",
+      "entry_price": 2835,
+      "current_pnl_pct": 0.0,
+      "invested": 839160,
+      "entry_date": "2026-04-13",
       "conviction": "S"
     }
   ],
   "recent_trades": [
+    {
+      "name": "경농",
+      "entry_date": "2026-04-13",
+      "exit_date": "2026-04-13",
+      "pnl_pct": 1.42,
+      "pnl_amount": 14275,
+      "exit_reason": "trailing_stop"
+    },
+    {
+      "name": "한솔로지스틱스",
+      "entry_date": "2026-04-08",
+      "exit_date": "2026-04-10",
+      "pnl_pct": 6.29,
+      "pnl_amount": 102699,
+      "exit_reason": "trailing_stop"
+    },
+    {
+      "name": "삼성제약",
+      "entry_date": "2026-04-09",
+      "exit_date": "2026-04-10",
+      "pnl_pct": 1.08,
+      "pnl_amount": 16168,
+      "exit_reason": "trailing_stop"
+    },
     {
       "name": "한신공영",
       "entry_date": "2026-04-09",
@@ -99,61 +150,66 @@
     {
       "date": "2026-04-08",
       "value": 10074858
+    },
+    {
+      "date": "2026-04-10",
+      "value": 10303410
+    },
+    {
+      "date": "2026-04-13",
+      "value": 10316716
     }
   ],
-  "strategy_mode": "aggressive",
+  "strategy_mode": "neutral",
   "signals_today": [
     {
-      "name": "삼아알미늄",
-      "code": "006110",
-      "grade": "S",
-      "score": 83,
-      "signals": [
-        "classic_entry",
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "한솔로지스틱스",
-      "code": "009180",
-      "grade": "S",
-      "score": 80,
-      "signals": [
-        "classic_entry",
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "삼성제약",
-      "code": "001360",
-      "grade": "S",
-      "score": 78,
-      "signals": [
-        "classic_entry",
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "한신공영",
-      "code": "004960",
+      "name": "신송홀딩스",
+      "code": "006880",
       "grade": "S",
       "score": 77,
       "signals": [
-        "classic_entry"
+        "momentum_buy"
       ]
     },
     {
       "name": "알루코",
       "code": "001780",
       "grade": "S",
-      "score": 70,
+      "score": 75,
+      "signals": [
+        "momentum_buy"
+      ]
+    },
+    {
+      "name": "경농",
+      "code": "002100",
+      "grade": "S",
+      "score": 75,
+      "signals": [
+        "momentum_buy"
+      ]
+    },
+    {
+      "name": "대한해운",
+      "code": "005880",
+      "grade": "S",
+      "score": 75,
+      "signals": [
+        "momentum_buy"
+      ]
+    },
+    {
+      "name": "롯데손해보험",
+      "code": "000400",
+      "grade": "S",
+      "score": 73,
       "signals": [
         "classic_entry"
       ]
     },
     {
-      "name": "현대제철",
-      "code": "004020",
+      "name": "고려산업",
+      "code": "002140",
       "grade": "S",
       "score": 70,
       "signals": [
@@ -162,8 +218,8 @@
       ]
     },
     {
-      "name": "우성",
-      "code": "006980",
+      "name": "도화엔지니어링",
+      "code": "002150",
       "grade": "S",
       "score": 70,
       "signals": [
@@ -171,28 +227,28 @@
       ]
     },
     {
-      "name": "DL",
-      "code": "000210",
+      "name": "SH에너지화학",
+      "code": "002360",
       "grade": "S",
-      "score": 69,
+      "score": 70,
+      "signals": [
+        "classic_entry"
+      ]
+    },
+    {
+      "name": "국도화학",
+      "code": "007690",
+      "grade": "S",
+      "score": 70,
       "signals": [
         "momentum_buy"
       ]
     },
     {
-      "name": "현대건설",
-      "code": "000720",
+      "name": "문배철강",
+      "code": "008420",
       "grade": "S",
-      "score": 65,
-      "signals": [
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "동국홀딩스",
-      "code": "001230",
-      "grade": "S",
-      "score": 65,
+      "score": 70,
       "signals": [
         "momentum_buy"
       ]
@@ -200,70 +256,70 @@
   ],
   "watchlist": [
     {
+      "name": "동화약품",
+      "code": "000020",
+      "grade": "D",
+      "score": 23
+    },
+    {
+      "name": "경방",
+      "code": "000050",
+      "grade": "B",
+      "score": 51
+    },
+    {
+      "name": "삼양홀딩스",
+      "code": "000070",
+      "grade": "B",
+      "score": 46
+    },
+    {
+      "name": "유한양행",
+      "code": "000100",
+      "grade": "D",
+      "score": 0
+    },
+    {
+      "name": "CJ대한통운",
+      "code": "000120",
+      "grade": "D",
+      "score": 13
+    },
+    {
+      "name": "하이트진로홀딩스",
+      "code": "000140",
+      "grade": "A",
+      "score": 54
+    },
+    {
+      "name": "성창기업지주",
+      "code": "000180",
+      "grade": "D",
+      "score": 13
+    },
+    {
+      "name": "유유제약",
+      "code": "000220",
+      "grade": "D",
+      "score": 21
+    },
+    {
+      "name": "일동홀딩스",
+      "code": "000230",
+      "grade": "D",
+      "score": 23
+    },
+    {
       "name": "기아",
       "code": "000270",
-      "grade": "B",
-      "score": 48
-    },
-    {
-      "name": "롯데손해보험",
-      "code": "000400",
-      "grade": "A",
-      "score": 55
-    },
-    {
-      "name": "SK하이닉스",
-      "code": "000660",
-      "grade": "S",
-      "score": 67
-    },
-    {
-      "name": "한화",
-      "code": "000880",
-      "grade": "A",
-      "score": 63
-    },
-    {
-      "name": "DB하이텍",
-      "code": "000990",
-      "grade": "S",
-      "score": 70
-    },
-    {
-      "name": "유진투자증권",
-      "code": "001200",
-      "grade": "A",
-      "score": 58
-    },
-    {
-      "name": "대한전선",
-      "code": "001440",
-      "grade": "S",
-      "score": 77
-    },
-    {
-      "name": "현대차증권",
-      "code": "001500",
-      "grade": "S",
-      "score": 65
-    },
-    {
-      "name": "신영증권",
-      "code": "001720",
-      "grade": "A",
-      "score": 58
-    },
-    {
-      "name": "KISCO홀딩스",
-      "code": "001940",
-      "grade": "S",
-      "score": 70
+      "grade": "C",
+      "score": 38
     }
   ],
   "market_status": {
-    "vix": 24.170000076293945,
-    "kospi": 5872.33984375,
+    "vix": 19.229999542236328,
+    "kospi": 5808.6201171875,
     "block_buy": false,
-    "ai_stance": "aggressive"
+    "ai_stance": "neutral"
   }
 }
