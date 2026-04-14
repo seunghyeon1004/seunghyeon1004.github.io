@@ -16,159 +16,82 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fetch Hyperliquid Data
+      - name: Fetch and Process Data
+        env:
+          WALLET: "0x9c81aF1b4097891AE5aA29EC1d7fC64926dd9c30"
         run: |
           set -e
-          WALLET="0x9c81aF1b4097891AE5aA29EC1d7fC64926dd9c30"
-          TODAY=$(TZ=Asia/Seoul date "+%Y-%m-%d")
-          GENERATED=$(TZ=Asia/Seoul date "+%Y-%m-%d %H:%M KST")
+          export TODAY=$(TZ=Asia/Seoul date "+%Y-%m-%d")
+          export GENERATED=$(TZ=Asia/Seoul date "+%Y-%m-%d %H:%M KST")
 
-          POSITIONS=$(curl -s -X POST "https://api.hyperliquid.xyz/info" \
+          curl -sf -X POST "https://api.hyperliquid.xyz/info" \
             -H "Content-Type: application/json" \
-            -d "{\"type\":\"clearinghouseState\",\"user\":\"$WALLET\"}" || echo "{}")
+            -d "{\"type\":\"clearinghouseState\",\"user\":\"$WALLET\"}" > /tmp/perp.json
 
-          SPOT=$(curl -s -X POST "https://api.hyperliquid.xyz/info" \
+          curl -sf -X POST "https://api.hyperliquid.xyz/info" \
             -H "Content-Type: application/json" \
-            -d "{\"type\":\"spotClearinghouseState\",\"user\":\"$WALLET\"}" || echo "{}")
+            -d "{\"type\":\"spotClearinghouseState\",\"user\":\"$WALLET\"}" > /tmp/spot.json
 
-          MIDS=$(curl -s -X POST "https://api.hyperliquid.xyz/info" \
+          curl -sf -X POST "https://api.hyperliquid.xyz/info" \
             -H "Content-Type: application/json" \
-            -d '{"type":"allMids"}' || echo "{}")
+            -d '{"type":"allMids"}' > /tmp/mids.json
 
-          # perp marginSummary + spot USDC 합산 (청산 후 수익은 spot으로)
-          echo "$POSITIONS" > /tmp/perp.json
-          echo "$SPOT"      > /tmp/spot.json
-          ACCOUNT_VALUE=$(python3 - << 'PYINLINE'
-import json
-perp = json.load(open('/tmp/perp.json'))
-spot = json.load(open('/tmp/spot.json'))
-perp_val   = float(perp.get('marginSummary', {}).get('accountValue', '0'))
-spot_usdc  = float(next((b['total'] for b in spot.get('balances', []) if b['coin'] == 'USDC'), '0'))
-print(round(perp_val + spot_usdc, 4))
-PYINLINE
-)
+          python3 -c '
+          import json, os, pathlib
 
-          TOTAL_UPNL=$(echo "$POSITIONS" | python3 -c "
-import sys,json
-d=json.load(sys.stdin)
-pos=[p for p in d.get('assetPositions',[]) if abs(float(p['position'].get('szi','0')))>0]
-print(round(sum(float(p['position'].get('unrealizedPnl','0')) for p in pos),4))
-" 2>/dev/null || echo "0")
+          perp = json.load(open("/tmp/perp.json"))
+          spot = json.load(open("/tmp/spot.json"))
+          mids = json.load(open("/tmp/mids.json"))
 
-          OPEN_COUNT=$(echo "$POSITIONS" | python3 -c "
-import sys,json
-d=json.load(sys.stdin)
-print(len([p for p in d.get('assetPositions',[]) if abs(float(p['position'].get('szi','0')))>0]))
-" 2>/dev/null || echo "0")
+          perp_val = float(perp.get("marginSummary", {}).get("accountValue", "0"))
+          spot_usdc = float(next((b["total"] for b in spot.get("balances", []) if b["coin"] == "USDC"), "0"))
+          acct = round(perp_val + spot_usdc, 4)
 
-          BTC_PRICE=$(echo "$MIDS" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round(float(d.get('BTC',0)),1))" 2>/dev/null || echo "0")
-          ETH_PRICE=$(echo "$MIDS" | python3 -c "import sys,json; d=json.load(sys.stdin); print(round(float(d.get('ETH',0)),2))" 2>/dev/null || echo "0")
+          positions = [p for p in perp.get("assetPositions", []) if abs(float(p["position"].get("szi", "0"))) > 0]
+          upnl = round(sum(float(p["position"].get("unrealizedPnl", "0")) for p in positions), 4)
+          open_pos = len(positions)
 
-          # 환경변수로 전달
-          echo "TODAY=$TODAY" >> $GITHUB_ENV
-          echo "GENERATED=$GENERATED" >> $GITHUB_ENV
-          echo "ACCOUNT_VALUE=$ACCOUNT_VALUE" >> $GITHUB_ENV
-          echo "TOTAL_UPNL=$TOTAL_UPNL" >> $GITHUB_ENV
-          echo "OPEN_COUNT=$OPEN_COUNT" >> $GITHUB_ENV
-          echo "BTC_PRICE=$BTC_PRICE" >> $GITHUB_ENV
-          echo "ETH_PRICE=$ETH_PRICE" >> $GITHUB_ENV
+          btc = round(float(mids.get("BTC", 0)), 1)
+          eth = round(float(mids.get("ETH", 0)), 2)
 
-      - name: Update PnL History
-        run: |
-          python3 << 'PYEOF'
-import json, os
-from pathlib import Path
+          today = os.environ.get("TODAY", "unknown")
+          generated = os.environ.get("GENERATED", "unknown")
 
-today        = os.environ['TODAY']
-acct         = float(os.environ['ACCOUNT_VALUE'])
-upnl         = float(os.environ['TOTAL_UPNL'])
-open_pos     = int(os.environ['OPEN_COUNT'])
+          # pnl-history.json
+          hf = pathlib.Path("pnl-history.json")
+          data = json.loads(hf.read_text()) if hf.exists() else {"start_date": today, "note": "auto", "history": []}
+          history = data.get("history", [])
+          entry = {"date": today, "account_value": acct, "unrealized_pnl": upnl, "open_positions": open_pos}
+          idx = next((i for i, h in enumerate(history) if h["date"] == today), None)
+          if idx is not None:
+              history[idx] = entry
+          else:
+              history.append(entry)
+          data["history"] = history
+          hf.write_text(json.dumps(data, indent=2, ensure_ascii=False))
 
-hist_file = Path('pnl-history.json')
-if hist_file.exists():
-    with open(hist_file) as f:
-        data = json.load(f)
-else:
-    data = {'start_date': today, 'note': '매일 09:00 KST GitHub Actions가 자동 갱신', 'history': []}
-
-# 오늘 날짜가 이미 있으면 업데이트, 없으면 추가
-history = data.get('history', [])
-existing = next((i for i, h in enumerate(history) if h['date'] == today), None)
-entry = {
-    'date': today,
-    'account_value': acct,
-    'unrealized_pnl': upnl,
-    'open_positions': open_pos
-}
-if existing is not None:
-    history[existing] = entry
-else:
-    history.append(entry)
-
-data['history'] = history
-with open(hist_file, 'w') as f:
-    json.dump(data, f, indent=2, ensure_ascii=False)
-
-print(f"PnL history updated: {today} | acct={acct} upnl={upnl}")
-PYEOF
-
-      - name: Generate Daily Report
-        run: |
-          if (( $(echo "$TOTAL_UPNL >= 0" | bc -l) )); then
-            PNL_EMOJI="📈"
-          else
-            PNL_EMOJI="📉"
-          fi
-
-          python3 << PYEOF
-import json, os
-
-today     = os.environ['TODAY']
-generated = os.environ['GENERATED']
-btc       = os.environ['BTC_PRICE']
-eth       = os.environ['ETH_PRICE']
-acct      = float(os.environ['ACCOUNT_VALUE'])
-upnl      = float(os.environ['TOTAL_UPNL'])
-open_pos  = int(os.environ['OPEN_COUNT'])
-pnl_sign  = '+' if upnl >= 0 else ''
-pnl_emoji = '📈' if upnl >= 0 else '📉'
-
-report = f"""🌿 미나리 일일 트레이딩 리포트 — {today}
-
-시장 현황
-• BTC: \${btc} | ETH: \${eth}
-
-포트폴리오
-• 총 자산: \${acct:.2f} USDC
-• 오픈 포지션: {open_pos}개
-• 미실현 손익: {pnl_emoji} {pnl_sign}\${upnl:.2f}
-
-운용 전략
-• 26B 파라미터 LLM이 5대 코인 시장을 실시간 분석
-• Optuna 자동 최적화 파라미터 적용 중
-• Walk-Forward 검증 통과 전략만 실전 투입
-
-다음 업데이트: 내일 09:00 KST"""
-
-data = {
-    'date': today,
-    'generated_at': generated,
-    'btc_price': float(btc),
-    'eth_price': float(eth),
-    'account_value': acct,
-    'open_positions': open_pos,
-    'unrealized_pnl': upnl,
-    'report': report
-}
-with open('daily-report.json', 'w') as f:
-    json.dump(data, f, ensure_ascii=False, indent=2)
-print(f"Report generated for {today}")
-PYEOF
+          # daily-report.json
+          pnl_sign = "+" if upnl >= 0 else ""
+          pnl_emoji = "up" if upnl >= 0 else "down"
+          report = (
+              f"Minari Daily Report - {today}\n"
+              f"BTC: ${btc} | ETH: ${eth}\n"
+              f"Account: ${acct:.2f} | Positions: {open_pos} | uPnL: {pnl_sign}${upnl:.2f}"
+          )
+          rd = {
+              "date": today, "generated_at": generated,
+              "btc_price": btc, "eth_price": eth,
+              "account_value": acct, "open_positions": open_pos,
+              "unrealized_pnl": upnl, "report": report
+          }
+          pathlib.Path("daily-report.json").write_text(json.dumps(rd, indent=2, ensure_ascii=False))
+          print(f"Updated: {today} acct={acct} upnl={upnl}")
+          '
 
       - name: Commit & Push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add daily-report.json pnl-history.json
-          git diff --staged --quiet || git commit -m "chore: daily report & pnl history $(TZ=Asia/Seoul date '+%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "chore: daily report $(TZ=Asia/Seoul date '+%Y-%m-%d')"
           git push
