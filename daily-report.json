@@ -1,10 +1,9 @@
 {
   "date": "2026-04-14",
-  "generated_at": "2026-04-14 13:56 KST",
-  "btc_price": 74355.5,
-  "eth_price": 2362.35,
+  "generated_at": "2026-04-14 15:20 KST",
   "account_value": 105.2857,
   "open_positions": 0,
   "unrealized_pnl": 0,
-  "report": "🌿 미나리 일일 트레이딩 리포트 — 2026-04-14\n\n시장 현황\n• BTC: $74355.5 | ETH: $2362.35\n\n포트폴리오\n• 총 자산: $105.29 USDC\n• 오픈 포지션: 0개\n• 미실현 손익: 📈 +$0.00\n\n운용 전략\n• 26B 파라미터 LLM이 5대 코인 시장을 실시간 분석\n• Optuna 자동 최적화 파라미터 적용 중\n• Walk-Forward 검증 통과 전략만 실전 투입\n\n다음 업데이트: 내일 09:00 KST"
+  "realized_pnl": 0.0,
+  "report": "Minari Auto Report - 2026-04-14\nAccount: $105.29 | Positions: 0 | uPnL: $+0.0000 | rPnL: $+0.0000"
 }
