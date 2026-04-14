@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2B AI 자동응대 시스템 데모</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --card: #1a1d2e;
+            --accent: #4F6EF7;
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --user-msg: #3a3f58;
+            --ai-msg: #4F6EF7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 150px 20px 100px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Package Section */
+        .package-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .package-card {
+            background: var(--card);
+            padding: 40px;
+            border-radius: 24px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .package-card.recommended {
+            border: 2px solid var(--accent);
+        }
+
+        .badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: var(--accent);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .package-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .package-features {
+            list-style: none;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .package-features li {
+            margin-bottom: 12px;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+        }
+
+        .package-features li::before {
+            content: "✓";
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .package-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .package-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Demo Section */
+        .demo-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .demo-wrapper { grid-template-columns: 1fr; }
+        }
+
+        .industry-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .industry-btn {
+            padding: 20px;
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            color: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .industry-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Chat UI */
+        .chat-container {
+            background: var(--card);
+            border-radius: 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 550px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chat-tabs {
+            display: flex;
+            background: rgba(0,0,0,0.2);
+            padding: 10px;
+            gap: 5px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 8px;
+            color: var(--text-dim);
+        }
+
+        .tab.active {
+            background: var(--user-msg);
+            color: white;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            word-break: break-word;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--user-msg);
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background: var(--ai-msg);
+            border-bottom-left-radius: 4px;
+        }
+
+        .typing {
+            font-style: italic;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .question-btn {
+            padding: 8px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-dim);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .question-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            padding: 100px 20px;
+            text-align: center;
+            background: #08090d;
+            margin-top: 100px;
+        }
+
+        .footer-cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .footer-info {
+            margin-top: 50px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .footer-info p { margin-bottom: 10px; }
+
+        /* Scroll Animation */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s all ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <h1>AI가 24시간 고객을 응대합니다</h1>
+        <p>치과·카페·학원 맞춤 자동응대 시스템. 월 29만원부터.</p>
+        <a href="#demo" class="cta-btn">지금 체험하기</a>
+    </section>
+
+    <section id="packages" class="reveal">
+        <div class="package-container">
+            <div class="package-card">
+                <h3>Basic</h3>
+                <div class="price">월 29만원</div>
+                <ul class="package-features">
+                    <li>기본 문의 응대</li>
+                    <li>24시간 운영</li>
+                    <li>카카오톡 연동</li>
+                </ul>
+                <button class="package-btn" onclick="location.href='#demo'">체험하기</button>
+            </div>
+            <div class="package-card recommended">
+                <div class="badge">추천</div>
+                <h3>Standard</h3>
+                <div class="price">월 49만원</div>
+                <ul class="package-features">
+                    <li>Basic 모든 기능</li>
+                    <li>예약 관리</li>
+                    <li>고객 리마인더</li>
+                    <li>실시간 대시보드</li>
+                    <li>네이버 연동</li>
+                </ul>
+                <button class="package-btn" onclick="location.href='#demo'">체험하기</button>
+            </div>
+            <div class="package-card">
+                <h3>Premium</h3>
+                <div class="price">월 79만원</div>
+                <ul class="package-features">
+                    <li>Standard 모든 기능</li>
+                    <li>AI 맞춤 추천</li>
+                    <li>리뷰 요청 자동화</li>
+                    <li>월간 매출 리포트</li>
+                    <li>전담 매니저</li>
+                </ul>
+                <button class="package-btn" onclick="location.href='#demo'">체험하기</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="reveal">
+        <div class="demo-wrapper">
+            <div class="industry-selector">
+                <button class="industry-btn active" onclick="setIndustry('dentist', this)">🦷 치과</button>
+                <button class="industry-btn" onclick="setIndustry('cafe', this)">☕ 카페</button>
+                <button class="industry-btn" onclick="setIndustry('academy', this)">📚 학원</button>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-tabs">
+                    <div class="tab active" onclick="setPackage('basic', this)">Basic</div>
+                    <div class="tab" onclick="setPackage('standard', this)">Standard</div>
+                    <div class="tab" onclick="setPackage('premium', this)">Premium</div>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                </div>
+                <div class="typing" id="typing-indicator">AI가 입력 중...</div>
+                <div class="chat-input-area" id="button-container">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-cta">
+            <h2>지금 바로 AI 자동응대를 도입하세요</h2>
+            <p style="color: var(--text-dim); margin-bottom: 30px;">무료 상담으로 우리 매장에 딱 맞는 플랜을 찾아보세요</p>
+            <a href="#" class="cta-btn">무료 상담 신청하기</a>
+        </div>
+        <div class="footer-info">
+            <p>02-1234-5678</p>
+            <p>카카오톡 @b2b-ai</p>
+            <p style="margin-top: 30px;">2026 B2B AI Agency. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+/* B2B AI 자동응대 데모 - 시나리오 데이터 및 인터랙션 */
+/* Note: innerHTML is used only with hardcoded static content, not user input */
+const industryNames = { dentist: '치과', cafe: '카페', academy: '학원' };
+let currentIndustry = 'dentist';
+let currentPackage = 'basic';
+
+const scenarios = {
+  dentist: {
+    basic: {
+      '영업시간은?': '평일 09:00~18:00, 토요일 09:00~13:00, 일요일 휴무입니다.',
+      '위치가 어디예요?': '서울 강남구 테헤란로 123, 2층에 위치해 있습니다. 강남역 3번 출구에서 도보 5분이에요.',
+      '임플란트 가격은?': '임플란트는 1개 120만원부터 시작됩니다. 정밀 검진 후 정확한 비용을 안내해드려요.',
+      '주차 되나요?': '네! 건물 지하주차장 이용 가능하며, 진료 시 2시간 무료입니다.'
+    },
+    standard: {
+      '예약하고 싶어요': '네, 예약 도와드릴게요!\n\n이번 주 빈 시간:\n- 목요일 14:00, 16:00\n- 금요일 10:00, 15:00\n\n원하시는 시간을 알려주세요!',
+      '다음 예약 확인': '다음 예약 정보:\n- 날짜: 4월 18일 (금) 14:00\n- 내용: 정기검진\n- 담당의: 김OO 원장님\n\n변경이 필요하시면 말씀해주세요!'
+    },
+    premium: {
+      '치아미백 추천해주세요': '고객님의 최근 검진 기록을 확인했습니다.\n\n추천: 레이저 미백\n- 고객님 치아 상태에 가장 적합\n- 시술 시간: 약 1시간\n- 현재 봄맞이 20% 할인 이벤트 중!\n\n예약하시겠어요?',
+      '이번 달 리포트': '4월 운영 리포트\n\n- 신규 환자: 23명 (+15%)\n- 총 예약: 128건\n- 리뷰 평점: 4.8/5.0\n- 매출: 전월 대비 12% 상승\n\n특이사항: 임플란트 문의 급증'
+    }
+  },
+  cafe: {
+    basic: {
+      '영업시간은?': '매일 08:00~22:00, 연중무휴로 운영합니다!',
+      '위치가 어디예요?': '서울 마포구 와우산로 94, 홍대입구역 3번 출구에서 도보 2분이에요!',
+      '아메리카노 얼마예요?': '아메리카노 4,500원\n카페라떼 5,000원\n바닐라라떼 5,500원\n\n사이즈업은 +500원입니다!',
+      '주차 되나요?': '매장 전용 주차장은 없지만, 인근 공영주차장이 도보 1분 거리에 있어요!'
+    },
+    standard: {
+      '좌석 예약할게요': '어떤 좌석을 원하세요?\n\n- 창가석 (2~4인)\n- 룸석 (4~8인)\n\n현재 오늘 오후 3시 이후 창가석 예약 가능합니다!',
+      '이번 달 이벤트': '4월 벚꽃 시즌 스페셜!\n\n- 체리블라썸 라떼 20% 할인\n- 음료 2잔 이상 주문시 디저트 10% 할인\n- 스탬프 2배 적립 이벤트\n\n기간: 4월 1일~30일'
+    },
+    premium: {
+      '메뉴 추천해주세요': '고객님은 바닐라 계열을 자주 드시네요!\n\n오늘의 추천:\n- 바닐라 콜드브루 + 티라미수 세트\n- 세트 가격: 9,000원\n- 고객님 전용 10% 할인 적용!\n\n최종 8,100원',
+      '이번 달 리포트': '4월 카페 운영 리포트\n\n- 매출: 1,820만원 (+8%)\n- 인기메뉴 TOP3: 아메리카노, 카페라떼, 바닐라라떼\n- 단골 재방문율: 68%\n- 리뷰 평점: 4.6/5.0'
+    }
+  },
+  academy: {
+    basic: {
+      '영업시간은?': '평일 14:00~22:00, 토요일 10:00~17:00, 일요일 휴무입니다.',
+      '위치가 어디예요?': '서울 강남구 대치동 456, 3층에 위치해 있습니다. 대치역 2번 출구 도보 3분!',
+      '수학 수강료는?': '수학반 수강료\n- 월 30만원 (주 3회 수업)\n- 교재비 별도\n- 형제 할인 10% 적용 가능',
+      '주차 되나요?': '건물 앞 무료주차 5대 가능합니다. 만석 시 뒤편 공영주차장 이용 가능해요!'
+    },
+    standard: {
+      '상담 예약할게요': '학습 상담을 예약해드릴게요!\n\n이번 주 가능 시간:\n- 수요일 16:00\n- 목요일 16:00\n\n학생의 현재 학년과 목표를 미리 알려주시면 더 좋은 상담이 가능합니다!',
+      '수업 일정 확인': '다음 수업 정보:\n- 날짜: 4월 16일 (수) 16:00\n- 과목: 수학 고급반\n- 준비물: 교재 3단원 예습\n- 담당: 박OO 선생님'
+    },
+    premium: {
+      '맞춤 커리큘럼 짜주세요': '학생의 현재 수준을 분석했습니다.\n\n약점: 연립방정식\n\n추천 커리큘럼 (4주):\n- 1주차: 연립방정식 집중\n- 2주차: 함수 기초\n- 3주차: 함수 응용\n- 4주차: 종합 테스트\n\n주 4회 수업으로 1개월 완성!',
+      '이번 달 리포트': '4월 학원 운영 리포트\n\n- 재원생: 45명\n- 신규 등록: 8명\n- 평균 성적향상: +15점\n- 학부모 만족도: 4.7/5.0\n- 재등록률: 92%'
+    }
+  }
+};
+
+const packageLevels = { basic: 1, standard: 2, premium: 3 };
+const packageNames = { basic: 'Basic', standard: 'Standard', premium: 'Premium' };
+
+function setIndustry(ind, el) {
+  currentIndustry = ind;
+  document.querySelectorAll('.industry-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  resetChat();
+}
+
+function setPackage(pkg, el) {
+  currentPackage = pkg;
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  updateButtons();
+  addMessage(packageNames[pkg] + ' 패키지로 전환했습니다.', 'system');
+}
+
+function resetChat() {
+  var container = document.getElementById('chat-messages');
+  while (container.firstChild) container.removeChild(container.firstChild);
+  addMessage(industryNames[currentIndustry] + ' AI 자동응대입니다. 궁금한 점을 선택해주세요!', 'ai');
+  updateButtons();
+}
+
+function updateButtons() {
+  var btnContainer = document.getElementById('button-container');
+  while (btnContainer.firstChild) btnContainer.removeChild(btnContainer.firstChild);
+  var tiers = ['basic', 'standard', 'premium'];
+  tiers.forEach(function(tier) {
+    var questions = scenarios[currentIndustry][tier];
+    Object.keys(questions).forEach(function(q) {
+      var btn = document.createElement('button');
+      btn.className = 'question-btn';
+      if (packageLevels[tier] > packageLevels[currentPackage]) {
+        btn.style.opacity = '0.5';
+        btn.textContent = '\uD83D\uDD12 ' + q;
+      } else {
+        btn.textContent = q;
+      }
+      btn.addEventListener('click', function() { handleQuestion(q, tier); });
+      btnContainer.appendChild(btn);
+    });
+  });
+}
+
+function addMessage(text, type) {
+  var container = document.getElementById('chat-messages');
+  var msgDiv = document.createElement('div');
+  msgDiv.className = 'message ' + type;
+  msgDiv.style.whiteSpace = 'pre-line';
+  if (type === 'system') {
+    msgDiv.style.alignSelf = 'center';
+    msgDiv.style.background = 'transparent';
+    msgDiv.style.color = 'var(--text-dim)';
+    msgDiv.style.fontSize = '0.8rem';
+    msgDiv.style.textAlign = 'center';
+    msgDiv.style.maxWidth = '100%';
+  } else if (type === 'upgrade') {
+    msgDiv.style.alignSelf = 'flex-start';
+    msgDiv.style.background = '#2d2a1a';
+    msgDiv.style.border = '1px solid #f0c040';
+    msgDiv.style.color = '#f0c040';
+    msgDiv.style.borderBottomLeftRadius = '4px';
+  }
+  msgDiv.textContent = text;
+  container.appendChild(msgDiv);
+  container.scrollTop = container.scrollHeight;
+}
+
+function handleQuestion(q, tier) {
+  addMessage(q, 'user');
+  if (packageLevels[tier] > packageLevels[currentPackage]) {
+    var neededPkg = tier === 'premium' ? 'Premium (79만원)' : 'Standard (49만원)';
+    setTimeout(function() {
+      addMessage('이 기능은 ' + neededPkg + ' 패키지에서 이용 가능합니다.\n\n업그레이드하시면 더 강력한 AI 응대를 경험하실 수 있어요!', 'upgrade');
+    }, 500);
+    return;
+  }
+  var indicator = document.getElementById('typing-indicator');
+  indicator.style.display = 'block';
+  document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+  setTimeout(function() {
+    indicator.style.display = 'none';
+    addMessage(scenarios[currentIndustry][tier][q], 'ai');
+  }, 1000);
+}
+
+/* Scroll fade-in */
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  resetChat();
+  document.querySelectorAll('section, .reveal').forEach(function(el) { observer.observe(el); });
+});
+    </script>
+</body>
+</html>
