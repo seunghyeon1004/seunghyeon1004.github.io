@@ -111,6 +111,29 @@ td:first-child { text-align:left; padding-left:0; }
 .bar-fill { height:4px; border-radius:2px; }
 
 footer { text-align:center; font-size:12px; color:var(--tertiary); padding:0 0 32px; }
+
+    /* ── Picks Grid ─────────────────────────── */
+    .picks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .pick-row { padding: 10px 0; border-bottom: 1px solid var(--divider); }
+    .pick-row:last-child { border-bottom: none; }
+    .pick-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .pick-grade { font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 4px; flex-shrink:0; }
+    .pick-grade-S { background: #E3F0FF; color: #0071E3; }
+    .pick-grade-A { background: #E8F8EC; color: #30A94D; }
+    .pick-grade-B { background: #FFF8E0; color: #B07D00; }
+    .pick-grade-C { background: #F0F0F0; color: #6E6E73; }
+    .pick-name { font-size: 14px; font-weight: 600; color: var(--label); }
+    .pick-code { font-size: 12px; color: var(--tertiary); }
+    .pick-score { margin-left: auto; font-size: 13px; font-weight: 700; color: var(--accent); }
+    .pick-signal { font-size: 11px; color: var(--secondary); margin-bottom: 4px; }
+    .pick-ai { display: flex; align-items: flex-start; gap: 6px; }
+    .pick-stance-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+    .pick-stance-bullish { background: var(--positive); }
+    .pick-stance-bearish { background: var(--negative); }
+    .pick-stance-neutral  { background: var(--tertiary); }
+    .pick-ai-summary { font-size: 12px; color: var(--secondary); line-height: 1.4; }
+    .pick-empty { text-align: center; color: var(--tertiary); padding: 24px 0; font-size: 13px; }
+    @media (max-width: 700px) { .picks-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -171,6 +194,24 @@ footer { text-align:center; font-size:12px; color:var(--tertiary); padding:0 0 3
       <div class="stat-label">오늘 거래</div>
       <div class="stat-value" id="q-today-count">--</div>
       <div class="stat-sub" id="q-today-pnl">순손익 --</div>
+    </div>
+  </div>
+
+  <!-- 오늘의 주식 / 내일의 주식 -->
+  <div class="picks-grid">
+    <div class="card">
+      <div class="card-header" style="margin-bottom:12px">
+        <div class="card-title">오늘의 주식</div>
+        <span class="badge neu">아침 스크리닝</span>
+      </div>
+      <div id="today-picks-body"><div class="pick-empty">로딩 중...</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header" style="margin-bottom:12px">
+        <div class="card-title">내일의 주식</div>
+        <span class="badge neu">저녁 스크리닝</span>
+      </div>
+      <div id="tomorrow-picks-body"><div class="pick-empty">로딩 중...</div></div>
     </div>
   </div>
 
@@ -298,6 +339,47 @@ function initChart(equity) {
       }
     }
   });
+}
+
+function renderPicks(picks, containerId) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  el.textContent = '';
+  if (!picks || picks.length === 0) {
+    var empty = document.createElement('div');
+    empty.className = 'pick-empty';
+    empty.textContent = '스크리닝 결과 없음';
+    el.appendChild(empty);
+    return;
+  }
+  var grades = ['S','A','B','C'];
+  var rows = picks.map(function(p) {
+    var grade   = esc(p.grade || '');
+    var gCls    = grades.indexOf(grade) >= 0 ? 'pick-grade-' + grade : 'pick-grade-C';
+    var signal  = esc((p.signal_type || '').replace(/_/g, ' '));
+    var sCls    = p.ai_stance === 'bullish' ? 'pick-stance-bullish'
+                : p.ai_stance === 'bearish' ? 'pick-stance-bearish'
+                : 'pick-stance-neutral';
+    var aiPart  = p.ai_stance
+      ? '<div class="pick-ai">'
+        + '<div class="pick-stance-dot ' + sCls + '"></div>'
+        + '<div class="pick-ai-summary">' + esc(p.ai_summary || p.ai_stance) + '</div>'
+        + '</div>'
+      : '';
+    return '<div class="pick-row">'
+      + '<div class="pick-top">'
+      +   '<span class="pick-grade ' + gCls + '">' + grade + '</span>'
+      +   '<span class="pick-name">' + esc(p.name) + '</span>'
+      +   '<span class="pick-code">' + esc(p.code) + '</span>'
+      +   '<span class="pick-score">' + (+(p.score) || 0) + '점</span>'
+      + '</div>'
+      + '<div class="pick-signal">' + signal + '</div>'
+      + aiPart
+      + '</div>';
+  });
+  var tmp = document.createElement('div');
+  tmp.insertAdjacentHTML('afterbegin', rows.join(''));
+  while (tmp.firstChild) el.appendChild(tmp.firstChild);
 }
 
 function render(d) {
@@ -436,6 +518,9 @@ function render(d) {
     });
     statsTbody.innerHTML = rows.join('');
   }
+
+  renderPicks(d.today_picks    || [], 'today-picks-body');
+  renderPicks(d.tomorrow_picks || [], 'tomorrow-picks-body');
 }
 
 async function loadData() {
