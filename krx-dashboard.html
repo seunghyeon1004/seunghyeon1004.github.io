@@ -257,9 +257,11 @@ function pnlCls(n) { return n > 0 ? 'pnl-pos' : n < 0 ? 'pnl-neg' : ''; }
 let chart = null;
 function initChart(equity) {
   const ctx = document.getElementById('pnlChart').getContext('2d');
-  const base = equity[0]?.value ?? 10000000;
-  const labels = equity.map(p => p.date.slice(5));
-  const data   = equity.map(p => +((p.value - base) / base * 100).toFixed(2));
+  const valid = equity.filter(p => p?.date && p?.value != null);
+  if (valid.length < 2) return;
+  const base   = valid[0].value;
+  const labels = valid.map(p => p.date.slice(5));
+  const data   = valid.map(p => +((p.value - base) / base * 100).toFixed(2));
   const color  = (data[data.length-1] ?? 0) >= 0 ? '#34C759' : '#FF3B30';
   const rgb    = color === '#34C759' ? '52,199,89' : '255,59,48';
   if (chart) chart.destroy();
@@ -351,7 +353,7 @@ function render(d) {
   const qTP = document.getElementById('q-today-pnl');
   const todayPnl = p.today_pnl ?? 0;
   qTP.textContent = '순손익 ' + fmtMoney(todayPnl);
-  qTP.style.color = todayPnl >= 0 ? 'var(--positive)' : 'var(--negative)';
+  qTP.style.color = todayPnl > 0 ? 'var(--positive)' : todayPnl < 0 ? 'var(--negative)' : 'var(--tertiary)';
 
   const tbody = document.getElementById('positions-tbody');
   const positions = d.positions ?? [];
@@ -416,18 +418,20 @@ function render(d) {
     tr.appendChild(td); statsTbody.appendChild(tr);
   } else {
     const rows = stats.slice(0,10).map((s,i) => {
-      const barColor = s.win_rate >= 60 ? 'var(--positive)' : s.win_rate >= 40 ? 'var(--warning)' : 'var(--negative)';
+      const wr = s.win_rate ?? 0;
+      const wrSafe = Math.min(100, Math.max(0, +wr));
+      const barColor = wr >= 60 ? 'var(--positive)' : wr >= 40 ? 'var(--warning)' : 'var(--negative)';
       return '<tr>'
         + '<td style="font-size:12px;color:var(--tertiary);font-weight:500">' + (i+1) + '</td>'
         + '<td>'
         +   '<div style="font-weight:600;font-size:13px">' + esc(s.code)
         +     ' <span style="font-weight:400;color:var(--secondary)">' + esc(s.name) + '</span></div>'
-        +   '<div class="bar-wrap"><div class="bar-fill" style="width:' + s.win_rate + '%;background:' + barColor + '"></div></div>'
+        +   '<div class="bar-wrap"><div class="bar-fill" style="width:' + wrSafe + '%;background:' + barColor + '"></div></div>'
         + '</td>'
-        + '<td>' + s.total_trades + '</td>'
-        + '<td class="' + pnlCls(s.win_rate - 50) + '">' + s.win_rate.toFixed(1) + '%</td>'
-        + '<td class="' + pnlCls(s.avg_return) + '">' + fmtPct(s.avg_return) + '</td>'
-        + '<td class="' + pnlCls(s.total_pnl) + '">' + fmtMoney(s.total_pnl) + '</td>'
+        + '<td>' + (s.total_trades ?? '--') + '</td>'
+        + '<td class="' + pnlCls(wr - 50) + '">' + wr.toFixed(1) + '%</td>'
+        + '<td class="' + pnlCls(s.avg_return ?? 0) + '">' + fmtPct(s.avg_return) + '</td>'
+        + '<td class="' + pnlCls(s.total_pnl ?? 0) + '">' + fmtMoney(s.total_pnl) + '</td>'
         + '</tr>';
     });
     statsTbody.innerHTML = rows.join('');
