@@ -396,7 +396,7 @@ function render(d) {
     fgEl.className = 'mv ' + (fg < 30 ? 'bad' : fg > 70 ? 'warn' : 'good');
   } else { fgEl.textContent = '--'; fgEl.className = 'mv'; }
 
-  const frgn = mkt.frgn_net ?? 0;
+  const frgn = mkt.frgn_net ?? 0; // frgn_net 단위: 억원 → fmtMoney에 원화(×1억) 변환
   const frgnEl = document.getElementById('m-frgn');
   frgnEl.textContent = frgn ? fmtMoney(frgn * 100000000) : '--';
   frgnEl.className = 'mv ' + (frgn > 0 ? 'good' : frgn < 0 ? 'bad' : '');
