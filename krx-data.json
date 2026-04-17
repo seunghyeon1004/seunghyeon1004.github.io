@@ -1,325 +1,88 @@
 {
-  "updated": "2026-04-14 15:31",
+  "updated": "2026-04-17 15:39",
   "portfolio": {
-    "total_invested": 10000000,
-    "current_value": 10316586,
-    "total_pnl": 318739,
-    "roi_pct": 3.19,
-    "cash": 4005662,
-    "positions_count": 5,
-    "win_rate": 100.0,
-    "total_trades": 6,
-    "max_drawdown": -0.0
-  },
-  "ai_opinion": {
-    "stance": "neutral",
-    "summary": "AI 분석 대기 중",
-    "bull_case": "",
-    "bear_case": "",
-    "reasoning": "",
-    "confidence": "medium",
-    "caution": "",
-    "model": ""
+    "total_capital": 10000000,
+    "realized_pnl": 6156,
+    "unrealized_pnl": 0,
+    "roi_pct": 0.06,
+    "win_rate": 33.3,
+    "wins": 1,
+    "losses": 2,
+    "total_trades": 3,
+    "open_positions": 1,
+    "max_slots": 5,
+    "today_pnl": 38076,
+    "today_trades_count": 2,
+    "today_return_pct": 0.38,
+    "monthly_pnl": 6156
   },
   "positions": [
     {
-      "name": "신송홀딩스",
-      "code": "006880",
-      "entry_price": 7230,
+      "code": "006370",
+      "name": "대구백화점",
+      "entry_price": 6570,
+      "current_price": 0,
+      "qty": 228,
       "current_pnl_pct": 0.0,
-      "invested": 867600,
-      "entry_date": "2026-04-14",
-      "conviction": "S"
-    },
-    {
-      "name": "삼성제약",
-      "code": "001360",
-      "entry_price": 1788,
-      "current_pnl_pct": 0.0,
-      "invested": 1847004,
-      "entry_date": "2026-04-13",
-      "conviction": "S"
-    },
-    {
-      "name": "한신공영",
-      "code": "004960",
-      "entry_price": 16120,
-      "current_pnl_pct": 0.0,
-      "invested": 1515280,
-      "entry_date": "2026-04-13",
-      "conviction": "S"
-    },
-    {
-      "name": "한솔로지스틱스",
-      "code": "009180",
-      "entry_price": 3160,
-      "current_pnl_pct": 0.0,
-      "invested": 1241880,
-      "entry_date": "2026-04-13",
-      "conviction": "S"
-    },
-    {
-      "name": "고려산업",
-      "code": "002140",
-      "entry_price": 2835,
-      "current_pnl_pct": 0.0,
-      "invested": 839160,
-      "entry_date": "2026-04-13",
-      "conviction": "S"
+      "entry_date": "2026-04-17",
+      "grade": "S",
+      "sl_price": 5900,
+      "regime": "swing"
     }
   ],
   "recent_trades": [
     {
-      "name": "경농",
-      "entry_date": "2026-04-13",
-      "exit_date": "2026-04-13",
-      "pnl_pct": 1.42,
-      "pnl_amount": 14275,
-      "exit_reason": "trailing_stop"
+      "name": "대구백화점",
+      "code": "006370",
+      "entry_date": "2026-04-16",
+      "exit_date": "2026-04-17",
+      "pnl_pct": -0.0,
+      "pnl_amount": -342,
+      "exit_reason": "stoploss"
     },
     {
-      "name": "한솔로지스틱스",
-      "entry_date": "2026-04-08",
-      "exit_date": "2026-04-10",
-      "pnl_pct": 6.29,
-      "pnl_amount": 102699,
-      "exit_reason": "trailing_stop"
+      "name": "대구백화점",
+      "code": "006370",
+      "entry_date": "2026-04-16",
+      "exit_date": "2026-04-17",
+      "pnl_pct": 0.05,
+      "pnl_amount": 38418,
+      "exit_reason": "partial_tp1"
     },
     {
-      "name": "삼성제약",
-      "entry_date": "2026-04-09",
-      "exit_date": "2026-04-10",
-      "pnl_pct": 1.08,
-      "pnl_amount": 16168,
-      "exit_reason": "trailing_stop"
-    },
-    {
-      "name": "한신공영",
-      "entry_date": "2026-04-09",
-      "exit_date": "2026-04-09",
-      "pnl_pct": 5.75,
-      "pnl_amount": 70684,
-      "exit_reason": "trailing_stop"
-    },
-    {
-      "name": "알루코",
-      "entry_date": "2026-04-09",
-      "exit_date": "2026-04-09",
-      "pnl_pct": 3.9,
-      "pnl_amount": 39564,
-      "exit_reason": "trailing_stop"
-    },
-    {
-      "name": "SK증권",
-      "entry_date": "2026-04-07",
-      "exit_date": "2026-04-07",
-      "pnl_pct": 4.65,
-      "pnl_amount": 75347,
-      "exit_reason": "trailing_stop"
+      "name": "대구백화점",
+      "code": "006370",
+      "entry_date": "2026-04-16",
+      "exit_date": "2026-04-16",
+      "pnl_pct": -0.03,
+      "pnl_amount": -31920,
+      "exit_reason": "unstuck"
     }
   ],
   "equity_curve": [
     {
-      "date": "2026-03-30",
-      "value": 10000000
+      "date": "2026-04-16",
+      "value": 9968080
     },
     {
-      "date": "2026-03-31",
-      "value": 10000000
-    },
-    {
-      "date": "2026-04-01",
-      "value": 10000000
-    },
-    {
-      "date": "2026-04-02",
-      "value": 10000000
-    },
-    {
-      "date": "2026-04-03",
-      "value": 10000000
-    },
-    {
-      "date": "2026-04-06",
-      "value": 10000000
-    },
-    {
-      "date": "2026-04-07",
-      "value": 10075103
-    },
-    {
-      "date": "2026-04-08",
-      "value": 10074858
-    },
-    {
-      "date": "2026-04-10",
-      "value": 10303410
-    },
-    {
-      "date": "2026-04-13",
-      "value": 10316716
+      "date": "2026-04-17",
+      "value": 10006156
     }
   ],
-  "strategy_mode": "neutral",
-  "signals_today": [
+  "stock_stats": [
     {
-      "name": "신송홀딩스",
-      "code": "006880",
-      "grade": "S",
-      "score": 77,
-      "signals": [
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "알루코",
-      "code": "001780",
-      "grade": "S",
-      "score": 75,
-      "signals": [
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "경농",
-      "code": "002100",
-      "grade": "S",
-      "score": 75,
-      "signals": [
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "대한해운",
-      "code": "005880",
-      "grade": "S",
-      "score": 75,
-      "signals": [
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "롯데손해보험",
-      "code": "000400",
-      "grade": "S",
-      "score": 73,
-      "signals": [
-        "classic_entry"
-      ]
-    },
-    {
-      "name": "고려산업",
-      "code": "002140",
-      "grade": "S",
-      "score": 70,
-      "signals": [
-        "classic_entry",
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "도화엔지니어링",
-      "code": "002150",
-      "grade": "S",
-      "score": 70,
-      "signals": [
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "SH에너지화학",
-      "code": "002360",
-      "grade": "S",
-      "score": 70,
-      "signals": [
-        "classic_entry"
-      ]
-    },
-    {
-      "name": "국도화학",
-      "code": "007690",
-      "grade": "S",
-      "score": 70,
-      "signals": [
-        "momentum_buy"
-      ]
-    },
-    {
-      "name": "문배철강",
-      "code": "008420",
-      "grade": "S",
-      "score": 70,
-      "signals": [
-        "momentum_buy"
-      ]
+      "code": "006370",
+      "name": "대구백화점",
+      "total_trades": 3,
+      "win_rate": 33.3,
+      "avg_return": 0.01,
+      "total_pnl": 6156
     }
   ],
-  "watchlist": [
-    {
-      "name": "동화약품",
-      "code": "000020",
-      "grade": "D",
-      "score": 23
-    },
-    {
-      "name": "경방",
-      "code": "000050",
-      "grade": "B",
-      "score": 51
-    },
-    {
-      "name": "삼양홀딩스",
-      "code": "000070",
-      "grade": "B",
-      "score": 46
-    },
-    {
-      "name": "유한양행",
-      "code": "000100",
-      "grade": "D",
-      "score": 0
-    },
-    {
-      "name": "CJ대한통운",
-      "code": "000120",
-      "grade": "D",
-      "score": 13
-    },
-    {
-      "name": "하이트진로홀딩스",
-      "code": "000140",
-      "grade": "A",
-      "score": 54
-    },
-    {
-      "name": "성창기업지주",
-      "code": "000180",
-      "grade": "D",
-      "score": 13
-    },
-    {
-      "name": "유유제약",
-      "code": "000220",
-      "grade": "D",
-      "score": 21
-    },
-    {
-      "name": "일동홀딩스",
-      "code": "000230",
-      "grade": "D",
-      "score": 23
-    },
-    {
-      "name": "기아",
-      "code": "000270",
-      "grade": "C",
-      "score": 38
-    }
-  ],
-  "market_status": {
-    "vix": 19.229999542236328,
-    "kospi": 5808.6201171875,
-    "block_buy": false,
-    "ai_stance": "neutral"
+  "market": {
+    "regime": "--",
+    "vix": 0.0,
+    "fg_index": 0,
+    "frgn_net": 0
   }
 }
