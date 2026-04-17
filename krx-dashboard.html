@@ -429,7 +429,7 @@ function render(d) {
         +   '<div class="bar-wrap"><div class="bar-fill" style="width:' + wrSafe + '%;background:' + barColor + '"></div></div>'
         + '</td>'
         + '<td>' + (s.total_trades ?? '--') + '</td>'
-        + '<td class="' + pnlCls(wr - 50) + '">' + wr.toFixed(1) + '%</td>'
+        + '<td class="' + pnlCls(wr - 50) + '">' + wrSafe.toFixed(1) + '%</td>'
         + '<td class="' + pnlCls(s.avg_return ?? 0) + '">' + fmtPct(s.avg_return) + '</td>'
         + '<td class="' + pnlCls(s.total_pnl ?? 0) + '">' + fmtMoney(s.total_pnl) + '</td>'
         + '</tr>';
