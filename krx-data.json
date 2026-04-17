@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-17 15:39",
+  "updated": "2026-04-17 21:09",
   "portfolio": {
     "total_capital": 10000000,
     "realized_pnl": 6156,
@@ -79,6 +79,8 @@
       "total_pnl": 6156
     }
   ],
+  "today_picks": [],
+  "tomorrow_picks": [],
   "market": {
     "regime": "--",
     "vix": 0.0,
