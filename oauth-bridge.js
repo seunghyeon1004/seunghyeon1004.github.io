@@ -38,30 +38,41 @@
       });
   }
 
-  // ── 2. Wait for React app ──────────────────────────────
-  var check = setInterval(function () {
-    var root = document.getElementById('root');
-    if (root && root.children.length > 0) {
-      clearInterval(check);
-      // Wait for .item elements (explorer rendered)
-      waitForItems();
-    }
-  }, 200);
+  // ── 2. Persistent watcher ──────────────────────────────
+  // Survives document replacement because setInterval is on window
+  var _bridgeReady = false;
+  var _realItems = null;
+  var _currentPath = '';
 
-  function waitForItems() {
-    var obs = new MutationObserver(function (_, me) {
-      if (document.querySelector('.item') || document.querySelector('.icon-grid')) {
-        me.disconnect();
-        setTimeout(initBridge, 300);
-      }
-    });
-    obs.observe(document.body, { childList: true, subtree: true });
-    // Also check immediately
-    if (document.querySelector('.item') || document.querySelector('.icon-grid')) {
-      obs.disconnect();
-      setTimeout(initBridge, 300);
+  setInterval(function () {
+    // Wait for body and sidebar to exist (after bundler replaces document)
+    if (!document.body) return;
+    var sidebar = document.querySelector('.sidebar');
+    var grid = document.querySelector('.icon-grid');
+    if (!sidebar && !grid) return;
+
+    // One-time init
+    if (!_bridgeReady) {
+      _bridgeReady = true;
+      initBridge();
     }
-  }
+
+    // Continuously re-apply real data if React overwrites it
+    if (_realItems && sidebar) {
+      // Check if sidebar still has our data (look for our marker)
+      if (!sidebar.dataset.oauthSidebar) {
+        updateSidebar(_realItems, _currentPath);
+      }
+    }
+    if (_realItems && grid) {
+      if (!grid.dataset.oauthGrid) {
+        injectRealItems(_realItems, _currentPath);
+      }
+    }
+
+    // Always patch login modal if it appears
+    patchLoginModalIfPresent();
+  }, 500);
 
   // ── 3. Main Bridge ────────────────────────────────────
   function initBridge() {
@@ -70,13 +81,6 @@
 
     // Show user badge if logged in
     if (token && user) showLoggedInBadge(JSON.parse(user));
-
-    // Patch any existing LoginModal
-    patchLoginModalIfPresent();
-
-    // Watch for LoginModal appearing
-    new MutationObserver(patchLoginModalIfPresent)
-      .observe(document.body, { childList: true, subtree: true });
 
     // Fetch real directory listing and inject
     fetchAndInjectListing('');
@@ -197,6 +201,8 @@
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (data.items && data.items.length > 0) {
+          _realItems = data.items;
+          _currentPath = dirPath;
           injectRealItems(data.items, dirPath);
         }
       })
@@ -215,6 +221,9 @@
     });
     if (!targetGrid && grids.length) targetGrid = grids[grids.length - 1];
     if (!targetGrid) return;
+
+    // Mark grid as ours
+    targetGrid.dataset.oauthGrid = 'true';
 
     // Clear existing items
     while (targetGrid.firstChild) targetGrid.removeChild(targetGrid.firstChild);
@@ -338,7 +347,11 @@
     fetch(url)
       .then(function (r) { return r.json(); })
       .then(function (data) {
-        if (data.items) injectRealItems(data.items, dirPath);
+        if (data.items) {
+          _realItems = data.items;
+          _currentPath = dirPath;
+          injectRealItems(data.items, dirPath);
+        }
       });
   }
 
@@ -432,6 +445,9 @@
   function updateSidebar(items, currentPath) {
     var sidebar = document.querySelector('.sidebar');
     if (!sidebar) return;
+
+    // Mark sidebar as ours
+    sidebar.dataset.oauthSidebar = 'true';
 
     // Clear ALL existing sections (즐겨찾기, 데모 등 전부 제거)
     while (sidebar.firstChild) sidebar.removeChild(sidebar.firstChild);
