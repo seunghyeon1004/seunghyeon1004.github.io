@@ -324,17 +324,30 @@
     var sidebar = document.querySelector('.sidebar');
     if (!sidebar) return;
 
+    // Find the section containing demo items (AI Trading ~ Misc)
+    var sections = sidebar.querySelectorAll('.side-section');
+    var catSection = null;
+
+    sections.forEach(function (sec) {
+      var sideItems = sec.querySelectorAll('.side-item');
+      sideItems.forEach(function (si) {
+        var txt = (si.textContent || '').toLowerCase();
+        if (txt.indexOf('trading') >= 0 || txt.indexOf('misc') >= 0 ||
+            txt.indexOf('signal') >= 0 || txt.indexOf('llm') >= 0 ||
+            txt.indexOf('alpha') >= 0 || txt.indexOf('research') >= 0) {
+          catSection = sec;
+        }
+      });
+    });
+
+    // Fallback: use last section if no demo items found
+    if (!catSection && sections.length) catSection = sections[sections.length - 1];
+    if (!catSection) return;
+
     // Mark as replaced
     sidebar.dataset.oauthCat = 'true';
 
-    // Find the last side-section (usually "카테고리" or the subscriber section)
-    var sections = sidebar.querySelectorAll('.side-section');
-    if (!sections.length) return;
-
-    // Replace items in the LAST section (카테고리), keep other sections intact
-    var catSection = sections[sections.length - 1];
-
-    // Keep the section title, remove only side-items
+    // Keep the section title (.side-title), remove only .side-item elements
     var existingItems = catSection.querySelectorAll('.side-item');
     existingItems.forEach(function (el) { el.remove(); });
 
