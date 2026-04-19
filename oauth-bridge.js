@@ -204,6 +204,9 @@
   }
 
   function injectRealItems(items, currentPath) {
+    // Update sidebar with real folders
+    updateSidebar(items, currentPath);
+
     // Find the grid with lock badges (구독자 전용 section)
     var grids = document.querySelectorAll('.icon-grid');
     var targetGrid = null;
@@ -423,6 +426,94 @@
 
     preview.appendChild(codeBody);
     document.body.appendChild(preview);
+  }
+
+  // ── 8b. Sidebar Update ─────────────────────────────────
+  function updateSidebar(items, currentPath) {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    // Find or create the "구독자 전용" section
+    var sections = sidebar.querySelectorAll('.side-section');
+    var targetSection = null;
+
+    // Look for existing subscriber section or use last section
+    sections.forEach(function (s) {
+      var title = s.querySelector('.side-title');
+      if (title && (title.textContent.indexOf('구독') >= 0 || title.textContent.indexOf('Subscriber') >= 0)) {
+        targetSection = s;
+      }
+    });
+
+    // If not found, replace the last section or create new
+    if (!targetSection) {
+      targetSection = sections.length > 0 ? sections[sections.length - 1] : document.createElement('div');
+      targetSection.className = 'side-section';
+      if (!sections.length) sidebar.appendChild(targetSection);
+    }
+
+    // Clear and rebuild
+    while (targetSection.firstChild) targetSection.removeChild(targetSection.firstChild);
+
+    var sideTitle = document.createElement('div');
+    sideTitle.className = 'side-title';
+    sideTitle.textContent = 'Subscribers';
+    targetSection.appendChild(sideTitle);
+
+    // Add root item
+    var rootItem = document.createElement('div');
+    rootItem.className = 'side-item' + (!currentPath ? ' active' : '');
+    var rootSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    rootSvg.setAttribute('viewBox', '0 0 24 24');
+    rootSvg.setAttribute('width', '16');
+    rootSvg.setAttribute('height', '16');
+    rootSvg.setAttribute('fill', 'none');
+    var rootPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    rootPath.setAttribute('d', 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z');
+    rootPath.setAttribute('stroke', 'currentColor');
+    rootPath.setAttribute('stroke-width', '2');
+    rootSvg.appendChild(rootPath);
+    rootItem.appendChild(rootSvg);
+    var rootSpan = document.createElement('span');
+    rootSpan.textContent = 'Root';
+    rootItem.appendChild(rootSpan);
+    rootItem.addEventListener('click', function () { fetchAndInjectListing(''); });
+    targetSection.appendChild(rootItem);
+
+    // Add folder items
+    var folders = items.filter(function (i) { return i.type === 'dir'; });
+    folders.forEach(function (folder) {
+      var sideItem = document.createElement('div');
+      sideItem.className = 'side-item' + (currentPath === folder.path ? ' active' : '');
+
+      var folderSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      folderSvg.setAttribute('viewBox', '0 0 24 24');
+      folderSvg.setAttribute('width', '16');
+      folderSvg.setAttribute('height', '16');
+      folderSvg.setAttribute('fill', 'none');
+      var folderPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      folderPath.setAttribute('d', 'M2 6a2 2 0 012-2h5l2 2h9a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6z');
+      folderPath.setAttribute('stroke', 'currentColor');
+      folderPath.setAttribute('stroke-width', '1.5');
+      folderPath.setAttribute('fill', 'rgba(249,201,79,0.3)');
+      folderSvg.appendChild(folderPath);
+      sideItem.appendChild(folderSvg);
+
+      var span = document.createElement('span');
+      span.textContent = folder.name;
+      sideItem.appendChild(span);
+
+      sideItem.addEventListener('click', function () {
+        var token = sessionStorage.getItem('gh_token');
+        if (token) {
+          fetchAndInjectListingAuth(folder.path, token);
+        } else {
+          showOAuthModal();
+        }
+      });
+
+      targetSection.appendChild(sideItem);
+    });
   }
 
   // ── 9. Address Bar ────────────────────────────────────
