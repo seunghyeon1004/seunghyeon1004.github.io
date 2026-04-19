@@ -38,6 +38,12 @@
       "account_value": 752.955,
       "unrealized_pnl": 0.2599,
       "open_positions": 1
+    },
+    {
+      "date": "2026-04-19",
+      "account_value": 642.6019,
+      "unrealized_pnl": 0,
+      "open_positions": 0
     }
   ]
 }
