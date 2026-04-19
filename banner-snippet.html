@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>구독자 전용 작업실 — 배너 스니펫</title>
+<style>
+  /* ========================================================
+     사용법 안내 (이 상단 부분은 전체 파일을 preview로 열었을 때만 보여요.
+     실제로 사이트에 넣을 때는 아래 <!-- BEGIN SNIPPET --> 부터 <!-- END SNIPPET --> 까지만 복사하세요.)
+     ========================================================  */
+  body { margin:0; background:#07070c; font-family: -apple-system, "Segoe UI Variable", system-ui, sans-serif; color:#eee; padding: 40px 20px; }
+  .howto {
+    max-width: 900px; margin: 0 auto 40px; padding: 24px 28px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; font-size: 14px; line-height: 1.6;
+  }
+  .howto h2 { margin: 0 0 10px; font-size: 16px; color: #ff2bd6; }
+  .howto code {
+    display: block; background: #000; color: #0ff; padding: 10px 14px;
+    border-radius: 6px; font-family: "SF Mono", monospace; font-size: 12px; margin-top: 10px;
+    border: 1px solid rgba(0,255,255,0.2); overflow-x: auto; white-space: pre;
+  }
+  .stage {
+    max-width: 1100px; margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+<div class="howto">
+  <h2>🧷 사용법</h2>
+  <p>아래 배너를 그대로 복사해서 <b>seunghyeon1004.github.io</b>의 메뉴(Home · About · Projects · Contact) 근처에 붙여넣으면 돼요. CSS는 한 덩어리로 <code>&lt;style scoped&gt;</code> 안에 다 들어있어서 기존 사이트 스타일을 건드리지 않아요.</p>
+  <p>링크는 본인 <b>구독자용 탐색기 URL</b>로 바꿔주세요 (예: <code>/subscribers.html</code> 또는 Vercel/Cloudflare Pages에 배포한 주소).</p>
+  <code>&lt;!-- 복사 시작: BEGIN SNIPPET --&gt;
+...
+&lt;!-- 복사 끝: END SNIPPET --&gt;</code>
+</div>
+
+<div class="stage">
+
+<!-- BEGIN SNIPPET ========================================================= -->
+<a href="https://seunghyeon1004.github.io/subscribers" class="subs-banner" aria-label="구독자 전용 작업실로 이동">
+  <style>
+    .subs-banner {
+      --cyber-pink: #ff2bd6;
+      --cyber-cyan: #00eaff;
+      --cyber-yellow: #f9f871;
+      --cyber-bg: #0a0012;
+
+      position: relative;
+      display: block;
+      width: 100%;
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 24px 28px;
+      background:
+        linear-gradient(135deg, rgba(255,43,214,0.08), rgba(0,234,255,0.08)),
+        radial-gradient(ellipse at 20% 50%, rgba(255,43,214,0.15), transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(0,234,255,0.15), transparent 60%),
+        linear-gradient(180deg, #0a0012 0%, #0d0821 100%);
+      border: 1px solid rgba(255,43,214,0.5);
+      border-radius: 10px;
+      text-decoration: none;
+      overflow: hidden;
+      font-family: "SF Mono", "JetBrains Mono", ui-monospace, monospace;
+      color: #eee;
+      box-shadow:
+        0 0 0 1px rgba(0,234,255,0.15),
+        0 0 30px rgba(255,43,214,0.18),
+        0 10px 40px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      isolation: isolate;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    /* grid background */
+    .subs-banner::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,234,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,234,255,0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.6), transparent 70%);
+      -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.6), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* scanline flicker overlay */
+    .subs-banner::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(255,255,255,0.03) 0,
+        rgba(255,255,255,0.03) 1px,
+        transparent 2px,
+        transparent 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.6;
+      animation: subsScan 8s linear infinite;
+    }
+    @keyframes subsScan { 0% { transform: translateY(-4px); } 100% { transform: translateY(0); } }
+
+    /* corner brackets */
+    .subs-banner .sb-corner {
+      position: absolute;
+      width: 14px; height: 14px;
+      border: 2px solid var(--cyber-cyan);
+      z-index: 2;
+    }
+    .subs-banner .sb-corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+    .subs-banner .sb-corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+    .subs-banner .sb-corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+    .subs-banner .sb-corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+
+    /* main row */
+    .subs-banner .sb-row {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 24px;
+    }
+
+    /* icon block */
+    .subs-banner .sb-icon {
+      width: 64px; height: 64px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--cyber-pink), var(--cyber-cyan));
+      border-radius: 10px;
+      position: relative;
+      box-shadow:
+        0 0 20px rgba(255,43,214,0.5),
+        0 0 40px rgba(0,234,255,0.25);
+      flex-shrink: 0;
+    }
+    .subs-banner .sb-icon svg { width: 36px; height: 36px; color: #0a0012; filter: drop-shadow(0 0 4px rgba(255,255,255,0.6)); }
+
+    /* text block */
+    .subs-banner .sb-label {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--cyber-cyan);
+      text-transform: uppercase;
+      text-shadow: 0 0 8px rgba(0,234,255,0.8);
+      margin-bottom: 6px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .subs-banner .sb-dot {
+      display: inline-block;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #00ff6a;
+      box-shadow: 0 0 8px #00ff6a, 0 0 14px #00ff6a;
+      animation: subsPulse 1.6s ease-in-out infinite;
+    }
+    @keyframes subsPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* glitch title */
+    .subs-banner .sb-title {
+      font-family: "SF Pro Display", "Segoe UI Variable", system-ui, sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: #fff;
+      margin: 0 0 4px;
+      position: relative;
+      display: inline-block;
+      text-shadow:
+        0 0 1px #fff,
+        0 0 12px rgba(255,43,214,0.4);
+    }
+    .subs-banner .sb-title::before,
+    .subs-banner .sb-title::after {
+      content: attr(data-text);
+      position: absolute; left: 0; top: 0;
+      width: 100%;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    .subs-banner .sb-title::before {
+      color: var(--cyber-pink);
+      transform: translate(-2px, 0);
+      clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+      animation: subsGlitchA 4.2s infinite steps(2, end);
+      opacity: 0.8;
+    }
+    .subs-banner .sb-title::after {
+      color: var(--cyber-cyan);
+      transform: translate(2px, 0);
+      clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+      animation: subsGlitchB 3.6s infinite steps(2, end);
+      opacity: 0.8;
+    }
+    @keyframes subsGlitchA {
+      0%, 92%, 100% { transform: translate(0, 0); }
+      93% { transform: translate(-3px, -1px); }
+      95% { transform: translate(2px, 1px); }
+      97% { transform: translate(-1px, 0); }
+    }
+    @keyframes subsGlitchB {
+      0%, 90%, 100% { transform: translate(0, 0); }
+      91% { transform: translate(3px, 1px); }
+      93% { transform: translate(-2px, -1px); }
+      96% { transform: translate(1px, 0); }
+    }
+
+    .subs-banner .sb-desc {
+      font-family: "SF Mono", ui-monospace, monospace;
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.7);
+      margin: 2px 0 0;
+      letter-spacing: 0.02em;
+    }
+    .subs-banner .sb-desc .hl { color: var(--cyber-yellow); font-weight: 600; }
+
+    /* CTA button */
+    .subs-banner .sb-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 22px;
+      background: linear-gradient(135deg, var(--cyber-pink), #b000a0);
+      color: #fff;
+      font-family: "SF Mono", ui-monospace, monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 6px;
+      position: relative;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+      box-shadow:
+        0 0 0 1px var(--cyber-cyan),
+        0 0 18px rgba(255,43,214,0.5),
+        0 0 0 3px rgba(0,234,255,0.15);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      flex-shrink: 0;
+    }
+    .subs-banner .sb-cta svg { width: 14px; height: 14px; }
+
+    /* hover state */
+    .subs-banner:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 0 1px rgba(0,234,255,0.35),
+        0 0 40px rgba(255,43,214,0.35),
+        0 14px 50px rgba(0,0,0,0.5);
+    }
+    .subs-banner:hover .sb-cta {
+      transform: scale(1.04);
+      box-shadow:
+        0 0 0 1px var(--cyber-cyan),
+        0 0 28px rgba(255,43,214,0.7),
+        0 0 0 4px rgba(0,234,255,0.2);
+    }
+
+    /* mobile */
+    @media (max-width: 640px) {
+      .subs-banner { padding: 18px 18px 20px; }
+      .subs-banner .sb-row { grid-template-columns: 48px 1fr; gap: 14px; row-gap: 14px; }
+      .subs-banner .sb-icon { width: 48px; height: 48px; }
+      .subs-banner .sb-icon svg { width: 26px; height: 26px; }
+      .subs-banner .sb-title { font-size: 22px; }
+      .subs-banner .sb-desc { font-size: 11.5px; }
+      .subs-banner .sb-cta { grid-column: 1 / -1; justify-content: center; padding: 10px 18px; font-size: 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .subs-banner::after,
+      .subs-banner .sb-dot,
+      .subs-banner .sb-title::before,
+      .subs-banner .sb-title::after { animation: none; }
+    }
+  </style>
+
+  <span class="sb-corner tl"></span>
+  <span class="sb-corner tr"></span>
+  <span class="sb-corner bl"></span>
+  <span class="sb-corner br"></span>
+
+  <div class="sb-row">
+    <div class="sb-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none">
+        <rect x="4.5" y="10.5" width="15" height="10" rx="1.5" stroke="currentColor" stroke-width="1.8" fill="rgba(255,255,255,0.15)"/>
+        <path d="M8 10.5V7a4 4 0 018 0v3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="12" cy="15" r="1.4" fill="currentColor"/>
+        <path d="M12 16.4V18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div>
+      <div class="sb-label">
+        <span class="sb-dot"></span>
+        <span>SUBSCRIBER_ACCESS // ONLINE</span>
+      </div>
+      <h3 class="sb-title" data-text="구독자 전용 작업실">구독자 전용 작업실</h3>
+      <p class="sb-desc">
+        <span class="hl">Windows 탐색기 스타일</span>로 제 GitHub를 둘러보세요 ·
+        비공개 레포 · 70B LLM 엔진 · 알파 시그널 로그
+      </p>
+    </div>
+
+    <span class="sb-cta">
+      <span>ENTER_VAULT</span>
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </div>
+</a>
+<!-- END SNIPPET =========================================================== -->
+
+</div>
+
+</body>
+</html>
