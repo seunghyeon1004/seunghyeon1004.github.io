@@ -52,6 +52,16 @@
       initBridge();
     }
 
+    // Re-apply grid items if React overwrites them
+    if (_gridRealItems) {
+      var grids = document.querySelectorAll('.icon-grid');
+      grids.forEach(function (g) {
+        if (g.querySelector('.lock-badge') && !g.dataset.oauthGrid) {
+          injectGridItems(_gridRealItems);
+        }
+      });
+    }
+
     // Always patch login modal if it appears
     patchLoginModalIfPresent();
   }, 500);
@@ -64,34 +74,136 @@
     // Show user badge if logged in
     if (token && user) showLoggedInBadge(JSON.parse(user));
 
+    // Replace ONLY the icon-grid items (파일/폴더 카테고리) with real repo data
+    replaceGridWithRealData('');
+
     // Intercept double-clicks on locked items for real GitHub data
     document.addEventListener('dblclick', function (e) {
       var item = e.target.closest('.item');
       if (!item) return;
       var lock = item.querySelector('.lock-badge');
-      if (!lock) return; // Only intercept locked items
+      if (!lock) return;
 
       var tk = sessionStorage.getItem('gh_token');
-      if (!tk) {
-        // Let the app's login modal appear, it will get patched
-        return;
-      }
+      if (!tk) return; // Let app's login modal appear, it gets patched
 
-      // Authenticated — fetch real content from GitHub
       e.stopPropagation();
       e.preventDefault();
       var nameEl = item.querySelector('.item-name');
       if (!nameEl) return;
-      var itemName = nameEl.textContent.trim();
+      var itemPath = item.dataset.path || nameEl.textContent.trim();
 
-      // Check if it looks like a directory (no extension)
-      var isDir = !itemName.includes('.') || item.dataset.type === 'dir';
-      if (isDir) {
-        fetchAndShowFolder(itemName, tk);
+      if (item.dataset.type === 'dir') {
+        fetchAndShowFolder(itemPath, tk);
       } else {
-        fetchFileContent(itemName, tk);
+        fetchFileContent(itemPath, tk);
       }
     }, true);
+  }
+
+  // ── 3b. Replace grid items with real data ─────────────
+  var _gridRealItems = null;
+
+  function replaceGridWithRealData(dirPath) {
+    var url = CONFIG.apiBase + '/api/subscribers-list';
+    if (dirPath) url += '?path=' + encodeURIComponent(dirPath);
+
+    fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.items && data.items.length > 0) {
+          _gridRealItems = data.items;
+          injectGridItems(data.items);
+        }
+      })
+      .catch(function () { /* keep demo on error */ });
+  }
+
+  function injectGridItems(items) {
+    // Find the icon-grid that has lock badges (구독자 전용 카테고리)
+    var grids = document.querySelectorAll('.icon-grid');
+    var targetGrid = null;
+    grids.forEach(function (g) {
+      if (g.querySelector('.lock-badge')) targetGrid = g;
+    });
+    if (!targetGrid && grids.length) targetGrid = grids[grids.length - 1];
+    if (!targetGrid) return;
+
+    // Mark as replaced
+    targetGrid.dataset.oauthGrid = 'true';
+
+    // Clear ONLY this grid's items
+    while (targetGrid.firstChild) targetGrid.removeChild(targetGrid.firstChild);
+
+    // Insert real items
+    items.forEach(function (item) {
+      var div = document.createElement('div');
+      div.className = 'item';
+      div.dataset.path = item.path;
+      div.dataset.type = item.type;
+
+      var iconWrap = document.createElement('div');
+      iconWrap.className = 'item-icon';
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 48 48');
+
+      if (item.type === 'dir') {
+        var p1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p1.setAttribute('d', 'M4 8h16l4 4h20v28H4z');
+        p1.setAttribute('fill', '#f9c74f');
+        p1.setAttribute('stroke', '#e5a800');
+        p1.setAttribute('stroke-width', '1.5');
+        svg.appendChild(p1);
+      } else {
+        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', '8'); rect.setAttribute('y', '4');
+        rect.setAttribute('width', '32'); rect.setAttribute('height', '40');
+        rect.setAttribute('rx', '3');
+        rect.setAttribute('fill', '#e8eaed'); rect.setAttribute('stroke', '#bbb');
+        rect.setAttribute('stroke-width', '1.2');
+        svg.appendChild(rect);
+        ['M14 16h20', 'M14 22h20', 'M14 28h14'].forEach(function (d) {
+          var line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          line.setAttribute('d', d); line.setAttribute('stroke', '#888');
+          line.setAttribute('stroke-width', '1.5'); line.setAttribute('stroke-linecap', 'round');
+          svg.appendChild(line);
+        });
+      }
+      iconWrap.appendChild(svg);
+
+      // Lock badge
+      var lock = document.createElement('div');
+      lock.className = 'lock-badge';
+      var lockSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      lockSvg.setAttribute('viewBox', '0 0 24 24'); lockSvg.setAttribute('fill', 'none');
+      var lockR = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      lockR.setAttribute('x','5'); lockR.setAttribute('y','11');
+      lockR.setAttribute('width','14'); lockR.setAttribute('height','10'); lockR.setAttribute('rx','2');
+      lockR.setAttribute('stroke','currentColor'); lockR.setAttribute('stroke-width','2');
+      lockSvg.appendChild(lockR);
+      var lockP = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      lockP.setAttribute('d','M8 11V7a4 4 0 018 0v4');
+      lockP.setAttribute('stroke','currentColor'); lockP.setAttribute('stroke-width','2');
+      lockSvg.appendChild(lockP);
+      lock.appendChild(lockSvg);
+      iconWrap.appendChild(lock);
+      div.appendChild(iconWrap);
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'item-name';
+      nameEl.textContent = item.name;
+      div.appendChild(nameEl);
+
+      if (item.size > 0 && item.type === 'file') {
+        var sub = document.createElement('div');
+        sub.className = 'item-sub';
+        sub.textContent = formatSize(item.size);
+        div.appendChild(sub);
+      }
+
+      targetGrid.appendChild(div);
+    });
   }
 
   // ── 4. Login Modal Patch ──────────────────────────────
