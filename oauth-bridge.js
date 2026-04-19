@@ -21,20 +21,20 @@
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (data.error) {
-          sessionStorage.setItem('gh_auth_error', data.error);
+          localStorage.setItem('gh_auth_error', data.error);
           return;
         }
         if (data.is_collaborator) {
-          sessionStorage.setItem('gh_token', data.access_token);
-          sessionStorage.setItem('gh_user', JSON.stringify(data.user));
-          sessionStorage.removeItem('gh_auth_error');
+          localStorage.setItem('gh_token', data.access_token);
+          localStorage.setItem('gh_user', JSON.stringify(data.user));
+          localStorage.removeItem('gh_auth_error');
         } else {
-          sessionStorage.setItem('gh_auth_error', 'no_access');
-          sessionStorage.setItem('gh_user', JSON.stringify(data.user));
+          localStorage.setItem('gh_auth_error', 'no_access');
+          localStorage.setItem('gh_user', JSON.stringify(data.user));
         }
       })
       .catch(function () {
-        sessionStorage.setItem('gh_auth_error', 'network');
+        localStorage.setItem('gh_auth_error', 'network');
       });
   }
 
@@ -74,8 +74,8 @@
 
   // ── 3. Main Bridge ────────────────────────────────────
   function initBridge() {
-    var token = sessionStorage.getItem('gh_token');
-    var user = sessionStorage.getItem('gh_user');
+    var token = localStorage.getItem('gh_token');
+    var user = localStorage.getItem('gh_user');
 
     // Show user badge if logged in
     if (token && user) showLoggedInBadge(JSON.parse(user));
@@ -90,7 +90,7 @@
       var lock = item.querySelector('.lock-badge');
       if (!lock) return;
 
-      var tk = sessionStorage.getItem('gh_token');
+      var tk = localStorage.getItem('gh_token');
       if (!tk) return; // Let app's login modal appear, it gets patched
 
       e.stopPropagation();
@@ -219,8 +219,8 @@
     if (!card || card.dataset.oauthPatched) return;
     card.dataset.oauthPatched = 'true';
 
-    var authError = sessionStorage.getItem('gh_auth_error');
-    if (authError) sessionStorage.removeItem('gh_auth_error');
+    var authError = localStorage.getItem('gh_auth_error');
+    if (authError) localStorage.removeItem('gh_auth_error');
 
     // Replace login body
     var body = card.querySelector('.login-body');
@@ -306,8 +306,8 @@
 
     badge.title = '클릭하여 로그아웃';
     badge.addEventListener('click', function () {
-      sessionStorage.removeItem('gh_token');
-      sessionStorage.removeItem('gh_user');
+      localStorage.removeItem('gh_token');
+      localStorage.removeItem('gh_user');
       window.location.reload();
     });
 
@@ -385,7 +385,7 @@
       sideItem.appendChild(span);
 
       sideItem.addEventListener('click', function () {
-        var token = sessionStorage.getItem('gh_token');
+        var token = localStorage.getItem('gh_token');
         if (item.type === 'dir') {
           if (token) fetchAndShowFolder(item.path, token);
           else showOAuthModal();
@@ -540,8 +540,8 @@
       .then(function (r) {
         if (r.status === 403 || r.status === 404) {
           // Not a collaborator or file not found
-          sessionStorage.removeItem('gh_token');
-          sessionStorage.removeItem('gh_user');
+          localStorage.removeItem('gh_token');
+          localStorage.removeItem('gh_user');
           showAccessDeniedModal();
           throw new Error('access_denied');
         }
