@@ -39,35 +39,17 @@
   }
 
   // ── 2. Persistent watcher ──────────────────────────────
-  // Survives document replacement because setInterval is on window
+  // Keeps demo UI intact, only patches OAuth and file preview
   var _bridgeReady = false;
-  var _realItems = null;
-  var _currentPath = '';
 
   setInterval(function () {
-    // Wait for body and sidebar to exist (after bundler replaces document)
     if (!document.body) return;
-    var sidebar = document.querySelector('.sidebar');
-    var grid = document.querySelector('.icon-grid');
-    if (!sidebar && !grid) return;
+    if (!document.querySelector('.item') && !document.querySelector('.icon-grid')) return;
 
     // One-time init
     if (!_bridgeReady) {
       _bridgeReady = true;
       initBridge();
-    }
-
-    // Continuously re-apply real data if React overwrites it
-    if (_realItems && sidebar) {
-      // Check if sidebar still has our data (look for our marker)
-      if (!sidebar.dataset.oauthSidebar) {
-        updateSidebar(_realItems, _currentPath);
-      }
-    }
-    if (_realItems && grid) {
-      if (!grid.dataset.oauthGrid) {
-        injectRealItems(_realItems, _currentPath);
-      }
     }
 
     // Always patch login modal if it appears
@@ -82,8 +64,34 @@
     // Show user badge if logged in
     if (token && user) showLoggedInBadge(JSON.parse(user));
 
-    // Fetch real directory listing and inject
-    fetchAndInjectListing('');
+    // Intercept double-clicks on locked items for real GitHub data
+    document.addEventListener('dblclick', function (e) {
+      var item = e.target.closest('.item');
+      if (!item) return;
+      var lock = item.querySelector('.lock-badge');
+      if (!lock) return; // Only intercept locked items
+
+      var tk = sessionStorage.getItem('gh_token');
+      if (!tk) {
+        // Let the app's login modal appear, it will get patched
+        return;
+      }
+
+      // Authenticated — fetch real content from GitHub
+      e.stopPropagation();
+      e.preventDefault();
+      var nameEl = item.querySelector('.item-name');
+      if (!nameEl) return;
+      var itemName = nameEl.textContent.trim();
+
+      // Check if it looks like a directory (no extension)
+      var isDir = !itemName.includes('.') || item.dataset.type === 'dir';
+      if (isDir) {
+        fetchAndShowFolder(itemName, tk);
+      } else {
+        fetchFileContent(itemName, tk);
+      }
+    }, true);
   }
 
   // ── 4. Login Modal Patch ──────────────────────────────
@@ -192,28 +200,23 @@
     }, 100);
   }
 
-  // ── 6. Real Directory Listing ─────────────────────────
-  function fetchAndInjectListing(dirPath) {
-    var url = CONFIG.apiBase + '/api/subscribers-list';
-    if (dirPath) url += '?path=' + encodeURIComponent(dirPath);
-
-    fetch(url)
+  // ── 6. Folder Navigation (real GitHub data) ────────────
+  function fetchAndShowFolder(folderName, token) {
+    fetch(CONFIG.apiBase + '/api/subscribers-list?path=' + encodeURIComponent(folderName))
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (data.items && data.items.length > 0) {
-          _realItems = data.items;
-          _currentPath = dirPath;
-          injectRealItems(data.items, dirPath);
+          showFolderContents(data.items, folderName, token);
         }
       })
-      .catch(function () { /* show demo data on error */ });
+      .catch(function () {
+        // Try fetching as a file instead
+        fetchFileContent(folderName, token);
+      });
   }
 
-  function injectRealItems(items, currentPath) {
-    // Update sidebar with real folders
-    updateSidebar(items, currentPath);
-
-    // Find the grid with lock badges (구독자 전용 section)
+  function showFolderContents(items, folderPath, token) {
+    // Find the grid with lock badges
     var grids = document.querySelectorAll('.icon-grid');
     var targetGrid = null;
     grids.forEach(function (g) {
@@ -222,10 +225,7 @@
     if (!targetGrid && grids.length) targetGrid = grids[grids.length - 1];
     if (!targetGrid) return;
 
-    // Mark grid as ours
-    targetGrid.dataset.oauthGrid = 'true';
-
-    // Clear existing items
+    // Clear and show real folder contents
     while (targetGrid.firstChild) targetGrid.removeChild(targetGrid.firstChild);
 
     // Create real items
@@ -307,19 +307,13 @@
         div.appendChild(sub);
       }
 
-      // Double-click: auth check
+      // Double-click: navigate folder or open file
       div.addEventListener('dblclick', function (e) {
         e.preventDefault();
         e.stopPropagation();
 
-        var token = sessionStorage.getItem('gh_token');
-        if (!token) {
-          showOAuthModal();
-          return;
-        }
-
         if (item.type === 'dir') {
-          fetchAndInjectListingAuth(item.path, token);
+          fetchAndShowFolder(item.path, token);
         } else {
           fetchFileContent(item.path, token);
         }
@@ -334,27 +328,9 @@
       var first = statusBar.firstElementChild;
       if (first) first.textContent = items.length + '개 항목';
     }
-
-    // Update address bar
-    updateAddressBar(currentPath);
   }
 
-  // ── 7. Authenticated Navigation ───────────────────────
-  function fetchAndInjectListingAuth(dirPath, token) {
-    var url = CONFIG.apiBase + '/api/subscribers-list';
-    if (dirPath) url += '?path=' + encodeURIComponent(dirPath);
-
-    fetch(url)
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        if (data.items) {
-          _realItems = data.items;
-          _currentPath = dirPath;
-          injectRealItems(data.items, dirPath);
-        }
-      });
-  }
-
+  // ── 7. File Content ────────────────────────────────────
   function fetchFileContent(filePath, token) {
     fetch('https://api.github.com/repos/seunghyeon1004/Subscribers/contents/' + filePath, {
       headers: {
@@ -441,149 +417,7 @@
     document.body.appendChild(preview);
   }
 
-  // ── 8b. Sidebar Update ─────────────────────────────────
-  function updateSidebar(items, currentPath) {
-    var sidebar = document.querySelector('.sidebar');
-    if (!sidebar) return;
-
-    // Mark sidebar as ours
-    sidebar.dataset.oauthSidebar = 'true';
-
-    // Clear ALL existing sections (즐겨찾기, 데모 등 전부 제거)
-    while (sidebar.firstChild) sidebar.removeChild(sidebar.firstChild);
-
-    // Create single section for Subscribers
-    var targetSection = document.createElement('div');
-    targetSection.className = 'side-section';
-    sidebar.appendChild(targetSection);
-
-    var sideTitle = document.createElement('div');
-    sideTitle.className = 'side-title';
-    sideTitle.textContent = 'Subscribers';
-    targetSection.appendChild(sideTitle);
-
-    // Add root item
-    var rootItem = document.createElement('div');
-    rootItem.className = 'side-item' + (!currentPath ? ' active' : '');
-    var rootSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    rootSvg.setAttribute('viewBox', '0 0 24 24');
-    rootSvg.setAttribute('width', '16');
-    rootSvg.setAttribute('height', '16');
-    rootSvg.setAttribute('fill', 'none');
-    var rootPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    rootPath.setAttribute('d', 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z');
-    rootPath.setAttribute('stroke', 'currentColor');
-    rootPath.setAttribute('stroke-width', '2');
-    rootSvg.appendChild(rootPath);
-    rootItem.appendChild(rootSvg);
-    var rootSpan = document.createElement('span');
-    rootSpan.textContent = 'Root';
-    rootItem.appendChild(rootSpan);
-    rootItem.addEventListener('click', function () { fetchAndInjectListing(''); });
-    targetSection.appendChild(rootItem);
-
-    // Add all items (folders first, then files)
-    var sorted = items.slice().sort(function (a, b) {
-      if (a.type === 'dir' && b.type !== 'dir') return -1;
-      if (a.type !== 'dir' && b.type === 'dir') return 1;
-      return a.name.localeCompare(b.name);
-    });
-    sorted.forEach(function (folder) {
-      var sideItem = document.createElement('div');
-      sideItem.className = 'side-item' + (currentPath === folder.path ? ' active' : '');
-
-      var itemSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      itemSvg.setAttribute('viewBox', '0 0 24 24');
-      itemSvg.setAttribute('width', '16');
-      itemSvg.setAttribute('height', '16');
-      itemSvg.setAttribute('fill', 'none');
-      var itemPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      if (folder.type === 'dir') {
-        itemPath.setAttribute('d', 'M2 6a2 2 0 012-2h5l2 2h9a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6z');
-        itemPath.setAttribute('stroke', 'currentColor');
-        itemPath.setAttribute('stroke-width', '1.5');
-        itemPath.setAttribute('fill', 'rgba(249,201,79,0.3)');
-      } else {
-        itemPath.setAttribute('d', 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z');
-        itemPath.setAttribute('stroke', 'currentColor');
-        itemPath.setAttribute('stroke-width', '1.5');
-        itemPath.setAttribute('fill', 'rgba(200,200,210,0.3)');
-      }
-      itemSvg.appendChild(itemPath);
-      sideItem.appendChild(itemSvg);
-
-      var span = document.createElement('span');
-      span.textContent = folder.name;
-      sideItem.appendChild(span);
-
-      sideItem.addEventListener('click', function () {
-        var token = sessionStorage.getItem('gh_token');
-        if (folder.type === 'dir') {
-          if (token) {
-            fetchAndInjectListingAuth(folder.path, token);
-          } else {
-            showOAuthModal();
-          }
-        } else {
-          if (token) {
-            fetchFileContent(folder.path, token);
-          } else {
-            showOAuthModal();
-          }
-        }
-      });
-
-      targetSection.appendChild(sideItem);
-    });
-  }
-
-  // ── 9. Address Bar ────────────────────────────────────
-  function updateAddressBar(currentPath) {
-    var addrBar = document.querySelector('.addr-bar');
-    if (!addrBar) return;
-
-    while (addrBar.firstChild) addrBar.removeChild(addrBar.firstChild);
-
-    var rootCrumb = document.createElement('span');
-    rootCrumb.className = 'addr-crumb';
-    rootCrumb.textContent = 'Subscribers';
-    rootCrumb.addEventListener('click', function () { fetchAndInjectListing(''); });
-    addrBar.appendChild(rootCrumb);
-
-    if (currentPath) {
-      var parts = currentPath.split('/');
-      var cumPath = '';
-      parts.forEach(function (part) {
-        cumPath += (cumPath ? '/' : '') + part;
-
-        var sep = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        sep.setAttribute('width', '14');
-        sep.setAttribute('height', '14');
-        sep.setAttribute('viewBox', '0 0 24 24');
-        sep.style.opacity = '0.4';
-        var sepPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        sepPath.setAttribute('d', 'M9 18l6-6-6-6');
-        sepPath.setAttribute('stroke', 'currentColor');
-        sepPath.setAttribute('stroke-width', '2');
-        sepPath.setAttribute('fill', 'none');
-        sep.appendChild(sepPath);
-        addrBar.appendChild(sep);
-
-        var crumb = document.createElement('span');
-        crumb.className = 'addr-crumb';
-        crumb.textContent = part;
-        var p = cumPath;
-        crumb.addEventListener('click', function () {
-          var token = sessionStorage.getItem('gh_token');
-          if (token) fetchAndInjectListingAuth(p, token);
-          else fetchAndInjectListing(p);
-        });
-        addrBar.appendChild(crumb);
-      });
-    }
-  }
-
-  // ── 10. Modals ────────────────────────────────────────
+  // ── 9. Modals ──────────────────────────────────────────
   function showOAuthModal() {
     if (document.querySelector('.modal-backdrop')) return;
 
