@@ -182,6 +182,750 @@ document.addEventListener('DOMContentLoaded', async function() {
   <script type="__bundler/template">
 "<!DOCTYPE html>\n<html lang=\"ko\"><head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>구독자용 GitHub 탐색기<\u002Ftitle>\n<style>/* ============================================\n   구독자용 GitHub 탐색기 — Win11 × Apple\n   ============================================ */\n\n:root {\n  --accent: oklch(0.62 0.14 245);\n  --accent-soft: oklch(0.92 0.04 245);\n  --text: oklch(0.22 0.01 250);\n  --text-dim: oklch(0.45 0.01 250);\n  --text-faint: oklch(0.62 0.01 250);\n  --window-bg: rgba(252, 252, 253, 0.72);\n  --window-border: rgba(0, 0, 0, 0.08);\n  --window-shadow:\n    0 1px 2px rgba(0, 0, 0, 0.08),\n    0 20px 40px -10px rgba(0, 0, 0, 0.22),\n    0 40px 80px -20px rgba(0, 0, 0, 0.18);\n  --hover: rgba(0, 0, 0, 0.04);\n  --selected: oklch(0.92 0.04 245);\n  --divider: rgba(0, 0, 0, 0.06);\n  --chip: rgba(0, 0, 0, 0.05);\n  --sidebar-bg: rgba(248, 248, 250, 0.6);\n\n  --radius-win: 10px;\n  --radius-item: 6px;\n  --radius-chip: 999px;\n\n  --font-ui: \"SF Pro Text\", \"SF Pro Display\", \"Segoe UI Variable Display\", \"Segoe UI\", -apple-system, BlinkMacSystemFont, \"Pretendard\", system-ui, sans-serif;\n  --font-mono: \"SF Mono\", \"JetBrains Mono\", \"Cascadia Code\", ui-monospace, monospace;\n}\n\n[data-theme=\"dark\"] {\n  --accent: oklch(0.72 0.14 245);\n  --accent-soft: oklch(0.35 0.08 245);\n  --text: oklch(0.96 0.005 250);\n  --text-dim: oklch(0.72 0.01 250);\n  --text-faint: oklch(0.55 0.01 250);\n  --window-bg: rgba(30, 30, 34, 0.72);\n  --window-border: rgba(255, 255, 255, 0.08);\n  --window-shadow:\n    0 1px 2px rgba(0, 0, 0, 0.4),\n    0 20px 40px -10px rgba(0, 0, 0, 0.5),\n    0 40px 80px -20px rgba(0, 0, 0, 0.5);\n  --hover: rgba(255, 255, 255, 0.06);\n  --selected: oklch(0.35 0.08 245);\n  --divider: rgba(255, 255, 255, 0.08);\n  --chip: rgba(255, 255, 255, 0.08);\n  --sidebar-bg: rgba(22, 22, 26, 0.55);\n}\n\n* { box-sizing: border-box; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%;\n  font-family: var(--font-ui);\n  color: var(--text);\n  overflow: hidden;\n  user-select: none;\n  -webkit-font-smoothing: antialiased;\n  font-feature-settings: \"ss01\", \"cv11\";\n}\n\nbody {\n  position: relative;\n}\n\n/* ============================================\n   Bliss-inspired desktop wallpaper\n   ============================================ */\n.desktop {\n  position: fixed;\n  inset: 0;\n  overflow: hidden;\n  z-index: 0;\n}\n\n.bliss-sky {\n  position: absolute;\n  inset: 0;\n  background: linear-gradient(\n    180deg,\n    #4a9fe0 0%,\n    #7cc5ee 35%,\n    #b8e0f2 58%,\n    #e0edd0 62%,\n    #9ec86c 70%,\n    #6ba53c 100%\n  );\n}\n\n[data-theme=\"dark\"] .bliss-sky {\n  background: linear-gradient(\n    180deg,\n    #0a1428 0%,\n    #1a2a4a 40%,\n    #2b3a5e 60%,\n    #1a2a3e 75%,\n    #0f1a2a 100%\n  );\n}\n\n/* cloud puffs */\n.cloud {\n  position: absolute;\n  background: rgba(255, 255, 255, 0.85);\n  border-radius: 50%;\n  filter: blur(12px);\n  opacity: 0.9;\n}\n[data-theme=\"dark\"] .cloud { display: none; }\n\n.star {\n  position: absolute;\n  width: 2px;\n  height: 2px;\n  background: white;\n  border-radius: 50%;\n  opacity: 0;\n  animation: twinkle 3s ease-in-out infinite;\n}\n[data-theme=\"dark\"] .star { opacity: 0.8; }\n\n@keyframes twinkle {\n  0%, 100% { opacity: 0.3; }\n  50% { opacity: 0.9; }\n}\n\n/* rolling hill */\n.hill {\n  position: absolute;\n  bottom: -10%;\n  left: -5%;\n  right: -5%;\n  height: 45%;\n  background: radial-gradient(ellipse at 50% 100%, #7cb342 0%, #558b2f 60%, #33691e 100%);\n  border-radius: 50% 50% 0 0 / 30% 30% 0 0;\n  transform: scaleX(1.2);\n}\n[data-theme=\"dark\"] .hill {\n  background: radial-gradient(ellipse at 50% 100%, #1a3a1e 0%, #0f2a14 60%, #08180a 100%);\n}\n\n/* ============================================\n   Desktop icons\n   ============================================ */\n.desktop-icons {\n  position: fixed;\n  top: 20px;\n  left: 20px;\n  display: grid;\n  gap: 8px;\n  z-index: 1;\n}\n\n.desk-icon {\n  width: 84px;\n  padding: 8px 4px 6px;\n  border-radius: 6px;\n  text-align: center;\n  cursor: pointer;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 4px;\n  transition: background 0.12s;\n}\n.desk-icon:hover { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); }\n.desk-icon.selected { background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(8px); outline: 1px solid rgba(255,255,255,0.4); }\n.desk-icon svg { width: 44px; height: 44px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }\n.desk-icon span {\n  font-size: 12px;\n  color: white;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);\n  line-height: 1.2;\n  max-width: 80px;\n  word-break: keep-all;\n}\n\n/* ============================================\n   Taskbar\n   ============================================ */\n.taskbar {\n  position: fixed;\n  bottom: 8px;\n  left: 50%;\n  transform: translateX(-50%);\n  height: 44px;\n  padding: 0 8px;\n  background: var(--window-bg);\n  backdrop-filter: blur(24px) saturate(1.8);\n  -webkit-backdrop-filter: blur(24px) saturate(1.8);\n  border: 1px solid var(--window-border);\n  border-radius: 12px;\n  display: flex;\n  align-items: center;\n  gap: 4px;\n  z-index: 1000;\n  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);\n}\n\n.task-btn {\n  width: 36px;\n  height: 36px;\n  border-radius: 6px;\n  display: grid;\n  place-items: center;\n  cursor: pointer;\n  color: var(--text);\n  position: relative;\n  transition: background 0.12s;\n}\n.task-btn:hover { background: var(--hover); }\n.task-btn.active { background: var(--accent-soft); }\n.task-btn.active::after {\n  content: \"\";\n  position: absolute;\n  bottom: -4px;\n  width: 4px;\n  height: 4px;\n  border-radius: 50%;\n  background: var(--accent);\n}\n.task-btn svg { width: 20px; height: 20px; }\n\n.task-divider { width: 1px; height: 20px; background: var(--divider); margin: 0 4px; }\n\n.task-clock {\n  padding: 0 12px;\n  font-size: 12px;\n  color: var(--text);\n  text-align: right;\n  line-height: 1.15;\n  cursor: pointer;\n  border-radius: 6px;\n  height: 36px;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n}\n.task-clock:hover { background: var(--hover); }\n.task-clock small { color: var(--text-dim); font-size: 11px; }\n\n/* ============================================\n   Explorer window\n   ============================================ */\n.window {\n  position: absolute;\n  background: var(--window-bg);\n  backdrop-filter: blur(40px) saturate(1.8);\n  -webkit-backdrop-filter: blur(40px) saturate(1.8);\n  border: 1px solid var(--window-border);\n  border-radius: var(--radius-win);\n  box-shadow: var(--window-shadow);\n  display: flex;\n  flex-direction: column;\n  overflow: hidden;\n  min-width: 640px;\n  min-height: 400px;\n}\n\n.title-bar {\n  height: 40px;\n  display: flex;\n  align-items: center;\n  padding: 0 0 0 12px;\n  gap: 8px;\n  -webkit-app-region: drag;\n  cursor: move;\n  flex-shrink: 0;\n}\n\n.title-bar-text {\n  font-size: 12px;\n  color: var(--text-dim);\n  flex: 1;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.window-controls {\n  display: flex;\n  height: 40px;\n}\n.wctl {\n  width: 46px;\n  height: 100%;\n  display: grid;\n  place-items: center;\n  cursor: pointer;\n  transition: background 0.1s;\n  color: var(--text);\n}\n.wctl:hover { background: var(--hover); }\n.wctl.close:hover { background: #e81123; color: white; }\n.wctl svg { width: 10px; height: 10px; }\n\n/* Command bar */\n.cmd-bar {\n  height: 44px;\n  display: flex;\n  align-items: center;\n  padding: 0 12px;\n  gap: 4px;\n  border-bottom: 1px solid var(--divider);\n  flex-shrink: 0;\n}\n.cmd-btn {\n  height: 32px;\n  padding: 0 12px;\n  border-radius: 6px;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  cursor: pointer;\n  color: var(--text);\n  font-size: 13px;\n  background: transparent;\n  border: none;\n  font-family: inherit;\n}\n.cmd-btn:hover { background: var(--hover); }\n.cmd-btn:disabled { color: var(--text-faint); cursor: default; }\n.cmd-btn:disabled:hover { background: transparent; }\n.cmd-btn svg { width: 16px; height: 16px; }\n.cmd-sep { width: 1px; height: 20px; background: var(--divider); margin: 0 4px; }\n\n/* Address bar */\n.addr-row {\n  height: 44px;\n  display: flex;\n  align-items: center;\n  padding: 0 12px;\n  gap: 8px;\n  border-bottom: 1px solid var(--divider);\n  flex-shrink: 0;\n}\n.addr-nav {\n  display: flex;\n  gap: 2px;\n}\n.addr-nav button {\n  width: 30px;\n  height: 30px;\n  border-radius: 50%;\n  border: none;\n  background: transparent;\n  cursor: pointer;\n  color: var(--text);\n  display: grid;\n  place-items: center;\n}\n.addr-nav button:hover:not(:disabled) { background: var(--hover); }\n.addr-nav button:disabled { color: var(--text-faint); cursor: default; }\n.addr-nav svg { width: 16px; height: 16px; }\n\n.addr-bar {\n  flex: 1;\n  height: 30px;\n  background: var(--hover);\n  border-radius: 6px;\n  display: flex;\n  align-items: center;\n  padding: 0 10px;\n  font-size: 13px;\n  gap: 2px;\n  overflow: hidden;\n}\n.addr-crumb {\n  padding: 3px 6px;\n  border-radius: 4px;\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  white-space: nowrap;\n}\n.addr-crumb:hover { background: rgba(0,0,0,0.06); }\n[data-theme=\"dark\"] .addr-crumb:hover { background: rgba(255,255,255,0.1); }\n.addr-crumb svg { width: 14px; height: 14px; opacity: 0.6; }\n\n.search-bar {\n  width: 220px;\n  height: 30px;\n  background: var(--hover);\n  border-radius: 6px;\n  display: flex;\n  align-items: center;\n  padding: 0 10px;\n  gap: 8px;\n  font-size: 13px;\n}\n.search-bar svg { width: 14px; height: 14px; color: var(--text-dim); }\n.search-bar input {\n  flex: 1;\n  border: none;\n  background: transparent;\n  outline: none;\n  color: var(--text);\n  font-size: 13px;\n  font-family: inherit;\n}\n\n/* Body layout */\n.win-body {\n  flex: 1;\n  display: flex;\n  overflow: hidden;\n  min-height: 0;\n}\n\n.sidebar {\n  width: 220px;\n  background: var(--sidebar-bg);\n  border-right: 1px solid var(--divider);\n  padding: 8px 6px;\n  overflow-y: auto;\n  flex-shrink: 0;\n  font-size: 13px;\n}\n.side-section { margin-bottom: 12px; }\n.side-title {\n  font-size: 11px;\n  color: var(--text-dim);\n  text-transform: uppercase;\n  letter-spacing: 0.04em;\n  padding: 6px 10px 4px;\n  font-weight: 600;\n}\n.side-item {\n  height: 30px;\n  padding: 0 10px;\n  border-radius: 5px;\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  cursor: pointer;\n  color: var(--text);\n}\n.side-item:hover { background: var(--hover); }\n.side-item.active { background: var(--selected); color: var(--accent); font-weight: 500; }\n.side-item svg { width: 16px; height: 16px; flex-shrink: 0; }\n.side-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }\n\n/* Main content */\n.main {\n  flex: 1;\n  overflow-y: auto;\n  padding: 12px 20px 20px;\n  min-height: 0;\n}\n\n.section-head {\n  font-size: 12px;\n  color: var(--text-dim);\n  margin: 16px 0 8px;\n  padding: 0 4px;\n  font-weight: 500;\n  display: flex;\n  align-items: center;\n  gap: 8px;\n}\n.section-head:first-child { margin-top: 4px; }\n.section-head::after {\n  content: \"\";\n  flex: 1;\n  height: 1px;\n  background: var(--divider);\n}\n\n.icon-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));\n  gap: 4px;\n}\n\n.item {\n  padding: 10px 6px 8px;\n  border-radius: var(--radius-item);\n  cursor: pointer;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 8px;\n  text-align: center;\n  border: 1px solid transparent;\n  transition: background 0.08s, border-color 0.08s;\n  position: relative;\n}\n.item:hover { background: var(--hover); }\n.item.selected {\n  background: var(--selected);\n  border-color: color-mix(in oklch, var(--accent) 35%, transparent);\n}\n.item-icon {\n  width: 48px;\n  height: 48px;\n  display: grid;\n  place-items: center;\n  position: relative;\n}\n.item-icon svg { width: 100%; height: 100%; }\n.item-name {\n  font-size: 12px;\n  line-height: 1.3;\n  color: var(--text);\n  word-break: break-word;\n  max-width: 100px;\n  display: -webkit-box;\n  -webkit-line-clamp: 2;\n  -webkit-box-orient: vertical;\n  overflow: hidden;\n}\n.item-sub {\n  font-size: 10.5px;\n  color: var(--text-faint);\n  line-height: 1.2;\n}\n.item .lock-badge {\n  position: absolute;\n  right: 4px;\n  bottom: 4px;\n  width: 18px;\n  height: 18px;\n  background: var(--accent);\n  border-radius: 50%;\n  display: grid;\n  place-items: center;\n  color: white;\n  box-shadow: 0 1px 3px rgba(0,0,0,0.3);\n}\n.item .lock-badge svg { width: 10px; height: 10px; }\n\n/* Status bar */\n.status-bar {\n  height: 28px;\n  background: var(--sidebar-bg);\n  border-top: 1px solid var(--divider);\n  display: flex;\n  align-items: center;\n  padding: 0 14px;\n  font-size: 12px;\n  color: var(--text-dim);\n  gap: 16px;\n  flex-shrink: 0;\n}\n\n/* ============================================\n   Preview pane (code preview window)\n   ============================================ */\n.preview-window {\n  position: absolute;\n  width: 820px;\n  height: 560px;\n  background: var(--window-bg);\n  backdrop-filter: blur(40px) saturate(1.8);\n  -webkit-backdrop-filter: blur(40px) saturate(1.8);\n  border: 1px solid var(--window-border);\n  border-radius: var(--radius-win);\n  box-shadow: var(--window-shadow);\n  display: flex;\n  flex-direction: column;\n  overflow: hidden;\n}\n\n.code-body {\n  flex: 1;\n  display: flex;\n  min-height: 0;\n  font-family: var(--font-mono);\n  font-size: 12.5px;\n  user-select: text;\n}\n\n.code-gutter {\n  padding: 12px 10px 12px 16px;\n  background: rgba(0,0,0,0.02);\n  color: var(--text-faint);\n  text-align: right;\n  border-right: 1px solid var(--divider);\n  line-height: 1.6;\n  user-select: none;\n  overflow: hidden;\n}\n[data-theme=\"dark\"] .code-gutter { background: rgba(255,255,255,0.03); }\n\n.code-content {\n  flex: 1;\n  padding: 12px 18px;\n  overflow: auto;\n  line-height: 1.6;\n  color: var(--text);\n  white-space: pre;\n}\n\n.readme-body {\n  flex: 1;\n  overflow-y: auto;\n  padding: 28px 40px;\n  user-select: text;\n  font-size: 14px;\n  line-height: 1.65;\n  color: var(--text);\n}\n.readme-body h1 { font-size: 28px; margin: 0 0 12px; font-weight: 600; }\n.readme-body h2 { font-size: 20px; margin: 28px 0 12px; font-weight: 600; border-bottom: 1px solid var(--divider); padding-bottom: 6px; }\n.readme-body h3 { font-size: 16px; margin: 20px 0 8px; font-weight: 600; }\n.readme-body p { margin: 8px 0; }\n.readme-body code { font-family: var(--font-mono); font-size: 13px; background: var(--chip); padding: 2px 5px; border-radius: 4px; }\n.readme-body pre { background: var(--chip); padding: 12px; border-radius: 6px; overflow: auto; }\n.readme-body pre code { background: none; padding: 0; }\n.readme-body a { color: var(--accent); text-decoration: none; }\n.readme-body a:hover { text-decoration: underline; }\n.readme-body ul, .readme-body ol { padding-left: 22px; }\n.readme-body img { max-width: 100%; border-radius: 6px; }\n.readme-body hr { border: 0; border-top: 1px solid var(--divider); margin: 20px 0; }\n.readme-body blockquote {\n  border-left: 3px solid var(--accent);\n  padding: 4px 14px;\n  color: var(--text-dim);\n  margin: 12px 0;\n  background: var(--chip);\n  border-radius: 0 6px 6px 0;\n}\n\n/* Syntax highlight-ish */\n.tok-k { color: oklch(0.5 0.18 300); }\n.tok-s { color: oklch(0.55 0.15 140); }\n.tok-c { color: var(--text-faint); font-style: italic; }\n.tok-n { color: oklch(0.6 0.15 30); }\n.tok-f { color: oklch(0.55 0.15 220); }\n[data-theme=\"dark\"] .tok-k { color: oklch(0.75 0.18 300); }\n[data-theme=\"dark\"] .tok-s { color: oklch(0.78 0.15 140); }\n[data-theme=\"dark\"] .tok-n { color: oklch(0.78 0.15 40); }\n[data-theme=\"dark\"] .tok-f { color: oklch(0.78 0.15 220); }\n\n/* ============================================\n   Login modal (OAuth-ish)\n   ============================================ */\n.modal-backdrop {\n  position: fixed;\n  inset: 0;\n  background: rgba(0, 0, 0, 0.35);\n  backdrop-filter: blur(4px);\n  display: grid;\n  place-items: center;\n  z-index: 2000;\n  animation: fade 0.2s ease;\n}\n@keyframes fade { from { opacity: 0; } to { opacity: 1; } }\n\n.login-card {\n  width: 420px;\n  background: var(--window-bg);\n  backdrop-filter: blur(40px) saturate(1.8);\n  border: 1px solid var(--window-border);\n  border-radius: 12px;\n  box-shadow: var(--window-shadow);\n  overflow: hidden;\n  animation: pop 0.24s cubic-bezier(0.2, 0.9, 0.3, 1.2);\n}\n@keyframes pop {\n  from { transform: scale(0.92) translateY(10px); opacity: 0; }\n  to { transform: scale(1) translateY(0); opacity: 1; }\n}\n\n.login-head {\n  padding: 24px 28px 16px;\n  display: flex;\n  align-items: center;\n  gap: 14px;\n}\n.login-logo {\n  width: 44px; height: 44px;\n  background: #000;\n  border-radius: 50%;\n  display: grid; place-items: center;\n  color: white;\n}\n[data-theme=\"dark\"] .login-logo { background: white; color: black; }\n.login-head h3 { margin: 0; font-size: 16px; font-weight: 600; }\n.login-head p { margin: 2px 0 0; font-size: 12px; color: var(--text-dim); }\n\n.login-body { padding: 8px 28px 20px; }\n.login-row {\n  margin: 12px 0;\n}\n.login-row label {\n  display: block;\n  font-size: 12px;\n  color: var(--text-dim);\n  margin-bottom: 6px;\n  font-weight: 500;\n}\n.login-input {\n  width: 100%;\n  height: 36px;\n  padding: 0 12px;\n  border-radius: 6px;\n  border: 1px solid var(--window-border);\n  background: var(--hover);\n  color: var(--text);\n  font-family: inherit;\n  font-size: 13px;\n  outline: none;\n}\n.login-input:focus { border-color: var(--accent); background: transparent; }\n\n.login-foot {\n  padding: 16px 28px 22px;\n  display: flex;\n  gap: 10px;\n  justify-content: flex-end;\n  border-top: 1px solid var(--divider);\n  background: var(--sidebar-bg);\n}\n.btn {\n  height: 34px;\n  padding: 0 16px;\n  border-radius: 6px;\n  border: 1px solid var(--window-border);\n  background: var(--hover);\n  color: var(--text);\n  font-family: inherit;\n  font-size: 13px;\n  cursor: pointer;\n  font-weight: 500;\n}\n.btn.primary {\n  background: var(--accent);\n  color: white;\n  border-color: transparent;\n}\n.btn.primary:hover { filter: brightness(1.08); }\n.btn:hover:not(.primary) { background: rgba(0,0,0,0.08); }\n\n.login-note {\n  margin: 8px 0 0;\n  font-size: 11.5px;\n  color: var(--text-faint);\n  line-height: 1.5;\n}\n.login-error {\n  margin-top: 10px;\n  padding: 8px 12px;\n  background: rgba(232, 17, 35, 0.08);\n  color: #e81123;\n  border-radius: 6px;\n  font-size: 12px;\n  border-left: 3px solid #e81123;\n}\n\n/* ============================================\n   Boot screen\n   ============================================ */\n.boot {\n  position: fixed;\n  inset: 0;\n  background: #000;\n  display: grid;\n  place-items: center;\n  z-index: 9999;\n  color: white;\n  transition: opacity 0.6s;\n}\n.boot.fade { opacity: 0; pointer-events: none; }\n\n.boot-inner {\n  text-align: center;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 28px;\n}\n.boot-logo {\n  width: 96px;\n  height: 96px;\n  display: grid;\n  place-items: center;\n  color: white;\n  animation: breathe 2.4s ease-in-out infinite;\n}\n@keyframes breathe {\n  0%, 100% { transform: scale(1); opacity: 0.92; }\n  50% { transform: scale(1.04); opacity: 1; }\n}\n.boot-spinner {\n  width: 56px; height: 56px;\n  border-radius: 50%;\n  position: relative;\n}\n.boot-spinner::before {\n  content: \"\";\n  position: absolute;\n  inset: 0;\n  border-radius: 50%;\n  border: 3px solid rgba(255,255,255,0.15);\n  border-top-color: white;\n  animation: spin 1s linear infinite;\n}\n@keyframes spin { to { transform: rotate(360deg); } }\n\n.boot-text {\n  font-size: 14px;\n  color: rgba(255,255,255,0.72);\n  letter-spacing: 0.02em;\n  font-weight: 300;\n}\n\n/* ============================================\n   Clippy\n   ============================================ */\n.clippy-wrap {\n  position: fixed;\n  right: 24px;\n  bottom: 72px;\n  z-index: 500;\n  display: flex;\n  align-items: flex-end;\n  gap: 10px;\n  pointer-events: none;\n}\n.clippy-wrap > * { pointer-events: auto; }\n\n.clippy-bubble {\n  max-width: 260px;\n  background: var(--window-bg);\n  backdrop-filter: blur(20px);\n  border: 1px solid var(--window-border);\n  border-radius: 12px 12px 2px 12px;\n  padding: 12px 14px;\n  font-size: 12.5px;\n  color: var(--text);\n  box-shadow: 0 6px 20px rgba(0,0,0,0.18);\n  line-height: 1.45;\n  animation: bubble-in 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);\n}\n@keyframes bubble-in {\n  from { transform: translateY(8px) scale(0.95); opacity: 0; }\n  to { transform: translateY(0) scale(1); opacity: 1; }\n}\n.clippy-bubble .bb-close {\n  float: right;\n  font-size: 11px;\n  color: var(--text-faint);\n  cursor: pointer;\n  margin-left: 8px;\n}\n.clippy-bubble .bb-close:hover { color: var(--text); }\n\n.clippy {\n  width: 64px;\n  height: 80px;\n  cursor: pointer;\n  animation: wiggle 3.4s ease-in-out infinite;\n  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));\n  transform-origin: 50% 80%;\n}\n@keyframes wiggle {\n  0%, 100% { transform: rotate(-2deg); }\n  50% { transform: rotate(2deg); }\n}\n.clippy:hover { animation-play-state: paused; }\n\n/* ============================================\n   Context menu\n   ============================================ */\n.ctx-menu {\n  position: fixed;\n  min-width: 200px;\n  background: var(--window-bg);\n  backdrop-filter: blur(40px) saturate(1.8);\n  border: 1px solid var(--window-border);\n  border-radius: 8px;\n  box-shadow: 0 8px 24px rgba(0,0,0,0.2);\n  padding: 4px;\n  z-index: 1500;\n  font-size: 13px;\n}\n.ctx-item {\n  padding: 6px 10px;\n  border-radius: 5px;\n  cursor: pointer;\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  color: var(--text);\n}\n.ctx-item:hover { background: var(--hover); }\n.ctx-item.disabled { color: var(--text-faint); pointer-events: none; }\n.ctx-item svg { width: 14px; height: 14px; }\n.ctx-sep { height: 1px; background: var(--divider); margin: 4px 2px; }\n\n/* ============================================\n   Tweaks panel\n   ============================================ */\n.tweaks-panel {\n  position: fixed;\n  right: 20px;\n  top: 20px;\n  width: 260px;\n  background: var(--window-bg);\n  backdrop-filter: blur(30px);\n  border: 1px solid var(--window-border);\n  border-radius: 10px;\n  box-shadow: var(--window-shadow);\n  padding: 14px 16px;\n  z-index: 2500;\n  font-size: 13px;\n}\n.tweaks-panel h4 { margin: 0 0 10px; font-size: 13px; font-weight: 600; }\n.tweak-row { display: flex; align-items: center; justify-content: space-between; margin: 8px 0; }\n.tweak-row label { color: var(--text-dim); }\n.toggle {\n  width: 36px; height: 20px;\n  background: var(--chip);\n  border-radius: 999px;\n  position: relative;\n  cursor: pointer;\n  transition: background 0.15s;\n}\n.toggle::after {\n  content: \"\";\n  position: absolute;\n  top: 2px; left: 2px;\n  width: 16px; height: 16px;\n  background: white;\n  border-radius: 50%;\n  transition: left 0.15s;\n  box-shadow: 0 1px 3px rgba(0,0,0,0.2);\n}\n.toggle.on { background: var(--accent); }\n.toggle.on::after { left: 18px; }\n\n/* Loading spinner inline */\n.mini-spin {\n  width: 14px; height: 14px;\n  border: 2px solid var(--divider);\n  border-top-color: var(--accent);\n  border-radius: 50%;\n  animation: spin 0.8s linear infinite;\n  display: inline-block;\n}\n\n.empty-state {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  padding: 60px 20px;\n  color: var(--text-dim);\n  text-align: center;\n  gap: 12px;\n}\n.empty-state svg { width: 48px; height: 48px; opacity: 0.4; }\n.empty-state h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }\n.empty-state p { margin: 0; font-size: 12.5px; max-width: 300px; line-height: 1.5; }\n\n/* scrollbars */\n::-webkit-scrollbar { width: 10px; height: 10px; }\n::-webkit-scrollbar-track { background: transparent; }\n::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }\n::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); background-clip: padding-box; border: 2px solid transparent; }\n[data-theme=\"dark\"] ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); background-clip: padding-box; border: 2px solid transparent; }\n<\u002Fstyle>\n<script src=\"62719c36-a181-498a-b399-294f819aa257\" integrity=\"sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L\" crossorigin=\"anonymous\"><\u002Fscript>\n<script src=\"642150fd-7a5e-4190-8b04-9b8eb8a1b362\" integrity=\"sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm\" crossorigin=\"anonymous\"><\u002Fscript>\n<script src=\"0fe207c6-4b6e-44e9-a0b4-cf8d2d5dcf5c\" integrity=\"sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y\" crossorigin=\"anonymous\"><\u002Fscript>\n<\u002Fhead>\n<body>\n<div id=\"root\"><\u002Fdiv>\n\n\n<script>\n  // Tweak defaults — editable via Tweaks panel.\n  window.__TWEAKS__ = /*EDITMODE-BEGIN*/{\n    \"dark\": false,\n    \"clippy\": true,\n    \"boot\": true,\n    \"username\": \"seunghyeon1004\",\n    \"xHandle\": \"baegseungh7061\",\n    \"siteUrl\": \"https://seunghyeon1004.github.io/\"\n  }/*EDITMODE-END*/;\n<\u002Fscript>\n\n<script type=\"text/babel\" src=\"9554f322-844b-49fd-9f69-f40a6838c2bf\"><\u002Fscript>\n<script type=\"text/babel\" src=\"cd477ed0-ebed-4c98-8771-3a97d9dc9c47\"><\u002Fscript>\n<script type=\"text/babel\" src=\"3fc59e72-792c-4808-83e9-c739b56fd3c2\"><\u002Fscript>\n<script type=\"text/babel\">\n  const root = ReactDOM.createRoot(document.getElementById(\"root\"));\n  root.render(<App initialTweaks={window.__TWEAKS__} />);\n<\u002Fscript>\n\n\n<\u002Fbody><\u002Fhtml>"
   </script>
-<script src="oauth-bridge.js"></script>
+<script>
+// GitHub OAuth Bridge for Subscribers Explorer
+// Runs after the bundled React app renders
+(function () {
+  var CONFIG = {
+    clientId: 'Ov23liPTjQi5F2bNMeiC',
+    apiBase: 'https://subscribers-api-eta.vercel.app',
+    redirectUri: 'https://seunghyeon1004.github.io/subscribers.html',
+    xHandle: 'baegseungh7061'
+  };
+
+  // ── 1. OAuth Callback ──────────────────────────────────
+  var params = new URLSearchParams(window.location.search);
+  var code = params.get('code');
+  if (code) {
+    window.history.replaceState({}, '', window.location.pathname);
+    fetch(CONFIG.apiBase + '/api/github-oauth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.error) {
+          sessionStorage.setItem('gh_auth_error', data.error);
+          return;
+        }
+        if (data.is_collaborator) {
+          sessionStorage.setItem('gh_token', data.access_token);
+          sessionStorage.setItem('gh_user', JSON.stringify(data.user));
+          sessionStorage.removeItem('gh_auth_error');
+        } else {
+          sessionStorage.setItem('gh_auth_error', 'no_access');
+          sessionStorage.setItem('gh_user', JSON.stringify(data.user));
+        }
+      })
+      .catch(function () {
+        sessionStorage.setItem('gh_auth_error', 'network');
+      });
+  }
+
+  // ── 2. Persistent watcher ──────────────────────────────
+  // Keeps demo UI intact, only patches OAuth and file preview
+  var _bridgeReady = false;
+
+  setInterval(function () {
+    if (!document.body) return;
+    if (!document.querySelector('.item') && !document.querySelector('.icon-grid')) return;
+
+    // One-time init
+    if (!_bridgeReady) {
+      _bridgeReady = true;
+      initBridge();
+    }
+
+    // Re-apply if React overwrites
+    if (_gridRealItems) {
+      // Re-apply grid items
+      var grids = document.querySelectorAll('.icon-grid');
+      grids.forEach(function (g) {
+        if (g.querySelector('.lock-badge') && !g.dataset.oauthGrid) {
+          injectGridItems(_gridRealItems);
+        }
+      });
+      // Re-apply sidebar category items
+      var sidebar = document.querySelector('.sidebar');
+      if (sidebar && !sidebar.dataset.oauthCat) {
+        replaceSidebarCategoryItems(_gridRealItems);
+      }
+    }
+
+    // Always patch login modal if it appears
+    patchLoginModalIfPresent();
+  }, 500);
+
+  // ── 3. Main Bridge ────────────────────────────────────
+  function initBridge() {
+    var token = sessionStorage.getItem('gh_token');
+    var user = sessionStorage.getItem('gh_user');
+
+    // Show user badge if logged in
+    if (token && user) showLoggedInBadge(JSON.parse(user));
+
+    // Replace ONLY the icon-grid items (파일/폴더 카테고리) with real repo data
+    replaceGridWithRealData('');
+
+    // Intercept double-clicks on locked items for real GitHub data
+    document.addEventListener('dblclick', function (e) {
+      var item = e.target.closest('.item');
+      if (!item) return;
+      var lock = item.querySelector('.lock-badge');
+      if (!lock) return;
+
+      var tk = sessionStorage.getItem('gh_token');
+      if (!tk) return; // Let app's login modal appear, it gets patched
+
+      e.stopPropagation();
+      e.preventDefault();
+      var nameEl = item.querySelector('.item-name');
+      if (!nameEl) return;
+      var itemPath = item.dataset.path || nameEl.textContent.trim();
+
+      if (item.dataset.type === 'dir') {
+        fetchAndShowFolder(itemPath, tk);
+      } else {
+        fetchFileContent(itemPath, tk);
+      }
+    }, true);
+  }
+
+  // ── 3b. Replace grid items with real data ─────────────
+  var _gridRealItems = null;
+
+  function replaceGridWithRealData(dirPath) {
+    var url = CONFIG.apiBase + '/api/subscribers-list';
+    if (dirPath) url += '?path=' + encodeURIComponent(dirPath);
+
+    fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.items && data.items.length > 0) {
+          _gridRealItems = data.items;
+          injectGridItems(data.items);
+          replaceSidebarCategoryItems(data.items);
+        }
+      })
+      .catch(function () { /* keep demo on error */ });
+  }
+
+  function injectGridItems(items) {
+    // Find the icon-grid that has lock badges (구독자 전용 카테고리)
+    var grids = document.querySelectorAll('.icon-grid');
+    var targetGrid = null;
+    grids.forEach(function (g) {
+      if (g.querySelector('.lock-badge')) targetGrid = g;
+    });
+    if (!targetGrid && grids.length) targetGrid = grids[grids.length - 1];
+    if (!targetGrid) return;
+
+    // Mark as replaced
+    targetGrid.dataset.oauthGrid = 'true';
+
+    // Clear ONLY this grid's items
+    while (targetGrid.firstChild) targetGrid.removeChild(targetGrid.firstChild);
+
+    // Insert real items
+    items.forEach(function (item) {
+      var div = document.createElement('div');
+      div.className = 'item';
+      div.dataset.path = item.path;
+      div.dataset.type = item.type;
+
+      var iconWrap = document.createElement('div');
+      iconWrap.className = 'item-icon';
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 48 48');
+
+      if (item.type === 'dir') {
+        var p1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p1.setAttribute('d', 'M4 8h16l4 4h20v28H4z');
+        p1.setAttribute('fill', '#f9c74f');
+        p1.setAttribute('stroke', '#e5a800');
+        p1.setAttribute('stroke-width', '1.5');
+        svg.appendChild(p1);
+      } else {
+        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', '8'); rect.setAttribute('y', '4');
+        rect.setAttribute('width', '32'); rect.setAttribute('height', '40');
+        rect.setAttribute('rx', '3');
+        rect.setAttribute('fill', '#e8eaed'); rect.setAttribute('stroke', '#bbb');
+        rect.setAttribute('stroke-width', '1.2');
+        svg.appendChild(rect);
+        ['M14 16h20', 'M14 22h20', 'M14 28h14'].forEach(function (d) {
+          var line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          line.setAttribute('d', d); line.setAttribute('stroke', '#888');
+          line.setAttribute('stroke-width', '1.5'); line.setAttribute('stroke-linecap', 'round');
+          svg.appendChild(line);
+        });
+      }
+      iconWrap.appendChild(svg);
+
+      // Lock badge
+      var lock = document.createElement('div');
+      lock.className = 'lock-badge';
+      var lockSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      lockSvg.setAttribute('viewBox', '0 0 24 24'); lockSvg.setAttribute('fill', 'none');
+      var lockR = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      lockR.setAttribute('x','5'); lockR.setAttribute('y','11');
+      lockR.setAttribute('width','14'); lockR.setAttribute('height','10'); lockR.setAttribute('rx','2');
+      lockR.setAttribute('stroke','currentColor'); lockR.setAttribute('stroke-width','2');
+      lockSvg.appendChild(lockR);
+      var lockP = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      lockP.setAttribute('d','M8 11V7a4 4 0 018 0v4');
+      lockP.setAttribute('stroke','currentColor'); lockP.setAttribute('stroke-width','2');
+      lockSvg.appendChild(lockP);
+      lock.appendChild(lockSvg);
+      iconWrap.appendChild(lock);
+      div.appendChild(iconWrap);
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'item-name';
+      nameEl.textContent = item.name;
+      div.appendChild(nameEl);
+
+      if (item.size > 0 && item.type === 'file') {
+        var sub = document.createElement('div');
+        sub.className = 'item-sub';
+        sub.textContent = formatSize(item.size);
+        div.appendChild(sub);
+      }
+
+      targetGrid.appendChild(div);
+    });
+  }
+
+  // ── 4. Login Modal Patch ──────────────────────────────
+  function patchLoginModalIfPresent() {
+    var card = document.querySelector('.login-card');
+    if (!card || card.dataset.oauthPatched) return;
+    card.dataset.oauthPatched = 'true';
+
+    var authError = sessionStorage.getItem('gh_auth_error');
+    if (authError) sessionStorage.removeItem('gh_auth_error');
+
+    // Replace login body
+    var body = card.querySelector('.login-body');
+    if (body) {
+      while (body.firstChild) body.removeChild(body.firstChild);
+
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'text-align:center;padding:16px 0';
+
+      var icon = document.createElement('div');
+      icon.style.cssText = 'margin-bottom:12px';
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', '40');
+      svg.setAttribute('height', '40');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('fill', 'currentColor');
+      svg.style.opacity = '0.8';
+      var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z');
+      svg.appendChild(path);
+      icon.appendChild(svg);
+      wrap.appendChild(icon);
+
+      var title = document.createElement('p');
+      title.style.cssText = 'margin:0 0 8px;font-size:14px;font-weight:600';
+      title.textContent = 'GitHub 계정으로 로그인';
+      wrap.appendChild(title);
+
+      var desc = document.createElement('p');
+      desc.style.cssText = 'margin:0;font-size:12px;color:var(--text-dim)';
+      desc.textContent = 'Collaborator로 초대된 계정만 접근 가능합니다.';
+      wrap.appendChild(desc);
+
+      body.appendChild(wrap);
+
+      // Auth error message
+      if (authError) {
+        var errDiv = document.createElement('div');
+        errDiv.className = 'login-error';
+        if (authError === 'no_access') {
+          errDiv.textContent = '권한이 없습니다. X(@' + CONFIG.xHandle + ')에서 DM 주세요.';
+        } else {
+          errDiv.textContent = '인증에 실패했습니다. 다시 시도해주세요.';
+        }
+        body.appendChild(errDiv);
+      }
+    }
+
+    // Replace primary button
+    var primaryBtn = card.querySelector('.btn.primary');
+    if (primaryBtn) {
+      primaryBtn.textContent = 'GitHub으로 로그인';
+      var newBtn = primaryBtn.cloneNode(true);
+      primaryBtn.parentNode.replaceChild(newBtn, primaryBtn);
+      newBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href =
+          'https://github.com/login/oauth/authorize?client_id=' +
+          CONFIG.clientId +
+          '&redirect_uri=' + encodeURIComponent(CONFIG.redirectUri) +
+          '&scope=repo';
+      });
+    }
+  }
+
+  // ── 5. Logged-in Badge ────────────────────────────────
+  function showLoggedInBadge(user) {
+    var badge = document.createElement('div');
+    badge.style.cssText =
+      'position:fixed;top:12px;right:12px;z-index:3000;display:flex;align-items:center;gap:8px;' +
+      'background:rgba(0,0,0,0.6);backdrop-filter:blur(12px);padding:6px 12px 6px 6px;' +
+      'border-radius:20px;color:white;font-size:12px;font-family:system-ui;cursor:pointer;';
+
+    var img = document.createElement('img');
+    img.src = user.avatar_url;
+    img.style.cssText = 'width:24px;height:24px;border-radius:50%';
+    badge.appendChild(img);
+
+    var name = document.createElement('span');
+    name.textContent = user.name || user.login;
+    badge.appendChild(name);
+
+    badge.title = '클릭하여 로그아웃';
+    badge.addEventListener('click', function () {
+      sessionStorage.removeItem('gh_token');
+      sessionStorage.removeItem('gh_user');
+      window.location.reload();
+    });
+
+    var waitBody = setInterval(function () {
+      if (document.body) {
+        clearInterval(waitBody);
+        document.body.appendChild(badge);
+      }
+    }, 100);
+  }
+
+  // ── 5b. Sidebar Category Items ─────────────────────────
+  function replaceSidebarCategoryItems(items) {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    // Find the section containing demo items (AI Trading ~ Misc)
+    var sections = sidebar.querySelectorAll('.side-section');
+    var catSection = null;
+
+    sections.forEach(function (sec) {
+      var sideItems = sec.querySelectorAll('.side-item');
+      sideItems.forEach(function (si) {
+        var txt = (si.textContent || '').toLowerCase();
+        if (txt.indexOf('trading') >= 0 || txt.indexOf('misc') >= 0 ||
+            txt.indexOf('signal') >= 0 || txt.indexOf('llm') >= 0 ||
+            txt.indexOf('alpha') >= 0 || txt.indexOf('research') >= 0) {
+          catSection = sec;
+        }
+      });
+    });
+
+    // Fallback: use last section if no demo items found
+    if (!catSection && sections.length) catSection = sections[sections.length - 1];
+    if (!catSection) return;
+
+    // Mark as replaced
+    sidebar.dataset.oauthCat = 'true';
+
+    // Keep the section title (.side-title), remove only .side-item elements
+    var existingItems = catSection.querySelectorAll('.side-item');
+    existingItems.forEach(function (el) { el.remove(); });
+
+    // Add real items (folders first)
+    var sorted = items.slice().sort(function (a, b) {
+      if (a.type === 'dir' && b.type !== 'dir') return -1;
+      if (a.type !== 'dir' && b.type === 'dir') return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+    sorted.forEach(function (item) {
+      var sideItem = document.createElement('div');
+      sideItem.className = 'side-item';
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('width', '16');
+      svg.setAttribute('height', '16');
+      svg.setAttribute('fill', 'none');
+      var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      if (item.type === 'dir') {
+        p.setAttribute('d', 'M2 6a2 2 0 012-2h5l2 2h9a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6z');
+        p.setAttribute('fill', 'rgba(249,201,79,0.3)');
+      } else {
+        p.setAttribute('d', 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z');
+        p.setAttribute('fill', 'rgba(200,200,210,0.3)');
+      }
+      p.setAttribute('stroke', 'currentColor');
+      p.setAttribute('stroke-width', '1.5');
+      svg.appendChild(p);
+      sideItem.appendChild(svg);
+
+      var span = document.createElement('span');
+      span.textContent = item.name;
+      sideItem.appendChild(span);
+
+      sideItem.addEventListener('click', function () {
+        var token = sessionStorage.getItem('gh_token');
+        if (item.type === 'dir') {
+          if (token) fetchAndShowFolder(item.path, token);
+          else showOAuthModal();
+        } else {
+          if (token) fetchFileContent(item.path, token);
+          else showOAuthModal();
+        }
+      });
+
+      catSection.appendChild(sideItem);
+    });
+  }
+
+  // ── 6. Folder Navigation (real GitHub data) ────────────
+  function fetchAndShowFolder(folderName, token) {
+    fetch(CONFIG.apiBase + '/api/subscribers-list?path=' + encodeURIComponent(folderName))
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.items && data.items.length > 0) {
+          showFolderContents(data.items, folderName, token);
+        }
+      })
+      .catch(function () {
+        // Try fetching as a file instead
+        fetchFileContent(folderName, token);
+      });
+  }
+
+  function showFolderContents(items, folderPath, token) {
+    // Find the grid with lock badges
+    var grids = document.querySelectorAll('.icon-grid');
+    var targetGrid = null;
+    grids.forEach(function (g) {
+      if (g.querySelector('.lock-badge')) targetGrid = g;
+    });
+    if (!targetGrid && grids.length) targetGrid = grids[grids.length - 1];
+    if (!targetGrid) return;
+
+    // Clear and show real folder contents
+    while (targetGrid.firstChild) targetGrid.removeChild(targetGrid.firstChild);
+
+    // Create real items
+    items.forEach(function (item) {
+      var div = document.createElement('div');
+      div.className = 'item';
+      div.dataset.path = item.path;
+      div.dataset.type = item.type;
+
+      // Icon
+      var iconWrap = document.createElement('div');
+      iconWrap.className = 'item-icon';
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 48 48');
+      svg.setAttribute('width', '48');
+      svg.setAttribute('height', '48');
+
+      if (item.type === 'dir') {
+        var p1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p1.setAttribute('d', 'M4 8h16l4 4h20v28H4z');
+        p1.setAttribute('fill', '#f9c74f');
+        p1.setAttribute('stroke', '#e5a800');
+        p1.setAttribute('stroke-width', '1.5');
+        svg.appendChild(p1);
+      } else {
+        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', '8'); rect.setAttribute('y', '4');
+        rect.setAttribute('width', '32'); rect.setAttribute('height', '40');
+        rect.setAttribute('rx', '3');
+        rect.setAttribute('fill', '#e8eaed'); rect.setAttribute('stroke', '#bbb');
+        rect.setAttribute('stroke-width', '1.2');
+        svg.appendChild(rect);
+        ['M14 16h20', 'M14 22h20', 'M14 28h14'].forEach(function (d) {
+          var line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          line.setAttribute('d', d);
+          line.setAttribute('stroke', '#888');
+          line.setAttribute('stroke-width', '1.5');
+          line.setAttribute('stroke-linecap', 'round');
+          svg.appendChild(line);
+        });
+      }
+      iconWrap.appendChild(svg);
+
+      // Lock badge
+      var lock = document.createElement('div');
+      lock.className = 'lock-badge';
+      var lockSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      lockSvg.setAttribute('viewBox', '0 0 24 24');
+      lockSvg.setAttribute('fill', 'none');
+      lockSvg.setAttribute('width', '10');
+      lockSvg.setAttribute('height', '10');
+      var lockR = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      lockR.setAttribute('x', '5'); lockR.setAttribute('y', '11');
+      lockR.setAttribute('width', '14'); lockR.setAttribute('height', '10');
+      lockR.setAttribute('rx', '2');
+      lockR.setAttribute('stroke', 'currentColor'); lockR.setAttribute('stroke-width', '2');
+      lockSvg.appendChild(lockR);
+      var lockP = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      lockP.setAttribute('d', 'M8 11V7a4 4 0 018 0v4');
+      lockP.setAttribute('stroke', 'currentColor'); lockP.setAttribute('stroke-width', '2');
+      lockSvg.appendChild(lockP);
+      lock.appendChild(lockSvg);
+      iconWrap.appendChild(lock);
+
+      div.appendChild(iconWrap);
+
+      // Name
+      var nameEl = document.createElement('div');
+      nameEl.className = 'item-name';
+      nameEl.textContent = item.name;
+      div.appendChild(nameEl);
+
+      // Size
+      if (item.size > 0 && item.type === 'file') {
+        var sub = document.createElement('div');
+        sub.className = 'item-sub';
+        sub.textContent = formatSize(item.size);
+        div.appendChild(sub);
+      }
+
+      // Double-click: navigate folder or open file
+      div.addEventListener('dblclick', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (item.type === 'dir') {
+          fetchAndShowFolder(item.path, token);
+        } else {
+          fetchFileContent(item.path, token);
+        }
+      });
+
+      targetGrid.appendChild(div);
+    });
+
+    // Update status bar item count
+    var statusBar = document.querySelector('.status-bar');
+    if (statusBar) {
+      var first = statusBar.firstElementChild;
+      if (first) first.textContent = items.length + '개 항목';
+    }
+  }
+
+  // ── 7. File Content ────────────────────────────────────
+  function fetchFileContent(filePath, token) {
+    fetch('https://api.github.com/repos/seunghyeon1004/Subscribers/contents/' + filePath, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+        Accept: 'application/vnd.github.v3.raw'
+      }
+    })
+      .then(function (r) {
+        if (r.status === 403 || r.status === 404) {
+          // Not a collaborator or file not found
+          sessionStorage.removeItem('gh_token');
+          sessionStorage.removeItem('gh_user');
+          showAccessDeniedModal();
+          throw new Error('access_denied');
+        }
+        if (!r.ok) throw new Error('fetch_failed');
+        return r.text();
+      })
+      .then(function (content) {
+        showFilePreview(filePath, content);
+      })
+      .catch(function (err) {
+        if (err.message !== 'access_denied') {
+          showAccessDeniedModal();
+        }
+      });
+  }
+
+  // ── 8. File Preview ───────────────────────────────────
+  function showFilePreview(filePath, content) {
+    // Remove any existing preview
+    var old = document.querySelector('.preview-window[data-oauth]');
+    if (old) old.remove();
+
+    var filename = filePath.split('/').pop();
+    var preview = document.createElement('div');
+    preview.className = 'preview-window';
+    preview.dataset.oauth = 'true';
+    preview.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1500;width:820px;height:560px;';
+
+    // Title bar
+    var titleBar = document.createElement('div');
+    titleBar.className = 'title-bar';
+    var titleText = document.createElement('span');
+    titleText.className = 'title-bar-text';
+    titleText.textContent = filename + ' \u2014 Subscribers/' + filePath;
+    titleBar.appendChild(titleText);
+
+    var controls = document.createElement('div');
+    controls.className = 'window-controls';
+    var closeBtn = document.createElement('div');
+    closeBtn.className = 'wctl close';
+    closeBtn.addEventListener('click', function () { preview.remove(); });
+    var closeSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    closeSvg.setAttribute('viewBox', '0 0 10 10');
+    closeSvg.setAttribute('width', '10');
+    closeSvg.setAttribute('height', '10');
+    var closePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    closePath.setAttribute('d', 'M1 1l8 8M9 1l-8 8');
+    closePath.setAttribute('stroke', 'currentColor');
+    closePath.setAttribute('stroke-width', '1.2');
+    closeSvg.appendChild(closePath);
+    closeBtn.appendChild(closeSvg);
+    controls.appendChild(closeBtn);
+    titleBar.appendChild(controls);
+    preview.appendChild(titleBar);
+
+    // Code body
+    var codeBody = document.createElement('div');
+    codeBody.className = 'code-body';
+
+    var lines = content.split('\n');
+    var gutter = document.createElement('div');
+    gutter.className = 'code-gutter';
+    gutter.textContent = lines.map(function (_, i) { return i + 1; }).join('\n');
+    codeBody.appendChild(gutter);
+
+    var codeContent = document.createElement('div');
+    codeContent.className = 'code-content';
+    codeContent.textContent = content;
+    codeBody.appendChild(codeContent);
+
+    preview.appendChild(codeBody);
+    document.body.appendChild(preview);
+  }
+
+  // ── 9. Modals ──────────────────────────────────────────
+  function showOAuthModal() {
+    if (document.querySelector('.modal-backdrop')) return;
+
+    var backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop) backdrop.remove();
+    });
+
+    var card = document.createElement('div');
+    card.className = 'login-card';
+    card.dataset.oauthPatched = 'true';
+
+    // Head
+    var head = document.createElement('div');
+    head.className = 'login-head';
+    var logo = document.createElement('div');
+    logo.className = 'login-logo';
+    var ghSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    ghSvg.setAttribute('width', '24');
+    ghSvg.setAttribute('height', '24');
+    ghSvg.setAttribute('viewBox', '0 0 24 24');
+    ghSvg.setAttribute('fill', 'currentColor');
+    var ghPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    ghPath.setAttribute('d', 'M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z');
+    ghSvg.appendChild(ghPath);
+    logo.appendChild(ghSvg);
+    head.appendChild(logo);
+
+    var headText = document.createElement('div');
+    var h3 = document.createElement('h3');
+    h3.textContent = 'GitHub 로그인';
+    headText.appendChild(h3);
+    var p = document.createElement('p');
+    p.textContent = '구독자 전용 콘텐츠 접근';
+    headText.appendChild(p);
+    head.appendChild(headText);
+    card.appendChild(head);
+
+    // Body
+    var body = document.createElement('div');
+    body.className = 'login-body';
+    body.style.cssText = 'text-align:center;padding:20px 28px';
+    var bodyP = document.createElement('p');
+    bodyP.style.cssText = 'font-size:13px;color:var(--text-dim);margin:0';
+    bodyP.textContent = 'Collaborator로 초대된 GitHub 계정만 접근 가능합니다.';
+    body.appendChild(bodyP);
+    card.appendChild(body);
+
+    // Footer
+    var foot = document.createElement('div');
+    foot.className = 'login-foot';
+
+    var cancelBtn = document.createElement('button');
+    cancelBtn.className = 'btn';
+    cancelBtn.textContent = '취소';
+    cancelBtn.addEventListener('click', function () { backdrop.remove(); });
+    foot.appendChild(cancelBtn);
+
+    var loginBtn = document.createElement('button');
+    loginBtn.className = 'btn primary';
+    loginBtn.textContent = 'GitHub으로 로그인';
+    loginBtn.addEventListener('click', function () {
+      window.location.href =
+        'https://github.com/login/oauth/authorize?client_id=' +
+        CONFIG.clientId +
+        '&redirect_uri=' + encodeURIComponent(CONFIG.redirectUri) +
+        '&scope=repo';
+    });
+    foot.appendChild(loginBtn);
+
+    card.appendChild(foot);
+    backdrop.appendChild(card);
+    document.body.appendChild(backdrop);
+  }
+
+  function showAccessDeniedModal() {
+    if (document.querySelector('.modal-backdrop')) return;
+
+    var backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop) backdrop.remove();
+    });
+
+    var card = document.createElement('div');
+    card.className = 'login-card';
+
+    var head = document.createElement('div');
+    head.className = 'login-head';
+    var h3 = document.createElement('h3');
+    h3.textContent = '접근 권한 없음';
+    head.appendChild(h3);
+    card.appendChild(head);
+
+    var body = document.createElement('div');
+    body.className = 'login-body';
+    body.style.padding = '20px 28px';
+    var errDiv = document.createElement('div');
+    errDiv.className = 'login-error';
+    errDiv.textContent = '이 레포의 Collaborator가 아닙니다. X(@' + CONFIG.xHandle + ')에서 DM으로 문의해주세요.';
+    body.appendChild(errDiv);
+    card.appendChild(body);
+
+    var foot = document.createElement('div');
+    foot.className = 'login-foot';
+    var okBtn = document.createElement('button');
+    okBtn.className = 'btn primary';
+    okBtn.textContent = '확인';
+    okBtn.addEventListener('click', function () { backdrop.remove(); });
+    foot.appendChild(okBtn);
+    card.appendChild(foot);
+
+    backdrop.appendChild(card);
+    document.body.appendChild(backdrop);
+  }
+
+  // ── Helpers ───────────────────────────────────────────
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+})();
+</script>
 </body>
 </html>
