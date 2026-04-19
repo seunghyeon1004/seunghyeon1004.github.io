@@ -52,14 +52,20 @@
       initBridge();
     }
 
-    // Re-apply grid items if React overwrites them
+    // Re-apply if React overwrites
     if (_gridRealItems) {
+      // Re-apply grid items
       var grids = document.querySelectorAll('.icon-grid');
       grids.forEach(function (g) {
         if (g.querySelector('.lock-badge') && !g.dataset.oauthGrid) {
           injectGridItems(_gridRealItems);
         }
       });
+      // Re-apply sidebar category items
+      var sidebar = document.querySelector('.sidebar');
+      if (sidebar && !sidebar.dataset.oauthCat) {
+        replaceSidebarCategoryItems(_gridRealItems);
+      }
     }
 
     // Always patch login modal if it appears
@@ -114,6 +120,7 @@
         if (data.items && data.items.length > 0) {
           _gridRealItems = data.items;
           injectGridItems(data.items);
+          replaceSidebarCategoryItems(data.items);
         }
       })
       .catch(function () { /* keep demo on error */ });
@@ -310,6 +317,73 @@
         document.body.appendChild(badge);
       }
     }, 100);
+  }
+
+  // ── 5b. Sidebar Category Items ─────────────────────────
+  function replaceSidebarCategoryItems(items) {
+    var sidebar = document.querySelector('.sidebar');
+    if (!sidebar) return;
+
+    // Mark as replaced
+    sidebar.dataset.oauthCat = 'true';
+
+    // Find the last side-section (usually "카테고리" or the subscriber section)
+    var sections = sidebar.querySelectorAll('.side-section');
+    if (!sections.length) return;
+
+    // Replace items in the LAST section (카테고리), keep other sections intact
+    var catSection = sections[sections.length - 1];
+
+    // Keep the section title, remove only side-items
+    var existingItems = catSection.querySelectorAll('.side-item');
+    existingItems.forEach(function (el) { el.remove(); });
+
+    // Add real items (folders first)
+    var sorted = items.slice().sort(function (a, b) {
+      if (a.type === 'dir' && b.type !== 'dir') return -1;
+      if (a.type !== 'dir' && b.type === 'dir') return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+    sorted.forEach(function (item) {
+      var sideItem = document.createElement('div');
+      sideItem.className = 'side-item';
+
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('width', '16');
+      svg.setAttribute('height', '16');
+      svg.setAttribute('fill', 'none');
+      var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      if (item.type === 'dir') {
+        p.setAttribute('d', 'M2 6a2 2 0 012-2h5l2 2h9a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V6z');
+        p.setAttribute('fill', 'rgba(249,201,79,0.3)');
+      } else {
+        p.setAttribute('d', 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z');
+        p.setAttribute('fill', 'rgba(200,200,210,0.3)');
+      }
+      p.setAttribute('stroke', 'currentColor');
+      p.setAttribute('stroke-width', '1.5');
+      svg.appendChild(p);
+      sideItem.appendChild(svg);
+
+      var span = document.createElement('span');
+      span.textContent = item.name;
+      sideItem.appendChild(span);
+
+      sideItem.addEventListener('click', function () {
+        var token = sessionStorage.getItem('gh_token');
+        if (item.type === 'dir') {
+          if (token) fetchAndShowFolder(item.path, token);
+          else showOAuthModal();
+        } else {
+          if (token) fetchFileContent(item.path, token);
+          else showOAuthModal();
+        }
+      });
+
+      catSection.appendChild(sideItem);
+    });
   }
 
   // ── 6. Folder Navigation (real GitHub data) ────────────
