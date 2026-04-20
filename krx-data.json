@@ -1,84 +1,38 @@
 {
-  "updated": "2026-04-17 21:09",
+  "updated": "2026-04-20 12:00",
   "portfolio": {
     "total_capital": 10000000,
-    "realized_pnl": 6156,
+    "realized_pnl": 0,
     "unrealized_pnl": 0,
-    "roi_pct": 0.06,
-    "win_rate": 33.3,
-    "wins": 1,
-    "losses": 2,
-    "total_trades": 3,
+    "roi_pct": 0.0,
+    "win_rate": 0.0,
+    "wins": 0,
+    "losses": 0,
+    "total_trades": 0,
     "open_positions": 1,
     "max_slots": 5,
-    "today_pnl": 38076,
-    "today_trades_count": 2,
-    "today_return_pct": 0.38,
-    "monthly_pnl": 6156
+    "today_pnl": 0,
+    "today_trades_count": 0,
+    "today_return_pct": 0.0,
+    "monthly_pnl": 0
   },
   "positions": [
     {
-      "code": "006370",
-      "name": "대구백화점",
-      "entry_price": 6570,
+      "code": "005930",
+      "name": "삼성전자",
+      "entry_price": 70000,
       "current_price": 0,
-      "qty": 228,
+      "qty": 14,
       "current_pnl_pct": 0.0,
-      "entry_date": "2026-04-17",
-      "grade": "S",
-      "sl_price": 5900,
+      "entry_date": "2026-04-20",
+      "grade": "A",
+      "sl_price": 68500,
       "regime": "swing"
     }
   ],
-  "recent_trades": [
-    {
-      "name": "대구백화점",
-      "code": "006370",
-      "entry_date": "2026-04-16",
-      "exit_date": "2026-04-17",
-      "pnl_pct": -0.0,
-      "pnl_amount": -342,
-      "exit_reason": "stoploss"
-    },
-    {
-      "name": "대구백화점",
-      "code": "006370",
-      "entry_date": "2026-04-16",
-      "exit_date": "2026-04-17",
-      "pnl_pct": 0.05,
-      "pnl_amount": 38418,
-      "exit_reason": "partial_tp1"
-    },
-    {
-      "name": "대구백화점",
-      "code": "006370",
-      "entry_date": "2026-04-16",
-      "exit_date": "2026-04-16",
-      "pnl_pct": -0.03,
-      "pnl_amount": -31920,
-      "exit_reason": "unstuck"
-    }
-  ],
-  "equity_curve": [
-    {
-      "date": "2026-04-16",
-      "value": 9968080
-    },
-    {
-      "date": "2026-04-17",
-      "value": 10006156
-    }
-  ],
-  "stock_stats": [
-    {
-      "code": "006370",
-      "name": "대구백화점",
-      "total_trades": 3,
-      "win_rate": 33.3,
-      "avg_return": 0.01,
-      "total_pnl": 6156
-    }
-  ],
+  "recent_trades": [],
+  "equity_curve": [],
+  "stock_stats": [],
   "today_picks": [],
   "tomorrow_picks": [],
   "market": {
