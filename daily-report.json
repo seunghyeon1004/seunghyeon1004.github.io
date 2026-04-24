@@ -1,10 +1,10 @@
 {
-  "date": "2026-04-23",
-  "generated_at": "2026-04-23 10:44 KST",
-  "btc_price": 78256.5,
-  "eth_price": 2365.95,
-  "account_value": 641.4382,
-  "open_positions": 1,
-  "unrealized_pnl": -0.1604,
-  "report": "Minari Daily Report - 2026-04-23\nBTC: $78256.5 | ETH: $2365.95\nAccount: $641.44 | Positions: 1 | uPnL: $-0.16"
+  "date": "2026-04-24",
+  "generated_at": "2026-04-24 10:44 KST",
+  "btc_price": 78007.5,
+  "eth_price": 2320.95,
+  "account_value": 0.0,
+  "open_positions": 0,
+  "unrealized_pnl": 0,
+  "report": "Minari Daily Report - 2026-04-24\nBTC: $78007.5 | ETH: $2320.95\nAccount: $0.00 | Positions: 0 | uPnL: +$0.00"
 }
