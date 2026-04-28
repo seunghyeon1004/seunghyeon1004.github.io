@@ -2,38 +2,100 @@
   "updated": "2026-04-28 09:00",
   "portfolio": {
     "total_capital": 10000000,
-    "realized_pnl": 0,
-    "unrealized_pnl": -132300,
-    "roi_pct": -1.32,
+    "realized_pnl": -134400,
+    "unrealized_pnl": 0,
+    "roi_pct": -1.34,
     "win_rate": 0.0,
     "wins": 0,
-    "losses": 0,
-    "total_trades": 0,
-    "open_positions": 1,
+    "losses": 1,
+    "total_trades": 1,
+    "open_positions": 0,
     "max_slots": 5,
-    "today_pnl": 0,
-    "today_trades_count": 0,
-    "today_return_pct": 0.0,
-    "monthly_pnl": 0
+    "today_pnl": -134400,
+    "today_trades_count": 1,
+    "today_return_pct": -1.34,
+    "monthly_pnl": -134400
   },
-  "positions": [
+  "positions": [],
+  "recent_trades": [
+    {
+      "name": "SGC에너지",
+      "code": "005090",
+      "entry_date": "2026-04-24",
+      "exit_date": "2026-04-28",
+      "pnl_pct": -0.1,
+      "pnl_amount": -134400,
+      "exit_reason": "stoploss"
+    }
+  ],
+  "equity_curve": [
+    {
+      "date": "2026-04-28",
+      "value": 9865600
+    }
+  ],
+  "stock_stats": [
     {
       "code": "005090",
       "name": "SGC에너지",
-      "entry_price": 68600,
-      "current_price": 62300,
-      "qty": 21,
-      "current_pnl_pct": -9.18,
-      "entry_date": "2026-04-24",
-      "grade": "S",
-      "sl_price": 60100,
-      "regime": "swing"
+      "total_trades": 1,
+      "win_rate": 0.0,
+      "avg_return": -0.1,
+      "total_pnl": -134400
     }
   ],
-  "recent_trades": [],
-  "equity_curve": [],
-  "stock_stats": [],
-  "today_picks": [],
+  "today_picks": [
+    {
+      "code": "009180",
+      "name": "한솔로지스틱스",
+      "score": 77,
+      "grade": "S",
+      "signal_type": "momentum_buy",
+      "price": 3320,
+      "ai_stance": null,
+      "ai_summary": null
+    },
+    {
+      "code": "001560",
+      "name": "제일연마",
+      "score": 75,
+      "grade": "S",
+      "signal_type": "classic_entry",
+      "price": 11500,
+      "ai_stance": null,
+      "ai_summary": null
+    },
+    {
+      "code": "000910",
+      "name": "유니온",
+      "score": 72,
+      "grade": "S",
+      "signal_type": "classic_entry",
+      "price": 4565,
+      "ai_stance": null,
+      "ai_summary": null
+    },
+    {
+      "code": "003070",
+      "name": "코오롱글로벌",
+      "score": 72,
+      "grade": "S",
+      "signal_type": "classic_entry",
+      "price": 11970,
+      "ai_stance": null,
+      "ai_summary": null
+    },
+    {
+      "code": "002240",
+      "name": "고려제강",
+      "score": 71,
+      "grade": "S",
+      "signal_type": "momentum_buy",
+      "price": 25050,
+      "ai_stance": null,
+      "ai_summary": null
+    }
+  ],
   "tomorrow_picks": [],
   "market": {
     "regime": "--",
