@@ -2,35 +2,31 @@
   "updated": "2026-05-04 13:00",
   "portfolio": {
     "total_capital": 10000000,
-    "realized_pnl": -152460,
+    "realized_pnl": -180460,
     "unrealized_pnl": 0,
-    "roi_pct": -1.52,
+    "roi_pct": -1.8,
     "win_rate": 0.0,
     "wins": 0,
-    "losses": 2,
-    "total_trades": 2,
-    "open_positions": 1,
+    "losses": 3,
+    "total_trades": 3,
+    "open_positions": 0,
     "max_slots": 5,
-    "today_pnl": 0,
-    "today_trades_count": 0,
-    "today_return_pct": 0.0,
-    "monthly_pnl": 0
+    "today_pnl": -28000,
+    "today_trades_count": 1,
+    "today_return_pct": -0.28,
+    "monthly_pnl": -28000
   },
-  "positions": [
-    {
-      "code": "001820",
-      "name": "삼화콘덴서",
-      "entry_price": 71000,
-      "current_price": 0,
-      "qty": 14,
-      "current_pnl_pct": 0.0,
-      "entry_date": "2026-05-04",
-      "grade": "S",
-      "sl_price": 64498,
-      "regime": "swing"
-    }
-  ],
+  "positions": [],
   "recent_trades": [
+    {
+      "name": "삼화콘덴서",
+      "code": "001820",
+      "entry_date": "2026-05-04",
+      "exit_date": "2026-05-04",
+      "pnl_pct": -0.03,
+      "pnl_amount": -28000,
+      "exit_reason": "unstuck"
+    },
     {
       "name": "한솔로지스틱스",
       "code": "009180",
@@ -54,6 +50,10 @@
     {
       "date": "2026-04-28",
       "value": 9847540
+    },
+    {
+      "date": "2026-05-04",
+      "value": 9819540
     }
   ],
   "stock_stats": [
@@ -64,6 +64,14 @@
       "win_rate": 0.0,
       "avg_return": -0.02,
       "total_pnl": -18060
+    },
+    {
+      "code": "001820",
+      "name": "삼화콘덴서",
+      "total_trades": 1,
+      "win_rate": 0.0,
+      "avg_return": -0.03,
+      "total_pnl": -28000
     },
     {
       "code": "005090",
