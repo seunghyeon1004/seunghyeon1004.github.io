@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-28 09:04",
+  "updated": "2026-05-04 13:00",
   "portfolio": {
     "total_capital": 10000000,
     "realized_pnl": -152460,
@@ -9,14 +9,27 @@
     "wins": 0,
     "losses": 2,
     "total_trades": 2,
-    "open_positions": 0,
+    "open_positions": 1,
     "max_slots": 5,
-    "today_pnl": -152460,
-    "today_trades_count": 2,
-    "today_return_pct": -1.52,
-    "monthly_pnl": -152460
+    "today_pnl": 0,
+    "today_trades_count": 0,
+    "today_return_pct": 0.0,
+    "monthly_pnl": 0
   },
-  "positions": [],
+  "positions": [
+    {
+      "code": "001820",
+      "name": "삼화콘덴서",
+      "entry_price": 71000,
+      "current_price": 0,
+      "qty": 14,
+      "current_pnl_pct": 0.0,
+      "entry_date": "2026-05-04",
+      "grade": "S",
+      "sl_price": 64498,
+      "regime": "swing"
+    }
+  ],
   "recent_trades": [
     {
       "name": "한솔로지스틱스",
@@ -61,58 +74,7 @@
       "total_pnl": -134400
     }
   ],
-  "today_picks": [
-    {
-      "code": "009180",
-      "name": "한솔로지스틱스",
-      "score": 77,
-      "grade": "S",
-      "signal_type": "momentum_buy",
-      "price": 3320,
-      "ai_stance": "bullish",
-      "ai_summary": "외국인과 기관의 동반 순매수세가 확인되며, 고환율 리스크가 존재하나 수급 주체의 질적 우위가 가격 상승 동력을 지지하고 있습니다."
-    },
-    {
-      "code": "001560",
-      "name": "제일연마",
-      "score": 75,
-      "grade": "S",
-      "signal_type": "classic_entry",
-      "price": 11500,
-      "ai_stance": null,
-      "ai_summary": null
-    },
-    {
-      "code": "000910",
-      "name": "유니온",
-      "score": 72,
-      "grade": "S",
-      "signal_type": "classic_entry",
-      "price": 4565,
-      "ai_stance": null,
-      "ai_summary": null
-    },
-    {
-      "code": "003070",
-      "name": "코오롱글로벌",
-      "score": 72,
-      "grade": "S",
-      "signal_type": "classic_entry",
-      "price": 11970,
-      "ai_stance": null,
-      "ai_summary": null
-    },
-    {
-      "code": "002240",
-      "name": "고려제강",
-      "score": 71,
-      "grade": "S",
-      "signal_type": "momentum_buy",
-      "price": 25050,
-      "ai_stance": null,
-      "ai_summary": null
-    }
-  ],
+  "today_picks": [],
   "tomorrow_picks": [],
   "market": {
     "regime": "--",
