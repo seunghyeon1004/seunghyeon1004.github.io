@@ -1,22 +1,35 @@
 {
-  "updated": "2026-05-04 13:00",
+  "updated": "2026-05-06 09:02",
   "portfolio": {
     "total_capital": 10000000,
     "realized_pnl": -180460,
-    "unrealized_pnl": 0,
-    "roi_pct": -1.8,
+    "unrealized_pnl": -8100,
+    "roi_pct": -1.89,
     "win_rate": 0.0,
     "wins": 0,
     "losses": 3,
     "total_trades": 3,
-    "open_positions": 0,
+    "open_positions": 1,
     "max_slots": 5,
-    "today_pnl": -28000,
-    "today_trades_count": 1,
-    "today_return_pct": -0.28,
+    "today_pnl": 0,
+    "today_trades_count": 0,
+    "today_return_pct": 0.0,
     "monthly_pnl": -28000
   },
-  "positions": [],
+  "positions": [
+    {
+      "code": "009180",
+      "name": "한솔로지스틱스",
+      "entry_price": 3320,
+      "current_price": 3290,
+      "qty": 270,
+      "current_pnl_pct": -0.9,
+      "entry_date": "2026-05-06",
+      "grade": "S",
+      "sl_price": 3168,
+      "regime": "swing"
+    }
+  ],
   "recent_trades": [
     {
       "name": "삼화콘덴서",
@@ -82,7 +95,58 @@
       "total_pnl": -134400
     }
   ],
-  "today_picks": [],
+  "today_picks": [
+    {
+      "code": "005950",
+      "name": "이수화학",
+      "score": 78,
+      "grade": "S",
+      "signal_type": "momentum_buy",
+      "price": 9800,
+      "ai_stance": null,
+      "ai_summary": null
+    },
+    {
+      "code": "009180",
+      "name": "한솔로지스틱스",
+      "score": 77,
+      "grade": "S",
+      "signal_type": "momentum_buy",
+      "price": 3320,
+      "ai_stance": "bullish",
+      "ai_summary": "외인/기관의 강력한 쌍끌이 매수세가 유입되었으나, FOMC 발표를 앞둔 고환율 환경 및 높은 변동성 리스크가 상방 압력을 제한할 수 있습니다."
+    },
+    {
+      "code": "000390",
+      "name": "삼화페인트",
+      "score": 75,
+      "grade": "S",
+      "signal_type": "classic_entry",
+      "price": 9940,
+      "ai_stance": null,
+      "ai_summary": null
+    },
+    {
+      "code": "001560",
+      "name": "제일연마",
+      "score": 75,
+      "grade": "S",
+      "signal_type": "classic_entry",
+      "price": 11500,
+      "ai_stance": null,
+      "ai_summary": null
+    },
+    {
+      "code": "007590",
+      "name": "동방아그로",
+      "score": 73,
+      "grade": "S",
+      "signal_type": "momentum_buy",
+      "price": 6140,
+      "ai_stance": null,
+      "ai_summary": null
+    }
+  ],
   "tomorrow_picks": [],
   "market": {
     "regime": "--",
