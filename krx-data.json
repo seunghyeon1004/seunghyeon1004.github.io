@@ -2,35 +2,31 @@
   "updated": "2026-05-07 09:02",
   "portfolio": {
     "total_capital": 10000000,
-    "realized_pnl": -161560,
+    "realized_pnl": -117460,
     "unrealized_pnl": 0,
-    "roi_pct": -1.62,
-    "win_rate": 25.0,
-    "wins": 1,
+    "roi_pct": -1.17,
+    "win_rate": 40.0,
+    "wins": 2,
     "losses": 3,
-    "total_trades": 4,
-    "open_positions": 1,
+    "total_trades": 5,
+    "open_positions": 0,
     "max_slots": 5,
-    "today_pnl": 0,
-    "today_trades_count": 0,
-    "today_return_pct": 0.0,
-    "monthly_pnl": -9100
+    "today_pnl": 44100,
+    "today_trades_count": 1,
+    "today_return_pct": 0.44,
+    "monthly_pnl": 35000
   },
-  "positions": [
-    {
-      "code": "000880",
-      "name": "한화",
-      "entry_price": 140600,
-      "current_price": 0,
-      "qty": 7,
-      "current_pnl_pct": 0.0,
-      "entry_date": "2026-05-07",
-      "grade": "S",
-      "sl_price": 131045,
-      "regime": "swing"
-    }
-  ],
+  "positions": [],
   "recent_trades": [
+    {
+      "name": "한화",
+      "code": "000880",
+      "entry_date": "2026-05-07",
+      "exit_date": "2026-05-07",
+      "pnl_pct": 0.04,
+      "pnl_amount": 44100,
+      "exit_reason": "unstuck"
+    },
     {
       "name": "한솔로지스틱스",
       "code": "009180",
@@ -80,9 +76,21 @@
     {
       "date": "2026-05-06",
       "value": 9838440
+    },
+    {
+      "date": "2026-05-07",
+      "value": 9882540
     }
   ],
   "stock_stats": [
+    {
+      "code": "000880",
+      "name": "한화",
+      "total_trades": 1,
+      "win_rate": 100.0,
+      "avg_return": 0.04,
+      "total_pnl": 44100
+    },
     {
       "code": "009180",
       "name": "한솔로지스틱스",
