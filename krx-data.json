@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-06 09:02",
+  "updated": "2026-05-07 09:02",
   "portfolio": {
     "total_capital": 10000000,
     "realized_pnl": -161560,
@@ -9,14 +9,27 @@
     "wins": 1,
     "losses": 3,
     "total_trades": 4,
-    "open_positions": 0,
+    "open_positions": 1,
     "max_slots": 5,
-    "today_pnl": 18900,
-    "today_trades_count": 1,
-    "today_return_pct": 0.19,
+    "today_pnl": 0,
+    "today_trades_count": 0,
+    "today_return_pct": 0.0,
     "monthly_pnl": -9100
   },
-  "positions": [],
+  "positions": [
+    {
+      "code": "000880",
+      "name": "한화",
+      "entry_price": 140600,
+      "current_price": 0,
+      "qty": 7,
+      "current_pnl_pct": 0.0,
+      "entry_date": "2026-05-07",
+      "grade": "S",
+      "sl_price": 131045,
+      "regime": "swing"
+    }
+  ],
   "recent_trades": [
     {
       "name": "한솔로지스틱스",
@@ -97,6 +110,16 @@
   ],
   "today_picks": [
     {
+      "code": "002460",
+      "name": "HS화성",
+      "score": 78,
+      "grade": "S",
+      "signal_type": "momentum_buy",
+      "price": 13750,
+      "ai_stance": null,
+      "ai_summary": null
+    },
+    {
       "code": "005950",
       "name": "이수화학",
       "score": 78,
@@ -107,22 +130,22 @@
       "ai_summary": null
     },
     {
+      "code": "000880",
+      "name": "한화",
+      "score": 77,
+      "grade": "S",
+      "signal_type": "momentum_buy",
+      "price": 140600,
+      "ai_stance": "bullish",
+      "ai_summary": "글로벌 증시 상승 및 외국인의 강력한 수급 유입이 이어지고 있으며, 기술적 과열 우려보다 상승 모멘텀이 우세한 환경입니다."
+    },
+    {
       "code": "009180",
       "name": "한솔로지스틱스",
       "score": 77,
       "grade": "S",
       "signal_type": "momentum_buy",
       "price": 3320,
-      "ai_stance": "bullish",
-      "ai_summary": "외인/기관의 강력한 쌍끌이 매수세가 유입되었으나, FOMC 발표를 앞둔 고환율 환경 및 높은 변동성 리스크가 상방 압력을 제한할 수 있습니다."
-    },
-    {
-      "code": "000390",
-      "name": "삼화페인트",
-      "score": 75,
-      "grade": "S",
-      "signal_type": "classic_entry",
-      "price": 9940,
       "ai_stance": null,
       "ai_summary": null
     },
@@ -133,16 +156,6 @@
       "grade": "S",
       "signal_type": "classic_entry",
       "price": 11500,
-      "ai_stance": null,
-      "ai_summary": null
-    },
-    {
-      "code": "007590",
-      "name": "동방아그로",
-      "score": 73,
-      "grade": "S",
-      "signal_type": "momentum_buy",
-      "price": 6140,
       "ai_stance": null,
       "ai_summary": null
     }
