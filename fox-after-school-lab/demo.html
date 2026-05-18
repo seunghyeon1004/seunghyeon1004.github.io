@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fox's After-School Lab TikTok Integration Demo</title>
+    <style>
+      :root {
+        --ink: #171717;
+        --muted: #6a6257;
+        --paper: #fff8ec;
+        --card: #ffffff;
+        --accent: #d58a24;
+        --line: #e5d5bf;
+        --ok: #137a48;
+      }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+      }
+      main {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 44px 22px 64px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 30px;
+      }
+      img {
+        width: 84px;
+        height: 84px;
+        border-radius: 20px;
+      }
+      h1 {
+        font-size: 36px;
+        margin: 0 0 6px;
+      }
+      p {
+        line-height: 1.65;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 22px;
+      }
+      .step {
+        color: var(--accent);
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+      code {
+        background: #f4ebdd;
+        padding: 2px 6px;
+        border-radius: 5px;
+      }
+      .status {
+        color: var(--ok);
+        font-weight: 800;
+      }
+      @media (max-width: 760px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <img src="./icon.png" alt="Fox's After-School Lab icon" />
+        <div>
+          <h1>TikTok Integration Demo</h1>
+          <p>Creator-authorized upload workflow for Fox's After-School Lab.</p>
+        </div>
+      </header>
+      <section class="grid">
+        <article class="card">
+          <div class="step">1. Login Kit</div>
+          <p>
+            The creator connects their TikTok account through OAuth using
+            <code>user.info.basic</code> and <code>video.publish</code>.
+          </p>
+        </article>
+        <article class="card">
+          <div class="step">2. Creator Info</div>
+          <p>
+            The app checks posting options such as available privacy levels.
+            Test publishing uses <code>SELF_ONLY</code>.
+          </p>
+        </article>
+        <article class="card">
+          <div class="step">3. Creator Review</div>
+          <p>
+            The creator reviews the final MP4, caption, hashtags, and privacy
+            setting before upload.
+          </p>
+        </article>
+        <article class="card">
+          <div class="step">4. Content Posting API</div>
+          <p>
+            The app initializes Direct Post, uploads the selected MP4, and
+            stores the returned publish ID locally.
+          </p>
+        </article>
+      </section>
+      <p class="status">Status: sandbox/private upload flow prepared.</p>
+    </main>
+  </body>
+</html>
