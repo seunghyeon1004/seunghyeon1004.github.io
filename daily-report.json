@@ -1,10 +1,10 @@
 {
-  "date": "2026-08-03",
-  "generated_at": "2026-08-03 10:50 KST",
-  "btc_price": 63169.5,
-  "eth_price": 1867.15,
+  "date": "2026-08-04",
+  "generated_at": "2026-08-04 10:25 KST",
+  "btc_price": 63453.5,
+  "eth_price": 1853.65,
   "account_value": 0.0,
   "open_positions": 0,
   "unrealized_pnl": 0,
-  "report": "Minari Daily Report - 2026-08-03\nBTC: $63169.5 | ETH: $1867.15\nAccount: $0.00 | Positions: 0 | uPnL: +$0.00"
+  "report": "Minari Daily Report - 2026-08-04\nBTC: $63453.5 | ETH: $1853.65\nAccount: $0.00 | Positions: 0 | uPnL: +$0.00"
 }
