@@ -698,6 +698,12 @@
       "account_value": 0.0,
       "unrealized_pnl": 0,
       "open_positions": 0
+    },
+    {
+      "date": "2026-08-07",
+      "account_value": 0.0,
+      "unrealized_pnl": 0,
+      "open_positions": 0
     }
   ]
 }
