@@ -223,10 +223,24 @@ execute.allow = false</code></pre>
           <div class="work-row__tags"><span>Python</span><span>Parquet</span><span>OOS</span><span>Audit Trail</span></div>
           <span class="text-link text-link--static"><i data-lucide="circle-x" aria-hidden="true"></i><span data-ko="수익 전략이 아닌 검증 증거" data-en="Validation evidence, not a profitable strategy">수익 전략이 아닌 검증 증거</span></span>
         </div>
-        <figure class="work-row__media evidence-frame">
-          <img src="assets/images/f301-evidence.webp" alt="F301 전략의 음수 수익률과 독립 감사 결과를 보여주는 검증 원장" width="1200" height="750" loading="lazy">
-          <figcaption><span>INDEPENDENT RECALCULATION</span><span>0 MISMATCH</span></figcaption>
-        </figure>
+        <div class="work-row__media audit-visual" role="img" aria-label="F301의 190회 거래, 음수 수익률, 벤치마크 비교, 독립 감사 최종 기각 결과">
+          <header><span>INDEPENDENT_AUDIT.JSON</span><span>RAW PARQUET / RECALCULATED</span></header>
+          <div class="audit-visual__verdict"><small>VERDICT</small><strong>HYPOTHESIS REJECTED</strong><i>CONFIRMED</i></div>
+          <dl class="audit-visual__metrics">
+            <div><dt>TRADES</dt><dd>190</dd></div>
+            <div><dt>BASE</dt><dd>-24.24%</dd></div>
+            <div><dt>STRESS</dt><dd>-62.49%</dd></div>
+            <div><dt>UPRO HOLD</dt><dd>+26.40%</dd></div>
+            <div><dt>MISMATCH</dt><dd>0</dd></div>
+          </dl>
+          <pre><code>{
+  "split_trade_counts": [64, 63, 63],
+  "holding_minutes": 30,
+  "audit_classification": "independent_raw_parquet_recalculation",
+  "material_mismatch_count": 0
+}</code></pre>
+          <footer><span>TERMINALLY_REJECTED_CONFIRMED</span><span>NO LIVE TRADING CLAIM</span></footer>
+        </div>
       </article>
     </section>
 

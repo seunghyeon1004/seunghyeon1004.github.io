@@ -45,12 +45,14 @@ test('film reaches all beats, finale, and reverses', async ({ page }) => {
 
   await setProgress(0.75);
   await expect(page.locator('[data-beat="5"]')).toHaveClass(/is-active/);
+  await expect.poll(() => page.locator('#scroll-film').evaluate(video => video.currentTime)).toBeGreaterThan(10);
   await setProgress(1);
   await expect(page.locator('#scroll-story')).toHaveAttribute('data-wordmark-visible', '');
   await expect(page.locator('#final-wordmark')).toHaveCSS('opacity', '1');
   await setProgress(0.23);
   await expect(page.locator('[data-beat="1"]')).toHaveClass(/is-active/);
   await expect(page.locator('[data-beat="5"]')).not.toHaveClass(/is-active/);
+  await expect.poll(() => page.locator('#scroll-film').evaluate(video => video.currentTime)).toBeLessThan(4);
 });
 
 test('language switch preserves position and updates copy', async ({ page }) => {

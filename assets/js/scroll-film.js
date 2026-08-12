@@ -35,6 +35,14 @@ function getMediaSource(video) {
   return value ? new URL(value, document.baseURI).href : null;
 }
 
+function canSeekTo(video, targetTime) {
+  if (targetTime <= SEEK_EPSILON) return true;
+  for (let index = 0; index < video.seekable.length; index += 1) {
+    if (video.seekable.start(index) <= targetTime && video.seekable.end(index) >= targetTime) return true;
+  }
+  return false;
+}
+
 export function initScrollFilm(root = globalThis.document) {
   if (!root || typeof window === 'undefined') return null;
 
@@ -54,37 +62,54 @@ export function initScrollFilm(root = globalThis.document) {
   let duration = DEFAULT_DURATION;
   let frameRequested = false;
   let recoveryAttempted = false;
+  let recoveryPromise = null;
+  let usingBlob = false;
   let blobUrl = null;
   let destroyed = false;
+  const directSourceUrl = getMediaSource(video);
 
   const setFallback = () => {
     story.dataset.filmState = 'fallback';
     video.hidden = true;
   };
 
-  const recoverWithBlob = async () => {
-    if (recoveryAttempted || reducedMotion) {
+  const recoverWithBlob = () => {
+    if (reducedMotion) return Promise.resolve();
+    if (recoveryPromise) return recoveryPromise;
+    if (recoveryAttempted || usingBlob) {
       setFallback();
-      return;
+      return Promise.resolve();
     }
 
     recoveryAttempted = true;
-    const sourceUrl = getMediaSource(video);
-    if (!sourceUrl) {
+    if (!directSourceUrl) {
       setFallback();
-      return;
+      return Promise.resolve();
     }
 
     story.dataset.filmState = 'recovering';
-    try {
-      const response = await fetch(sourceUrl);
-      if (!response.ok) throw new Error(`Film request failed: ${response.status}`);
-      blobUrl = URL.createObjectURL(await response.blob());
-      video.src = blobUrl;
-      video.load();
-    } catch {
-      setFallback();
-    }
+    video.pause();
+    video.removeAttribute('src');
+    video.querySelector('source')?.removeAttribute('src');
+    video.load();
+
+    recoveryPromise = fetch(directSourceUrl, { cache: 'no-store' })
+      .then(response => {
+        if (!response.ok) throw new Error(`Film request failed: ${response.status}`);
+        return response.blob();
+      })
+      .then(blob => {
+        if (destroyed) return;
+        blobUrl = URL.createObjectURL(blob);
+        usingBlob = true;
+        video.src = blobUrl;
+        video.load();
+      })
+      .catch(setFallback)
+      .finally(() => {
+        recoveryPromise = null;
+      });
+    return recoveryPromise;
   };
 
   const setTimelineState = progress => {
@@ -117,6 +142,11 @@ export function initScrollFilm(root = globalThis.document) {
 
     if (reducedMotion || story.dataset.filmState === 'fallback') return;
     if (video.readyState < 1 || video.seeking || Math.abs(video.currentTime - videoTime) <= SEEK_EPSILON) return;
+    if (!canSeekTo(video, videoTime)) {
+      if (usingBlob) setFallback();
+      else void recoverWithBlob();
+      return;
+    }
 
     try {
       video.currentTime = videoTime;
@@ -146,7 +176,7 @@ export function initScrollFilm(root = globalThis.document) {
 
   const onMetadata = () => {
     if (Number.isFinite(video.duration) && video.duration > 0) duration = video.duration;
-    if (!reducedMotion) story.dataset.filmState = 'ready';
+    if (!reducedMotion) story.dataset.filmState = usingBlob ? 'blob-ready' : 'ready';
     requestRender();
   };
 
@@ -165,7 +195,10 @@ export function initScrollFilm(root = globalThis.document) {
   };
 
   video.addEventListener('loadedmetadata', onMetadata);
-  video.addEventListener('error', () => void recoverWithBlob());
+  video.addEventListener('error', () => {
+    if (usingBlob) setFallback();
+    else void recoverWithBlob();
+  });
   window.addEventListener('scroll', requestRender, { passive: true });
   window.addEventListener('resize', requestRender, { passive: true });
   window.addEventListener('pagehide', destroy, { once: true });
