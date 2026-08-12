@@ -19,3 +19,24 @@ test('homepage keeps four selected systems and two languages', () => {
   assert.match(html, /data-ko=/);
   assert.match(html, /data-en=/);
 });
+
+test('selected work exposes a handoff and four three-beat product scenes', () => {
+  assert.match(html, /data-story-handoff/);
+
+  const scenes = [...html.matchAll(/<article[^>]+data-product-scene[^>]+data-project=["']([^"']+)["']/g)]
+    .map(match => match[1]);
+  assert.deepEqual(scenes, ['pawrelay', 'operations', 'skillsets', 'f301']);
+
+  for (const project of scenes) {
+    const start = html.indexOf(`data-project="${project}"`);
+    const end = html.indexOf('</article>', start);
+    const scene = html.slice(start, end);
+    assert.match(scene, /data-scene-layer="thesis"/);
+    assert.match(scene, /data-scene-layer="evidence"/);
+    assert.match(scene, /data-scene-layer="method"/);
+  }
+});
+
+test('homepage loads the isolated product story enhancement', () => {
+  assert.match(html, /<script type="module" src="assets\/js\/product-story\.js"><\/script>/);
+});
