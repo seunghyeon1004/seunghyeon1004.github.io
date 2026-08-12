@@ -77,6 +77,24 @@ test('language switch preserves position and updates copy', async ({ page }) => 
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 });
 
+test('language switch keeps the active label legible on dark and light backgrounds', async ({ page }) => {
+  await page.goto('/');
+  const activeLanguage = page.locator('[data-lang][aria-pressed="true"]');
+  const colors = () => activeLanguage.evaluate(element => {
+    const style = getComputedStyle(element);
+    return [style.color, style.backgroundColor];
+  });
+
+  let [color, background] = await colors();
+  expect(color).not.toBe(background);
+
+  await page.evaluate(() => scrollTo(0, document.querySelector('#selected-work').offsetTop));
+  await settleFrame(page);
+  await expect(page.locator('#site-nav')).toHaveAttribute('data-on-dark', 'false');
+  [color, background] = await colors();
+  expect(color).not.toBe(background);
+});
+
 test('mobile menu exposes navigation and closes after selection', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
@@ -137,6 +155,25 @@ test('reduced motion removes product scene pinning', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/');
   await expect(page.locator('[data-project="pawrelay"] .project-scene__stage')).toHaveCSS('position', 'relative');
+  await expect(page.locator('[data-project="pawrelay"] [data-scene-layer="thesis"]')).toHaveCSS('opacity', '1');
+  await expect(page.locator('[data-project="pawrelay"] [data-scene-layer="thesis"]')).toHaveCSS('transform', 'none');
   await expect(page.locator('[data-project="pawrelay"] [data-scene-layer="evidence"]')).toBeVisible();
   await expect(page.locator('[data-project="f301"] [data-scene-layer="method"]')).toBeVisible();
+});
+
+test('product scenes remain readable when the enhancement script is unavailable', async ({ page }) => {
+  await page.route('**/assets/js/product-story.js', route => route.abort());
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/');
+
+  await expect(page.locator('[data-product-scene]')).toHaveCount(4);
+  await expect(page.locator('[data-scene-layer]')).toHaveCount(12);
+  await expect(page.locator('html')).not.toHaveAttribute('data-product-story-ready', 'true');
+
+  for (const layer of await page.locator('[data-scene-layer]').all()) {
+    await expect(layer).toBeVisible();
+  }
+
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
 });

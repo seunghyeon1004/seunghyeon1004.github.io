@@ -224,11 +224,12 @@ html[lang="ko"] .growth-beat > span {
 }
 
 .language-switch button[aria-pressed="true"] {
-  background: currentColor;
+  background: var(--ink);
   color: var(--paper);
 }
 
 .site-nav[data-on-dark="true"] .language-switch button[aria-pressed="true"] {
+  background: var(--paper);
   color: var(--black);
 }
 
@@ -1000,7 +1001,7 @@ html[lang="ko"] .growth-beat > span {
 }
 
 .project-scene--pawrelay .project-scene__evidence {
-  width: min(1480px, calc(100vw - 32px));
+  width: min(100%, 1480px);
 }
 
 .project-scene--pawrelay .product-frame img {
@@ -1262,7 +1263,11 @@ html[lang="ko"] .growth-beat > span {
   white-space: pre-wrap;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html[data-product-story-ready="true"] .project-scene--pawrelay .project-scene__evidence {
+    width: min(1480px, calc(100vw - 32px));
+  }
+
   html[data-product-story-ready="true"] .project-scene__scroll {
     height: 240vh;
   }
