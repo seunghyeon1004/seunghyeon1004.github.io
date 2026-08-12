@@ -13,6 +13,16 @@ async function settleFrame(page) {
   }));
 }
 
+async function setSceneProgress(page, project, progress) {
+  await page.evaluate(({ project, progress }) => {
+    const scene = document.querySelector(`[data-project="${project}"]`);
+    const top = scene.getBoundingClientRect().top + scrollY;
+    const travel = scene.offsetHeight - innerHeight;
+    scrollTo(0, top + travel * progress);
+  }, { project, progress });
+  await settleFrame(page);
+}
+
 for (const viewport of viewports) {
   test(`${viewport.name} has no overflow or console errors`, async ({ page }) => {
     const errors = [];
@@ -58,11 +68,11 @@ test('film reaches all beats, finale, and reverses', async ({ page }) => {
 test('language switch preserves position and updates copy', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-lang="ko"]').click();
-  await expect(page.locator('#selected-work-title')).toContainText('과정');
+  await expect(page.locator('#selected-work-title')).toContainText('신호');
   await page.evaluate(() => scrollTo(0, document.querySelector('#selected-work').offsetTop));
   const before = await page.evaluate(() => scrollY);
   await page.locator('[data-lang="en"]').click();
-  await expect(page.locator('#selected-work-title')).toContainText('process');
+  await expect(page.locator('#selected-work-title')).toContainText('signals');
   expect(await page.evaluate(() => scrollY)).toBe(before);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 });
@@ -90,4 +100,43 @@ test('reduced motion exposes readable content without scrubbing', async ({ page 
   await page.evaluate(() => scrollTo(0, document.querySelector('#selected-work').offsetTop));
   await settleFrame(page);
   expect(await page.locator('#scroll-film').evaluate(video => video.currentTime)).toBe(initialTime);
+});
+
+test('desktop product scenes advance and reverse deterministically', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/');
+
+  for (const project of ['pawrelay', 'operations', 'skillsets', 'f301']) {
+    const scene = page.locator(`[data-project="${project}"]`);
+    await setSceneProgress(page, project, 0.1);
+    await expect(scene).toHaveAttribute('data-scene-state', 'thesis');
+    await setSceneProgress(page, project, 0.5);
+    await expect(scene).toHaveAttribute('data-scene-state', 'evidence');
+    await setSceneProgress(page, project, 0.82);
+    await expect(scene).toHaveAttribute('data-scene-state', 'method');
+    await setSceneProgress(page, project, 0.12);
+    await expect(scene).toHaveAttribute('data-scene-state', 'thesis');
+  }
+});
+
+test('mobile product scenes use readable normal flow', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  for (const project of ['pawrelay', 'operations', 'skillsets', 'f301']) {
+    const scene = page.locator(`[data-project="${project}"]`);
+    await expect(scene.locator('[data-scene-layer="thesis"]')).toBeVisible();
+    await expect(scene.locator('[data-scene-layer="evidence"]')).toBeVisible();
+    await expect(scene.locator('[data-scene-layer="method"]')).toBeVisible();
+    await expect(scene.locator('.project-scene__stage')).toHaveCSS('position', 'relative');
+  }
+});
+
+test('reduced motion removes product scene pinning', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/');
+  await expect(page.locator('[data-project="pawrelay"] .project-scene__stage')).toHaveCSS('position', 'relative');
+  await expect(page.locator('[data-project="pawrelay"] [data-scene-layer="evidence"]')).toBeVisible();
+  await expect(page.locator('[data-project="f301"] [data-scene-layer="method"]')).toBeVisible();
 });
