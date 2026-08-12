@@ -98,7 +98,9 @@ export function initScrollFilm(root = globalThis.document) {
     story.dataset.phase = isFinale ? 'finale' : activeBeat >= 0 ? `beat-${activeBeat + 1}` : 'origin';
     story.toggleAttribute('data-wordmark-visible', isWordmarkVisible);
     story.toggleAttribute('data-descriptor-visible', isDescriptorVisible);
-    wordmark?.style.setProperty('--wordmark-progress', clamp((progress - WORDMARK_START) / (1 - WORDMARK_START)).toFixed(5));
+    const wordmarkProgress = clamp((progress - WORDMARK_START) / (1 - WORDMARK_START));
+    wordmark?.style.setProperty('--wordmark-progress', wordmarkProgress.toFixed(5));
+    wordmark?.style.setProperty('--wordmark-clip', `${((1 - wordmarkProgress) * 100).toFixed(3)}%`);
 
     beats.forEach((beat, index) => {
       const isActive = index === activeBeat;
