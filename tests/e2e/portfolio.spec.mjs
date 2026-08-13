@@ -177,3 +177,66 @@ test('product scenes remain readable when the enhancement script is unavailable'
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+test('outcomes distinguish public artifacts, a live service, and an inquiry-only program', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/');
+  await page.locator('[data-lang="ko"]').click();
+
+  await expect(page.locator('[data-outcome]')).toHaveCount(2);
+  await expect(page.locator('[data-outcome="research"]')).toContainText('Technical check as of 10 Aug 2026');
+  await expect(page.locator('[data-outcome="research"] a')).toHaveAttribute('href', /stock-ai-negative-results-reproducibility/);
+
+  const liveOffer = page.locator('[data-offer-status="live"]');
+  await expect(liveOffer).toContainText('LIVE ON KMONG');
+  await expect(liveOffer.locator('a')).toHaveAttribute('href', 'https://kmong.com/gig/789934');
+
+  const reviewOffer = page.locator('[data-offer-status="under-review"]');
+  await expect(reviewOffer).toContainText('크몽 심사 중');
+  await expect(reviewOffer.locator('a')).toHaveAttribute('href', '#contact');
+  await expect(reviewOffer.locator('a')).not.toHaveAttribute('target', '_blank');
+
+  const desktopLayout = await page.locator('[data-outcome="research"]').evaluate(element => {
+    const story = element.querySelector('.outcome-band__story').getBoundingClientRect();
+    const body = element.querySelector('.outcome-band__body').getBoundingClientRect();
+    return { storyRight: story.right, bodyLeft: body.left };
+  });
+  expect(desktopLayout.bodyLeft).toBeGreaterThan(desktopLayout.storyRight);
+});
+
+test('AI education promotion switches language and routes to collaboration', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-lang="en"]').click();
+  await expect(page.locator('#outcomes-title')).toContainText('Evidence became a paper');
+  await expect(page.locator('[data-offer-status="under-review"]')).toContainText('KMONG REVIEW IN PROGRESS');
+  await expect(page.locator('[data-offer-status="under-review"] a')).toContainText('Ask about training');
+
+  await page.locator('[data-offer-status="under-review"] a').click();
+  await expect(page).toHaveURL(/#contact$/);
+  await expect(page.locator('#contact')).toBeVisible();
+  await expect(page.locator('#contact')).toContainText('AI training');
+});
+
+for (const viewport of [
+  { name: 'outcomes-mobile', width: 390, height: 844 },
+  { name: 'outcomes-small-mobile', width: 320, height: 700 },
+]) {
+  test(`${viewport.name} keeps every outcome in readable document order`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto('/');
+
+    for (const selector of ['[data-outcome="research"]', '[data-offer-status="live"]', '[data-offer-status="under-review"]']) {
+      await expect(page.locator(selector)).toBeVisible();
+    }
+
+    const layout = await page.locator('[data-outcome="research"]').evaluate(element => {
+      const story = element.querySelector('.outcome-band__story').getBoundingClientRect();
+      const body = element.querySelector('.outcome-band__body').getBoundingClientRect();
+      return { storyBottom: story.bottom, bodyTop: body.top };
+    });
+    expect(layout.bodyTop).toBeGreaterThanOrEqual(layout.storyBottom);
+
+    const inquiryHeight = await page.locator('[data-offer-status="under-review"] a').evaluate(element => element.getBoundingClientRect().height);
+    expect(inquiryHeight).toBeGreaterThanOrEqual(44);
+  });
+}
