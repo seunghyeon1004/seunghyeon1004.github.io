@@ -210,6 +210,13 @@ test('outcomes distinguish public artifacts, a live service, and an inquiry-only
   await expect(reviewOffer).toContainText('크몽 심사 중');
   await expect(reviewOffer.locator('a')).toHaveAttribute('href', '#contact');
   await expect(reviewOffer.locator('a')).not.toHaveAttribute('target', '_blank');
+
+  const desktopLayout = await page.locator('[data-outcome="research"]').evaluate(element => {
+    const story = element.querySelector('.outcome-band__story').getBoundingClientRect();
+    const body = element.querySelector('.outcome-band__body').getBoundingClientRect();
+    return { storyRight: story.right, bodyLeft: body.left };
+  });
+  expect(desktopLayout.bodyLeft).toBeGreaterThan(desktopLayout.storyRight);
 });
 
 test('AI education promotion switches language and routes to collaboration', async ({ page }) => {
@@ -258,7 +265,7 @@ Run:
 npx playwright test tests/e2e/portfolio.spec.mjs --grep "outcomes|AI education"
 ```
 
-Expected: the semantic assertions from Task 1 may pass, while the mobile order or 44px target assertion fails because outcome-specific CSS does not exist yet.
+Expected: the semantic assertions from Task 1 pass, while the desktop two-column assertion fails because outcome-specific CSS does not exist yet.
 
 - [ ] **Step 3: Add the desktop editorial layout**
 
