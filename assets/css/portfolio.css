@@ -1403,6 +1403,7 @@ html[lang="ko"] .growth-beat > span {
 .outcome-band__status,
 .outcome-offer__status {
   margin: 0;
+  color: var(--ink);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 9px;
   font-weight: 720;
@@ -1410,11 +1411,13 @@ html[lang="ko"] .growth-beat > span {
 }
 
 .outcome-band--research .outcome-band__status {
-  color: var(--research-red);
+  border-left: 2px solid var(--research-red);
+  padding-left: 8px;
 }
 
 .outcome-band--business .outcome-band__status {
-  color: var(--blue);
+  border-left: 2px solid var(--blue);
+  padding-left: 8px;
 }
 
 .outcome-band__number {
@@ -1510,11 +1513,19 @@ html[lang="ko"] .growth-beat > span {
 }
 
 .outcome-offer--live .outcome-offer__status {
-  color: var(--green);
+  color: var(--ink);
 }
 
 .outcome-offer--review .outcome-offer__status {
-  color: var(--coral);
+  color: var(--ink);
+}
+
+.outcome-offer--live .outcome-offer__status > span[aria-hidden="true"] {
+  background: var(--green);
+}
+
+.outcome-offer--review .outcome-offer__status > span[aria-hidden="true"] {
+  background: #b86a00;
 }
 
 .outcome-offer__copy {
@@ -1765,7 +1776,7 @@ html[lang="ko"] .growth-beat > span {
 
 @media (hover: hover) {
   .outcome-band a:hover {
-    color: var(--blue);
+    text-decoration-color: var(--blue);
   }
 
   .icon-button:hover {

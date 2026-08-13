@@ -21,11 +21,24 @@ test('homepage exposes two truthful research and business outcomes', () => {
   assert.match(html, /OUTCOMES \/ 02/);
   assert.match(html, /Submission received · Technical check as of 10 Aug 2026/);
   assert.match(html, /stock-ai-negative-results-reproducibility/);
-  assert.match(html, /data-offer-status=["']live["']/);
-  assert.match(html, /https:\/\/kmong\.com\/gig\/789934/);
-  assert.match(html, /data-offer-status=["']under-review["']/);
-  assert.match(html, /크몽 심사 중/);
-  assert.match(html, /href=["']#contact["']/);
+  assert.match(html, /data-ko=["']코드 · 파생 데이터 · 체크섬 · 그림 · 인용 메타데이터["']/);
+  assert.match(html, /data-en=["']Code · Derived data · Checksums · Figures · Citation metadata["']/);
+
+  const researchLink = html.match(/<a class=["']text-link outcome-band__link["'][^>]*>/)?.[0];
+  const liveOffer = html.match(/<section[^>]+data-offer-status=["']live["'][\s\S]*?<\/section>/)?.[0];
+  const reviewOffer = html.match(/<section[^>]+data-offer-status=["']under-review["'][\s\S]*?<\/section>/)?.[0];
+
+  assert.ok(researchLink, 'research outcome link exists');
+  assert.match(researchLink, /target=["']_blank["']/);
+  assert.match(researchLink, /rel=["']noopener noreferrer["']/);
+  assert.ok(liveOffer, 'live offer exists');
+  assert.match(liveOffer, /https:\/\/kmong\.com\/gig\/789934/);
+  assert.match(liveOffer, /target=["']_blank["']/);
+  assert.match(liveOffer, /rel=["']noopener noreferrer["']/);
+  assert.ok(reviewOffer, 'under-review offer exists');
+  assert.equal((reviewOffer.match(/<a\b/g) || []).length, 1);
+  assert.match(reviewOffer, /href=["']#contact["']/);
+  assert.doesNotMatch(reviewOffer, /https?:\/\//);
   assert.doesNotMatch(html, /kmong\.com\/gig\/795856/);
 });
 

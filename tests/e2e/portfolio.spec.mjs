@@ -13,6 +13,21 @@ async function settleFrame(page) {
   }));
 }
 
+function contrastRatio(foreground, background) {
+  const toLuminance = color => {
+    const channels = color.match(/\d+(?:\.\d+)?/g).slice(0, 3).map(Number);
+    const linear = channels.map(channel => {
+      const normalized = channel / 255;
+      return normalized <= 0.03928
+        ? normalized / 12.92
+        : ((normalized + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+  };
+  const [lighter, darker] = [toLuminance(foreground), toLuminance(background)].sort((a, b) => b - a);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 async function setSceneProgress(page, project, progress) {
   await page.evaluate(({ project, progress }) => {
     const scene = document.querySelector(`[data-project="${project}"]`);
@@ -188,11 +203,13 @@ test('outcomes distinguish public artifacts, a live service, and an inquiry-only
   await expect(page.locator('[data-outcome="research"] a')).toHaveAttribute('href', /stock-ai-negative-results-reproducibility/);
 
   const liveOffer = page.locator('[data-offer-status="live"]');
-  await expect(liveOffer).toContainText('LIVE ON KMONG');
+  await expect(liveOffer).toContainText('크몽 판매 중');
+  await expect(liveOffer.locator('h4')).toHaveText('입찰/지원사업 맞춤 리서치');
   await expect(liveOffer.locator('a')).toHaveAttribute('href', 'https://kmong.com/gig/789934');
 
   const reviewOffer = page.locator('[data-offer-status="under-review"]');
   await expect(reviewOffer).toContainText('크몽 심사 중');
+  await expect(reviewOffer.locator('h4')).toHaveText('AI로 직접 만드는 실전 바이브 코딩 1:1/단체 강의');
   await expect(reviewOffer.locator('a')).toHaveAttribute('href', '#contact');
   await expect(reviewOffer.locator('a')).not.toHaveAttribute('target', '_blank');
 
@@ -204,11 +221,57 @@ test('outcomes distinguish public artifacts, a live service, and an inquiry-only
   expect(desktopLayout.bodyLeft).toBeGreaterThan(desktopLayout.storyRight);
 });
 
+test('outcome status text and hovered action meet normal-text contrast', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/');
+
+  const outcomeBackground = await page.locator('#outcomes').evaluate(element => getComputedStyle(element).backgroundColor);
+  for (const status of await page.locator('.outcome-band__status, .outcome-offer__status').all()) {
+    const color = await status.evaluate(element => getComputedStyle(element).color);
+    expect(contrastRatio(color, outcomeBackground)).toBeGreaterThanOrEqual(4.5);
+  }
+
+  const researchAction = page.locator('[data-outcome="research"] .outcome-band__link');
+  await researchAction.hover();
+  const hoverColor = await researchAction.evaluate(element => getComputedStyle(element).color);
+  expect(contrastRatio(hoverColor, outcomeBackground)).toBeGreaterThanOrEqual(4.5);
+});
+
+test('all outcome actions provide a 44px touch target', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  for (const action of await page.locator('[data-outcome="research"] .outcome-band__link, [data-offer-status="live"] .outcome-offer__link, [data-offer-status="under-review"] .outcome-offer__link').all()) {
+    const height = await action.evaluate(element => element.getBoundingClientRect().height);
+    expect(height).toBeGreaterThanOrEqual(44);
+  }
+});
+
+test('research outcome changes from two columns at 1024px to vertical flow at 1023px', async ({ page }) => {
+  const measure = async width => {
+    await page.setViewportSize({ width, height: 768 });
+    await page.goto('/');
+    return page.locator('[data-outcome="research"]').evaluate(element => {
+      const story = element.querySelector('.outcome-band__story').getBoundingClientRect();
+      const body = element.querySelector('.outcome-band__body').getBoundingClientRect();
+      return { storyRight: story.right, storyBottom: story.bottom, bodyLeft: body.left, bodyTop: body.top };
+    });
+  };
+
+  const desktop = await measure(1024);
+  expect(desktop.bodyLeft).toBeGreaterThan(desktop.storyRight);
+  const mobile = await measure(1023);
+  expect(mobile.bodyTop).toBeGreaterThanOrEqual(mobile.storyBottom);
+});
+
 test('AI education promotion switches language and routes to collaboration', async ({ page }) => {
   await page.goto('/');
   await page.locator('[data-lang="en"]').click();
   await expect(page.locator('#outcomes-title')).toContainText('Evidence became a paper');
-  await expect(page.locator('[data-offer-status="under-review"]')).toContainText('KMONG REVIEW IN PROGRESS');
+  await expect(page.locator('[data-offer-status="live"]')).toContainText('LIVE ON KMONG');
+  await expect(page.locator('[data-offer-status="live"] h4')).toHaveText('Bid & Grant Opportunity Research');
+  await expect(page.locator('[data-offer-status="under-review"]')).toContainText('PROGRAM / UNDER REVIEW');
+  await expect(page.locator('[data-offer-status="under-review"] h4')).toHaveText('Practical AI Vibe Coding: 1:1 & Team Training');
   await expect(page.locator('[data-offer-status="under-review"] a')).toContainText('Ask about training');
 
   await page.locator('[data-offer-status="under-review"] a').click();
