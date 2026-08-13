@@ -5,11 +5,28 @@ import test from 'node:test';
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 
 test('homepage exposes the approved sections and media', () => {
-  for (const id of ['scroll-story', 'scroll-film', 'selected-work', 'capabilities', 'archive', 'contact']) {
+  for (const id of ['scroll-story', 'scroll-film', 'selected-work', 'outcomes', 'capabilities', 'archive', 'contact']) {
     assert.match(html, new RegExp(`id=["']${id}["']`));
   }
   assert.match(html, /assets\/media\/portfolio-universe-720p\.mp4/);
   assert.match(html, /SEUNGHYEON/);
+});
+
+test('homepage exposes two truthful research and business outcomes', () => {
+  const outcomes = [...html.matchAll(/<article[^>]+data-outcome=["']([^"']+)["']/g)]
+    .map(match => match[1]);
+
+  assert.deepEqual(outcomes, ['research', 'business']);
+  assert.match(html, /id=["']outcomes["']/);
+  assert.match(html, /OUTCOMES \/ 02/);
+  assert.match(html, /Submission received · Technical check as of 10 Aug 2026/);
+  assert.match(html, /stock-ai-negative-results-reproducibility/);
+  assert.match(html, /data-offer-status=["']live["']/);
+  assert.match(html, /https:\/\/kmong\.com\/gig\/789934/);
+  assert.match(html, /data-offer-status=["']under-review["']/);
+  assert.match(html, /크몽 심사 중/);
+  assert.match(html, /href=["']#contact["']/);
+  assert.doesNotMatch(html, /kmong\.com\/gig\/795856/);
 });
 
 test('homepage keeps four selected systems and two languages', () => {
