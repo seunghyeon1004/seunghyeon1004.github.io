@@ -2455,6 +2455,70 @@ html[lang="ko"] .growth-beat > span {
   }
 }
 
+@media (max-width: 640px) and (prefers-reduced-motion: no-preference) {
+  html[data-product-story-ready="true"] .project-scene__scroll {
+    height: 180svh;
+  }
+
+  html[data-product-story-ready="true"] .project-scene__stage {
+    position: sticky;
+    top: 64px;
+    display: grid;
+    place-items: center;
+    height: calc(100svh - 64px);
+    min-height: 0;
+    overflow: hidden;
+    padding: 32px 18px;
+  }
+
+  html[data-product-story-ready="true"] .project-scene__thesis,
+  html[data-product-story-ready="true"] .project-scene__evidence {
+    position: absolute;
+    width: calc(100% - 36px);
+    max-width: none;
+    margin: 0;
+    transition: opacity 300ms ease, transform 520ms cubic-bezier(0.2, 0.72, 0.2, 1);
+  }
+
+  html[data-product-story-ready="true"] .project-scene__thesis {
+    text-align: left;
+  }
+
+  html[data-product-story-ready="true"] .project-scene__evidence,
+  html[data-product-story-ready="true"] .project-scene--pawrelay .project-scene__evidence {
+    width: calc(100% - 36px);
+    margin-top: 0;
+    opacity: 0;
+    transform: translateY(8svh) scale(0.9);
+  }
+
+  html[data-product-story-ready="true"] .project-scene[data-scene-state="thesis"] .project-scene__thesis {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  html[data-product-story-ready="true"] .project-scene[data-scene-state="thesis"] .project-scene__evidence {
+    opacity: 0;
+    transform: translateY(8svh) scale(0.9);
+  }
+
+  html[data-product-story-ready="true"] .project-scene[data-scene-state="evidence"] .project-scene__thesis,
+  html[data-product-story-ready="true"] .project-scene[data-scene-state="method"] .project-scene__thesis {
+    opacity: 0;
+    transform: translateY(-6svh) scale(0.96);
+  }
+
+  html[data-product-story-ready="true"] .project-scene[data-scene-state="evidence"] .project-scene__evidence,
+  html[data-product-story-ready="true"] .project-scene[data-scene-state="method"] .project-scene__evidence {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  html[data-product-story-ready="true"] .project-scene--pawrelay .product-frame img {
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

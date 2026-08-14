@@ -152,8 +152,8 @@ test('desktop product scenes advance and reverse deterministically', async ({ pa
   }
 });
 
-test('mobile product scenes use readable normal flow', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+test('mid-width product scenes keep readable normal flow', async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 1024 });
   await page.goto('/');
 
   for (const project of ['pawrelay', 'operations', 'skillsets', 'f301']) {
