@@ -1,6 +1,18 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { clamp, getSceneProgress, getSceneState } from '../assets/js/product-story.js';
+import * as productStory from '../assets/js/product-story.js';
+
+const { clamp, getSceneProgress, getSceneState } = productStory;
+
+test('scene scrubbing runs only on phones and desktops without reduced motion', () => {
+  const shouldScrub = productStory.shouldScrubProductStory;
+
+  assert.equal(shouldScrub?.({ reducedMotion: false, desktop: false, phone: true }), true);
+  assert.equal(shouldScrub?.({ reducedMotion: false, desktop: true, phone: false }), true);
+  assert.equal(shouldScrub?.({ reducedMotion: false, desktop: false, phone: false }), false);
+  assert.equal(shouldScrub?.({ reducedMotion: true, desktop: false, phone: true }), false);
+  assert.equal(shouldScrub?.({ reducedMotion: true, desktop: true, phone: false }), false);
+});
 
 test('scene progress maps the sticky travel distance to zero through one', () => {
   assert.equal(clamp(-0.2), 0);

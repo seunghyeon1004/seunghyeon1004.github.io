@@ -11,6 +11,10 @@ export function getSceneState(progress) {
   return 'method';
 }
 
+export function shouldScrubProductStory({ reducedMotion, desktop, phone }) {
+  return !reducedMotion && (desktop || phone);
+}
+
 export function initProductStory(root = globalThis.document, view = globalThis.window) {
   if (!root || !view) return null;
   const scenes = [...root.querySelectorAll('[data-product-scene]')];
@@ -18,6 +22,7 @@ export function initProductStory(root = globalThis.document, view = globalThis.w
 
   const motionQuery = view.matchMedia('(prefers-reduced-motion: reduce)');
   const desktopQuery = view.matchMedia('(min-width: 1024px)');
+  const phoneQuery = view.matchMedia('(max-width: 640px)');
   let frameRequested = false;
   let destroyed = false;
 
@@ -30,13 +35,22 @@ export function initProductStory(root = globalThis.document, view = globalThis.w
     frameRequested = false;
     if (destroyed) return;
 
-    if (motionQuery.matches || !desktopQuery.matches) {
+    const shouldScrub = shouldScrubProductStory({
+      reducedMotion: motionQuery.matches,
+      desktop: desktopQuery.matches,
+      phone: phoneQuery.matches,
+    });
+
+    if (!shouldScrub) {
       scenes.forEach(setReadableState);
       return;
     }
 
     scenes.forEach(scene => {
-      const progress = getSceneProgress(scene.getBoundingClientRect(), view.innerHeight);
+      const progressElement = phoneQuery.matches
+        ? scene.querySelector('.project-scene__scroll')
+        : scene;
+      const progress = getSceneProgress(progressElement.getBoundingClientRect(), view.innerHeight);
       scene.style.setProperty('--scene-progress', progress.toFixed(5));
       scene.dataset.sceneState = getSceneState(progress);
     });
@@ -54,6 +68,7 @@ export function initProductStory(root = globalThis.document, view = globalThis.w
     view.removeEventListener('resize', requestRender);
     motionQuery.removeEventListener?.('change', requestRender);
     desktopQuery.removeEventListener?.('change', requestRender);
+    phoneQuery.removeEventListener?.('change', requestRender);
   };
 
   root.documentElement.dataset.productStoryReady = 'true';
@@ -62,6 +77,7 @@ export function initProductStory(root = globalThis.document, view = globalThis.w
   view.addEventListener('pagehide', destroy, { once: true });
   motionQuery.addEventListener?.('change', requestRender);
   desktopQuery.addEventListener?.('change', requestRender);
+  phoneQuery.addEventListener?.('change', requestRender);
   render();
 
   return { render: requestRender, destroy };
