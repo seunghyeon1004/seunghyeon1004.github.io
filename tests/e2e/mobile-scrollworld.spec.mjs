@@ -14,15 +14,19 @@ async function settleFrame(page) {
 }
 
 async function setPhoneSceneProgress(page, project, progress) {
-  await page.evaluate(({ project, progress }) => {
+  const targetY = await page.evaluate(({ project, progress }) => {
     const scrollContainer = document.querySelector(
       `[data-project="${project}"] .project-scene__scroll`,
     );
     const top = scrollContainer.getBoundingClientRect().top + scrollY;
     const travel = scrollContainer.offsetHeight - innerHeight;
-    scrollTo(0, top + travel * progress);
+    const target = top + travel * progress;
+    scrollTo(0, target);
+    return target;
   }, { project, progress });
-  await settleFrame(page);
+  await expect.poll(() => page.evaluate(target => Math.abs(scrollY - target), targetY))
+    .toBeLessThanOrEqual(2);
+  return targetY;
 }
 
 async function swipe(page, { fromY, toY, x = 195 }) {
@@ -93,17 +97,15 @@ test('native phone swipes advance and reverse a project scene', async ({ page })
 
   const scene = page.locator('[data-project="pawrelay"]');
   await setPhoneSceneProgress(page, 'pawrelay', 0);
-  await page.waitForTimeout(1000);
-  await settleFrame(page);
   const initialY = await page.evaluate(() => scrollY);
   await expect(scene).toHaveAttribute('data-scene-state', 'thesis');
 
-  await swipe(page, { fromY: 680, toY: 200 });
+  await swipe(page, { fromY: 680, toY: 380 });
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(initialY + 150);
   await expect(scene).toHaveAttribute('data-scene-state', 'evidence');
 
   const forwardY = await page.evaluate(() => scrollY);
-  await swipe(page, { fromY: 200, toY: 680 });
+  await swipe(page, { fromY: 380, toY: 680 });
   await expect.poll(() => page.evaluate(() => scrollY)).toBeLessThan(forwardY - 150);
   await expect(scene).toHaveAttribute('data-scene-state', 'thesis');
   expect(errors).toEqual([]);
@@ -111,7 +113,9 @@ test('native phone swipes advance and reverse a project scene', async ({ page })
 
 test('native phone scrolling exits the final scene without lock or overflow', async ({ page }) => {
   await page.goto('/');
+  const scene = page.locator('[data-project="f301"]');
   await setPhoneSceneProgress(page, 'f301', 0.72);
+  await expect(scene).toHaveAttribute('data-scene-state', 'method');
   const startingY = await page.evaluate(() => scrollY);
 
   for (let index = 0; index < 6; index += 1) {
@@ -137,6 +141,7 @@ test('reduced motion and script failure preserve native readable flow', async ({
     await expect(layer).toBeVisible();
   }
 
+  await expect(page.locator('[data-project="pawrelay"]')).toHaveAttribute('data-scene-state', 'method');
   const startY = await page.evaluate(() => scrollY);
   await swipe(page, { fromY: 700, toY: 300 });
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(startY);
