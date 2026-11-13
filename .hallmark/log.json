@@ -1,0 +1,30 @@
+[
+ {
+  "shape": "Index-First",
+  "theme": "ink",
+  "axes": "light/grotesk-sans/chromatic-teal",
+  "hero": "settled",
+  "nav": "slab",
+  "footer": "colophon block",
+  "imagery": "product screenshots",
+  "photos": [],
+  "entry": "index.html",
+  "fingerprint": "ruled index of 24 works, state tag at row end",
+  "sections": [
+   "hero",
+   "index",
+   "case",
+   "services",
+   "contact",
+   "footer"
+  ],
+  "signature": "the ruled work index with state tags",
+  "waived": [
+   "22",
+   "26b"
+  ],
+  "prompt": "개인 포트폴리오 작업 색인",
+  "date": "2026-11-13",
+  "mode": "build"
+ }
+]
