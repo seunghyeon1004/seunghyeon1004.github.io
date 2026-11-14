@@ -97,7 +97,7 @@
     const words = q.toLowerCase().split(/\s+/).map((t) => t.replace(/(보여|알려|찾아)\s*(줘|주세요|줄래)?$|[?!.,]/g, '').replace(/(은|는|이|가|을|를|도|만|의|에|로)$/, '')).filter((t) => t.length >= 2);
     const hits = works.map((w) => [w, words.filter((t) => w.text.includes(t)).length]).filter(([, c]) => c > 0).sort((a, b) => b[1] - a[1]).map(([w]) => w);
     if (hits.length) return [hits, `‘${q}’ 관련해서는 ${hits.length}개 찾았어요.`];
-    return [null, `‘${q}’는 아직 안 만들어 봤어요. 해커톤, 자동화, 지금 써볼 수 있는 거 같은 식으로 물어봐 주세요.`];
+    return [null, `‘${q}’ 쪽은 아직 안 만들어 봤어요. 해커톤, 자동화, 지금 써볼 수 있는 거 같은 식으로 물어봐 주세요.`];
   };
 
   const ask = (raw) => {
