@@ -10,6 +10,18 @@
     });
   });
 
+  // 시연 영상: 누르기 전에는 사진만 있고, 누르면 그 자리에서 재생기를 불러온다.
+  document.querySelectorAll('.yt[data-yt]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const frame = document.createElement('iframe');
+      frame.src = `https://www.youtube-nocookie.com/embed/${btn.dataset.yt}?autoplay=1&rel=0`;
+      frame.title = btn.getAttribute('aria-label');
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      frame.className = 'yt__frame';
+      btn.replaceWith(frame);
+    });
+  });
+
   const work = document.querySelector('.work');
   if (!work || !window.matchMedia('(hover: hover)').matches) return;
   document.documentElement.classList.add('js');

@@ -23,9 +23,9 @@
   <div class="container nav__in">
     <a class="nav__mark" href="/">백승현</a>
     <nav class="nav__links" aria-label="주요 메뉴">
-      <a href="/#work">작업</a>
-      <a href="/#services">맡길 수 있는 일</a>
-      <a class="btn btn--primary btn--small" href="/#contact">의뢰 문의</a>
+      <a href="/#try">해보기</a>
+      <a href="/#watch">영상</a>
+      <a href="/#work">작업 24</a>
     </nav>
   </div>
 </header>
@@ -40,9 +40,12 @@
         <p class="proj__meta"><span class="tag tag--in">라이브</span> <span class="num">2026</span></p>
       </div>
     </header>
-    <figure class="shot proj__shot">
-      <img src="/assets/work/seance.webp" alt="Séance 결과 화면" width="1600" height="1000">
-    </figure>
+    <div class="proj__shot">
+      <button class="yt shot" type="button" data-yt="pHCNYkefrOI" aria-label="Séance 시연 영상 재생">
+        <img src="/assets/work/seance.webp" alt="" loading="lazy" width="1600" height="1000">
+        <span class="yt__play">재생</span>
+      </button>
+    </div>
     <div class="proj__body">
       <div class="proj__text">
         <p>코드 한 줄을 고르면 그 줄을 거쳐 간 커밋을 모아 장부를 만들고, 원작자의 목소리로 왜 이렇게 짰는지 답합니다.</p>
@@ -72,7 +75,7 @@
   <div class="container foot__in">
     <div class="foot__about">
       <p class="foot__mark">백승현</p>
-      <p>자동화와 웹과 앱 시제품을 만들고, 만든 것이 맞게 돌아가는지 검증합니다. 이 페이지의 숫자는 각 프로젝트의 기록에서 확인한 값입니다.</p>
+      <p>AI로 영상과 앱과 자동화를 직접 만들고 돌립니다. 첫 화면 영상은 맥 미니 4대로 만들었고, 이 페이지의 숫자는 각 프로젝트의 기록에서 확인한 값입니다.</p>
     </div>
     <nav class="foot__col" aria-label="연락처">
       <p class="foot__head">연락</p>
@@ -90,5 +93,6 @@
   </div>
 </footer>
 <script src="/assets/js/site.js" defer></script>
+<script type="module" src="/assets/js/stage.js"></script>
 </body>
 </html>

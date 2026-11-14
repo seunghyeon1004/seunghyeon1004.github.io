@@ -43,9 +43,9 @@ ${image ? `<meta property="og:image" content="${SITE}${image}">\n` : ''}<link re
   <div class="container nav__in">
     <a class="nav__mark" href="/">${NAME}</a>
     <nav class="nav__links" aria-label="주요 메뉴">
-      <a href="/#work">작업</a>
-      <a href="/#services">맡길 수 있는 일</a>
-      <a class="btn btn--primary btn--small" href="/#contact">의뢰 문의</a>
+      <a href="/#try">해보기</a>
+      <a href="/#watch">영상</a>
+      <a href="/#work">작업 ${projects.length}</a>
     </nav>
   </div>
 </header>
@@ -56,7 +56,7 @@ const foot = () => `</main>
   <div class="container foot__in">
     <div class="foot__about">
       <p class="foot__mark">${NAME}</p>
-      <p>자동화와 웹과 앱 시제품을 만들고, 만든 것이 맞게 돌아가는지 검증합니다. 이 페이지의 숫자는 각 프로젝트의 기록에서 확인한 값입니다.</p>
+      <p>AI로 영상과 앱과 자동화를 직접 만들고 돌립니다. 첫 화면 영상은 맥 미니 4대로 만들었고, 이 페이지의 숫자는 각 프로젝트의 기록에서 확인한 값입니다.</p>
     </div>
     <nav class="foot__col" aria-label="연락처">
       <p class="foot__head">연락</p>
@@ -74,9 +74,26 @@ const foot = () => `</main>
   </div>
 </footer>
 <script src="/assets/js/site.js" defer></script>
+<script type="module" src="/assets/js/stage.js"></script>
 </body>
 </html>
 `;
+
+const ytId = (p) => {
+  for (const [, u] of p.links) {
+    const m = u.match(/youtu\.be\/([\w-]+)/);
+    if (m) return m[1];
+  }
+  return null;
+};
+// 누르면 그 자리에서 재생되는 시연 영상. 누르기 전에는 우리 쪽 사진만 보인다.
+const yt = (p, big) => `<button class="yt shot" type="button" data-yt="${ytId(p)}" aria-label="${esc(p.name)} 시연 영상 재생">
+        <img src="/assets/work/${big ? '' : 'thumb/'}${p.slug}.webp" alt="" loading="lazy" ${size(`assets/work/${big ? '' : 'thumb/'}${p.slug}.webp`)}>
+        <span class="yt__play">재생</span>
+      </button>`;
+const mesh = projects.find((p) => p.slug === 'mesh');
+const meshTimes = mesh.facts.filter(([k]) => k.startsWith('3초 영상')).map(([k, v]) => [k.replace('3초 영상, ', ''), parseFloat(v), v]);
+const watch = projects.filter((p) => hasImg(p) && ytId(p)).slice(0, 6);
 
 const tag = (p) => `<span class="tag tag--${p.state}">${esc(p.status)}</span>`;
 
@@ -96,21 +113,70 @@ const caseP = projects.find((p) => p.slug === 'mureobopseo');
 const liveCount = projects.filter((p) => p.state === 'in').length;
 
 const index = () => `${head({
-  title: `${NAME} | 자동화와 시제품을 만들고 검증합니다`,
-  desc: `해커톤 출품작부터 출시한 앱까지, ${NAME}이 직접 만든 결과물 ${projects.length}개를 모았습니다. 자동화, 웹과 앱 시제품, 데이터 검증 의뢰를 받습니다.`,
+  title: `${NAME} | AI로 영상과 앱과 자동화를 만듭니다`,
+  desc: `해커톤 출품작부터 출시한 앱까지, ${NAME}이 직접 만든 결과물 ${projects.length}개를 모았습니다. 첫 화면 영상은 맥 미니 4대로 만들었습니다.`,
   path: '/',
-  image: '/assets/work/mureobopseo.webp',
+  image: '/assets/hero/poster.webp',
 })}
 <section class="hero">
+  <div class="hero__stage">
+    <img src="/assets/hero/poster.webp" alt="해 질 무렵 항구를 하늘에서 내려다본 장면. AI로 만든 영상의 한 장면입니다." width="672" height="384" fetchpriority="high">
+    <canvas data-src="/assets/hero/harbor-depth.mp4" aria-hidden="true"></canvas>
+  </div>
   <div class="container hero__in">
-    <h1>만들고, 돌리고, 검증합니다.</h1>
+    <h1><span>이 영상은</span> <span>책상 위 맥 미니 4대가</span> <span>만들었습니다.</span></h1>
     <div class="hero__side">
-      <p class="lead">해커톤 출품작부터 출시한 앱까지, 직접 만든 결과물 ${projects.length}개입니다.</p>
+      <p class="lead">움직여 보세요. 영상이 입체로 기웁니다. AI로 영상과 앱과 자동화를 직접 만듭니다.</p>
       <div class="actions">
-        <a class="btn btn--primary" href="#contact">의뢰 문의</a>
-        <a class="btn" href="#work">작업 보기</a>
+        <a class="btn btn--primary" href="#try">내 사진으로 해보기</a>
+        <a class="btn" href="#work">결과물 ${projects.length}개 보기</a>
       </div>
     </div>
+  </div>
+</section>
+
+<section class="try" id="try" aria-labelledby="try-title">
+  <div class="container try__in">
+    <div class="try__text">
+      <h2 id="try-title">당신 사진도 입체로 만들어 보세요</h2>
+      <p class="lead">AI 모델이 서버가 아니라 지금 이 기기 안에서 돕니다. 사진은 어디에도 보내지 않습니다.</p>
+      <div class="actions">
+        <button class="btn btn--primary" type="button" data-sample>예시 사진으로 해보기</button>
+        <label class="btn try__file">내 사진 고르기<input class="visually-hidden" type="file" accept="image/*"></label>
+        <button class="btn" type="button" data-depth aria-pressed="false" hidden>깊이 지도 보기</button>
+      </div>
+      <p class="try__status" role="status">처음 한 번은 모델을 내려받습니다. 약 50MB입니다.</p>
+    </div>
+    <figure class="shot try__stage">
+      <img src="/assets/try/sample.webp" alt="부두 말뚝에 감긴 굵은 밧줄과 붉은 배. AI로 만든 영상의 한 장면입니다." loading="lazy" width="672" height="384">
+      <canvas aria-hidden="true"></canvas>
+    </figure>
+  </div>
+</section>
+
+<section class="proof" aria-labelledby="proof-title">
+  <div class="container proof__in">
+    <div class="proof__text">
+      <h2 id="proof-title">한 대로 338초, 세 대로 165초</h2>
+      <p class="lead">맥 미니를 썬더볼트로 묶어 영상 모델 하나를 나눠 돌렸습니다. 3초 영상 한 편을 만드는 데 걸린 시간입니다.</p>
+      <a class="btn" href="/work/mesh/">어떻게 했는지 보기</a>
+    </div>
+    <ol class="bars">
+${meshTimes.map(([k, n, v]) => `      <li><span class="bars__k">맥 미니 ${esc(k)}</span><span class="bars__track"><span class="bars__bar" style="--v:${(n / meshTimes[0][1]).toFixed(3)}"></span></span><span class="bars__v num">${esc(v)}</span></li>`).join('\n')}
+    </ol>
+  </div>
+</section>
+
+<section class="watch" id="watch" aria-labelledby="watch-title">
+  <div class="container">
+    <h2 id="watch-title">누르면 바로 재생됩니다</h2>
+    <ul class="watch__grid">
+${watch.map((p) => `      <li>
+      ${yt(p)}
+      <a class="watch__name" href="/work/${p.slug}/">${esc(p.name)}</a>
+      <p>${esc(p.line)}</p>
+      </li>`).join('\n')}
+    </ul>
   </div>
 </section>
 
@@ -147,41 +213,12 @@ ${Object.entries(kinds).map(([k, v]) => `        <button class="chip" type="butt
   </div>
 </section>
 
-<section class="services" id="services" aria-labelledby="services-title">
-  <div class="container">
-    <h2 id="services-title">맡길 수 있는 일</h2>
-    <ol class="steps">
-      <li>
-        <span class="steps__n num">1</span>
-        <h3>반복 업무 자동화</h3>
-        <p>사람이 매일 손으로 하던 수집, 작성, 발행을 정해진 시각에 돌아가게 만듭니다.</p>
-        <a href="/work/blog-auto/">블로그 자동 발행 보기</a>
-      </li>
-      <li>
-        <span class="steps__n num">2</span>
-        <h3>웹과 앱 시제품</h3>
-        <p>아이디어를 직접 눌러 볼 수 있는 화면으로 만들고, 필요하면 출시까지 갑니다.</p>
-        <a href="/work/pawrelay/">PawRelay 보기</a>
-      </li>
-      <li>
-        <span class="steps__n num">3</span>
-        <h3>데이터 검증과 리서치</h3>
-        <p>주장과 숫자를 원자료에서 다시 계산해, 맞는 것과 틀린 것을 가려 드립니다.</p>
-        <a href="/work/f301/">F301 보기</a>
-      </li>
-    </ol>
-  </div>
-</section>
-
 <section class="contact" id="contact" aria-labelledby="contact-title">
   <div class="container contact__in">
-    <h2 id="contact-title">다음 것은 같이 만들 수 있습니다</h2>
-    <div class="contact__side">
-      <p class="lead">하고 싶은 일을 한두 줄로 보내 주시면, 가능한 범위와 기간을 답해 드립니다.</p>
-      <div class="actions">
-        <a class="btn btn--paper" href="${KMONG}" target="_blank" rel="noopener">크몽에서 문의하기</a>
-        <a class="btn btn--ghost" href="${X}" target="_blank" rel="noopener">X로 연락하기</a>
-      </div>
+    <h2 id="contact-title">같이 만들 일이 있다면</h2>
+    <div class="actions">
+      <a class="btn" href="${KMONG}" target="_blank" rel="noopener">크몽에서 문의하기</a>
+      <a class="btn" href="${X}" target="_blank" rel="noopener">X로 연락하기</a>
     </div>
   </div>
 </section>
@@ -206,7 +243,10 @@ const detail = (p, i) => {
         <p class="proj__meta">${tag(p)} <span class="num">${p.year}</span></p>
       </div>
     </header>
-${hasImg(p) ? `    <figure class="shot proj__shot">
+${hasImg(p) && ytId(p) ? `    <div class="proj__shot">
+      ${yt(p, true)}
+    </div>
+` : hasImg(p) ? `    <figure class="shot proj__shot">
       <img src="/assets/work/${p.slug}.webp" alt="${esc(p.name)} 결과 화면" ${size(`assets/work/${p.slug}.webp`)}>
     </figure>
 ` : ''}    <div class="proj__body">
