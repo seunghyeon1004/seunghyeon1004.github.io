@@ -1,4 +1,4 @@
-// 작업 화면: 물어보거나 목록에서 고르면 큰 화면이 바로 바뀐다. 답은 이 페이지에 담긴 작업 기록에서만 찾는다(모델 호출 없음).
+// 작업 화면: 단추를 누르거나 목록에서 고르면 큰 화면이 바로 바뀐다. 답은 이 페이지에 담긴 작업 기록에서만 만든다(모델 호출 없음).
 // 스크립트가 꺼져도 목록의 링크와 첫 작업은 그대로 보인다.
 (() => {
   const player = (id, title) => Object.assign(document.createElement('iframe'), {
@@ -20,7 +20,6 @@
   const view = $('.con__view'), media = $('.con__media'), sayBox = $('.con__say'), live = $('[role=status]');
   const rows = [...con.querySelectorAll('.pick')];
   const chips = [...con.querySelectorAll('.chip[data-q]')];
-  const inputs = [...document.querySelectorAll('[data-ask] input')];
   let current = '', touched = false, typing = 0;
 
   const say = (text) => {
@@ -77,11 +76,7 @@
 
   const n = works.length;
   const kind = (k, words) => (q) => { const l = works.filter((w) => w.k === k); return [l, `${words} ${l.length}개예요.`]; };
-  const jump = (id, text) => () => { document.getElementById(id).scrollIntoView({ behavior: still ? 'auto' : 'smooth' }); return [null, text]; };
   const intents = [
-    [/^(안녕|하이|hi|hello)/, () => [null, '안녕하세요. 보고 싶은 걸 편하게 말해 주세요. 해커톤, 자동화, 지금 써볼 수 있는 거 같은 식으로요.']],
-    [/연락|문의|의뢰|견적|맡기|가격|비용/, jump('contact', '문의는 크몽이나 X로 받고 있어요. 아래로 내려 드렸어요.')],
-    [/사진|입체|깊이|3d/, jump('try', '사진을 입체로 바꿔 보는 곳으로 내려 드렸어요.')],
     [/지금|바로|써 ?[볼보]|열어|라이브|체험/, () => { const l = works.filter((w) => w.state === 'in'); return [l, `지금 바로 열어볼 수 있는 건 ${l.length}개예요.`]; }],
     [/영상|비디오|유튜브|시연|데모/, () => { const l = works.filter((w) => w.yt); return [l, `영상으로 볼 수 있는 건 ${l.length}개예요. 영상 재생을 누르면 여기서 바로 나와요.`]; }],
     [/해커톤|공모전|대회|출품|나간/, kind('contest', '해커톤이랑 공모전에 낸 건')],
@@ -90,28 +85,19 @@
     [/연구|실측|벤치|측정|맥 ?미니|속도/, kind('research', '직접 재 보고 연구한 건')],
     [/실험|옛|예전/, kind('archive', '실험하다 기록으로 남긴 건')],
     [/전체|전부|모두|다 보여/, () => [works, `${n}개 전부 꺼내 왔어요.`]],
-    [/누구|소개|자기/, () => [works, `Seunghyeon이에요. AI로 영상, 앱, 자동화를 직접 만들고 돌려요. 만든 것 ${n}개 꺼내 왔어요.`]],
   ];
-  // 정해 둔 말에 걸리지 않으면 작업 기록의 글에서 낱말을 찾는다.
-  const search = (q) => {
-    const words = q.toLowerCase().split(/\s+/).map((t) => t.replace(/(보여|알려|찾아)\s*(줘|주세요|줄래)?$|[?!.,]/g, '').replace(/(은|는|이|가|을|를|도|만|의|에|로)$/, '')).filter((t) => t.length >= 2);
-    const hits = works.map((w) => [w, words.filter((t) => w.text.includes(t)).length]).filter(([, c]) => c > 0).sort((a, b) => b[1] - a[1]).map(([w]) => w);
-    if (hits.length) return [hits, `‘${q}’ 관련해서는 ${hits.length}개 찾았어요.`];
-    return [null, `‘${q}’ 쪽은 아직 안 만들어 봤어요. 해커톤, 자동화, 지금 써볼 수 있는 거 같은 식으로 물어봐 주세요.`];
-  };
-
   const ask = (raw) => {
     const q = raw.trim();
     if (!q) return;
     touched = true;
-    inputs.forEach((i) => { i.value = q; });
     chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.q === q)));
     const hit = intents.find(([re]) => re.test(q.toLowerCase()));
-    const [list, text] = hit ? hit[1](q) : search(q);
-    if (list) { show(list, text); con.scrollIntoView({ behavior: still ? 'auto' : 'smooth' }); } else say(text);
+    if (!hit) return;
+    const [list, text] = hit[1](q);
+    show(list, text);
+    con.scrollIntoView({ behavior: still ? 'auto' : 'smooth' });
   };
 
-  document.querySelectorAll('[data-ask]').forEach((form) => form.addEventListener('submit', (e) => { e.preventDefault(); ask(form.querySelector('input').value); }));
   document.querySelectorAll('[data-q]').forEach((b) => b.addEventListener('click', () => ask(b.dataset.q)));
 
   rows.forEach((r) => {
@@ -130,22 +116,6 @@
       if (next) { e.preventDefault(); next.focus(); }
     });
   });
-
-  // 말로 묻기: 브라우저에 음성 인식이 있을 때만 단추가 보인다.
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const mic = document.querySelector('[data-mic]');
-  if (SR && mic) {
-    mic.hidden = false;
-    mic.addEventListener('click', () => {
-      const r = new SR();
-      r.lang = 'ko-KR';
-      r.onstart = () => mic.setAttribute('aria-pressed', 'true');
-      r.onend = () => mic.setAttribute('aria-pressed', 'false');
-      r.onresult = (e) => ask(e.results[0][0].transcript);
-      r.onerror = () => { mic.hidden = true; inputs[0].placeholder = '이 브라우저는 음성 인식이 안 돼요. 글로 물어봐 주세요.'; };
-      r.start();
-    });
-  }
 
   select(works[0].slug);
   if (still) return;

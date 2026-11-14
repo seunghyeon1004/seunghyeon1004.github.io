@@ -56,7 +56,7 @@ const foot = () => `</main>
   <div class="container foot__in">
     <div class="foot__about">
       <p class="foot__mark">${NAME}</p>
-      <p>AI로 영상, 앱, 자동화를 직접 만들고 돌려요. 첫 화면 영상은 Grok으로 만들고 깊이는 제가 따로 계산해서 입혔어요. 질문에 대한 답은 AI를 부르는 게 아니라 이 페이지에 적어 둔 작업 기록에서 찾아요. 숫자는 전부 각 프로젝트 기록에서 확인한 값이에요.</p>
+      <p>AI로 영상, 앱, 자동화를 직접 만들고 돌려요. 첫 화면 영상은 Grok으로 만들고 깊이는 제가 따로 계산해서 입혔어요. 숫자는 전부 각 프로젝트 기록에서 확인한 값이에요.</p>
     </div>
     <nav class="foot__col" aria-label="연락처">
       <p class="foot__head">연락</p>
@@ -115,7 +115,7 @@ const pick = (p, i) => `
 
 const index = () => `${head({
   title: `${NAME} | AI로 영상, 앱, 자동화를 만들어요`,
-  desc: `해커톤에 낸 것부터 출시한 앱까지, 혼자 만든 것 ${projects.length}개를 모아 뒀어요. 물어보면 바로 보여 드려요.`,
+  desc: `해커톤에 낸 것부터 출시한 앱까지, 혼자 만든 것 ${projects.length}개를 모아 뒀어요.`,
   path: '/',
   image: '/assets/hero/poster.webp',
 })}
@@ -127,12 +127,6 @@ const index = () => `${head({
   <div class="container hero__in">
     <div class="hero__main">
       <h1>뭐가 궁금하세요?</h1>
-      <form class="ask" data-ask>
-        <label class="visually-hidden" for="ask-hero">보고 싶은 것</label>
-        <input class="ask__in" id="ask-hero" type="text" autocomplete="off" placeholder="예: 해커톤 나간 거 보여줘">
-        <button class="btn" type="button" data-mic aria-pressed="false" hidden>말로 묻기</button>
-        <button class="btn btn--primary" type="submit">보여줘</button>
-      </form>
       <div class="asks">
 ${asks.map((q) => `        <button class="chip" type="button" data-q="${q}">${q}</button>`).join('\n')}
       </div>
