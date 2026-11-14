@@ -114,7 +114,7 @@ if (tryBox) {
     if (pipe) return pipe;
     const { pipeline } = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.2');
     const model = 'onnx-community/depth-anything-v2-small';
-    const progress_callback = (p) => { if (p.status === 'progress' && p.file.endsWith('.onnx')) say(`AI 모델을 내려받는 중입니다. ${Math.round(p.progress)}%`); };
+    const progress_callback = (p) => { if (p.status === 'progress' && p.file.endsWith('.onnx')) say(`AI 모델을 받는 중이에요. ${Math.round(p.progress)}%`); };
     if (navigator.gpu) {
       try { pipe = await pipeline('depth-estimation', model, { device: 'webgpu', dtype: 'fp16', progress_callback }); device = '그래픽카드(WebGPU)'; } catch { pipe = null; }
     }
@@ -131,9 +131,9 @@ if (tryBox) {
       const k = Math.min(1, 1024 / Math.max(source.width, source.height));
       const input = Object.assign(document.createElement('canvas'), { width: Math.round(source.width * k), height: Math.round(source.height * k) });
       input.getContext('2d').drawImage(source, 0, 0, input.width, input.height);
-      say('AI 모델을 준비하는 중입니다.');
+      say('모델을 준비하고 있어요.');
       const estimate = await load();
-      say('깊이를 계산하는 중입니다.');
+      say('깊이를 계산하고 있어요.');
       const t0 = performance.now();
       const out = await estimate(input.toDataURL('image/jpeg', 0.92));
       const sec = ((performance.now() - t0) / 1000).toFixed(1);
@@ -143,10 +143,10 @@ if (tryBox) {
       stage.setImage(input, out.depth.toCanvas());
       canvas.classList.add('is-on');
       depthBtn.hidden = false;
-      say(`이 기기의 ${device}에서 ${sec}초 만에 계산했습니다. 사진 위에서 움직여 보세요.`);
+      say(`이 기기의 ${device}로 ${sec}초 걸렸어요. 사진 위에서 움직여 보세요.`);
     } catch (e) {
       console.error(e);
-      say('이 브라우저에서는 모델을 돌리지 못했습니다. 최신 크롬이나 엣지에서 다시 해보세요.');
+      say('이 브라우저에서는 안 돌아가네요. 최신 크롬이나 엣지에서 다시 해보세요.');
     }
     busy = false;
     tryBox.removeAttribute('aria-busy');

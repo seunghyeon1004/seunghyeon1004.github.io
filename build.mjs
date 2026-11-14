@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { projects, kinds } from './site/projects.mjs';
 
 const SITE = 'https://seunghyeon1004.github.io';
-const NAME = '백승현';
+const NAME = 'Seunghyeon';
 const KMONG = 'https://kmong.com/gig/789934';
 const X = 'https://x.com/baegseungh7061';
 const GH = 'https://github.com/seunghyeon1004';
@@ -56,7 +56,7 @@ const foot = () => `</main>
   <div class="container foot__in">
     <div class="foot__about">
       <p class="foot__mark">${NAME}</p>
-      <p>AI로 영상과 앱과 자동화를 직접 만들고 돌립니다. 첫 화면 영상은 Grok으로 만들고 깊이는 직접 계산해 입혔습니다. 질문에 대한 답은 AI 모델을 부르지 않고 이 페이지에 담긴 작업 기록에서 찾습니다. 숫자는 각 프로젝트의 기록에서 확인한 값입니다.</p>
+      <p>AI로 영상, 앱, 자동화를 직접 만들고 돌려요. 첫 화면 영상은 Grok으로 만들고 깊이는 제가 따로 계산해서 입혔어요. 질문에 대한 답은 AI를 부르는 게 아니라 이 페이지에 적어 둔 작업 기록에서 찾아요. 숫자는 전부 각 프로젝트 기록에서 확인한 값이에요.</p>
     </div>
     <nav class="foot__col" aria-label="연락처">
       <p class="foot__head">연락</p>
@@ -103,7 +103,7 @@ const works = projects.map((p) => ({
   text: [p.name, p.line, ...p.body, ...p.facts.flat()].join(' ').toLowerCase(),
 }));
 const first = projects[0];
-const asks = ['지금 써볼 수 있는 것', '해커톤 출품작', '자동화', '시연 영상'];
+const asks = ['지금 써볼 수 있는 거', '해커톤 나간 거', '자동화', '영상 있는 거'];
 
 const pick = (p, i) => `
         <li><a class="pick" href="/work/${p.slug}/" data-slug="${p.slug}">
@@ -114,8 +114,8 @@ const pick = (p, i) => `
         </a></li>`;
 
 const index = () => `${head({
-  title: `${NAME} | AI로 영상과 앱과 자동화를 만듭니다`,
-  desc: `해커톤 출품작부터 출시한 앱까지, ${NAME}이 직접 만든 결과물 ${projects.length}개를 물어보면 바로 보여 줍니다.`,
+  title: `${NAME} | AI로 영상, 앱, 자동화를 만들어요`,
+  desc: `해커톤에 낸 것부터 출시한 앱까지, 혼자 만든 것 ${projects.length}개를 모아 뒀어요. 물어보면 바로 보여 드려요.`,
   path: '/',
   image: '/assets/hero/poster.webp',
 })}
@@ -126,20 +126,20 @@ const index = () => `${head({
   </div>
   <div class="container hero__in">
     <div class="hero__main">
-      <h1>무엇을 보여드릴까요?</h1>
+      <h1>뭐가 궁금하세요?</h1>
       <form class="ask" data-ask>
         <label class="visually-hidden" for="ask-hero">보고 싶은 것</label>
-        <input class="ask__in" id="ask-hero" type="text" autocomplete="off" placeholder="예: 해커톤에 낸 것 보여줘">
+        <input class="ask__in" id="ask-hero" type="text" autocomplete="off" placeholder="예: 해커톤 나간 거 보여줘">
         <button class="btn" type="button" data-mic aria-pressed="false" hidden>말로 묻기</button>
-        <button class="btn btn--primary" type="submit">보기</button>
+        <button class="btn btn--primary" type="submit">보여줘</button>
       </form>
       <div class="asks">
 ${asks.map((q) => `        <button class="chip" type="button" data-q="${q}">${q}</button>`).join('\n')}
       </div>
     </div>
     <div class="hero__side">
-      <p class="lead">${NAME}이 AI로 만든 것 ${projects.length}개가 준비되어 있습니다.</p>
-      <p class="hero__note">뒤의 항구는 AI가 만든 영상입니다. 마우스를 움직이면 입체로 기웁니다.</p>
+      <p class="lead">혼자서 AI로 이것저것 만들고 있어요. 지금까지 ${projects.length}개 만들었어요.</p>
+      <p class="hero__note">뒤에 보이는 항구는 진짜가 아니에요. AI로 만든 영상인데, 마우스를 움직이면 입체로 기울어요.</p>
     </div>
   </div>
 </section>
@@ -147,7 +147,7 @@ ${asks.map((q) => `        <button class="chip" type="button" data-q="${q}">${q}
 <section class="con" id="work" aria-labelledby="work-title">
   <div class="container">
     <h2 id="work-title" class="visually-hidden">작업 ${projects.length}개</h2>
-    <p class="con__say" aria-hidden="true">작업 ${projects.length}개를 불러왔습니다. 목록에서 고르거나 물어보세요.</p>
+    <p class="con__say" aria-hidden="true">지금까지 만든 ${projects.length}개예요. 옆에서 고르거나 위에서 물어보세요.</p>
     <p class="visually-hidden" role="status"></p>
     <div class="con__in">
       <div class="con__view">
@@ -180,14 +180,14 @@ ${Object.values(kinds).map((v) => `          <button class="chip" type="button" 
 <section class="try" id="try" aria-labelledby="try-title">
   <div class="container try__in">
     <div class="try__text">
-      <h2 id="try-title">사진 한 장을 올려 보세요</h2>
-      <p class="lead">이 기기 안에서 AI가 깊이를 읽어 입체로 바꿉니다. 사진은 밖으로 나가지 않습니다.</p>
+      <h2 id="try-title">본인 사진으로도 해보세요</h2>
+      <p class="lead">사진을 올리면 이 기기에서 바로 입체로 바꿔 줘요. 사진은 어디로도 안 보내요.</p>
       <div class="actions">
         <button class="btn btn--primary" type="button" data-sample>예시 사진으로 해보기</button>
         <label class="btn try__file">내 사진 고르기<input class="visually-hidden" type="file" accept="image/*"></label>
         <button class="btn" type="button" data-depth aria-pressed="false" hidden>깊이 지도 보기</button>
       </div>
-      <p class="try__status" role="status">처음 한 번만 모델 50MB를 내려받습니다.</p>
+      <p class="try__status" role="status">처음 한 번은 모델 50MB를 받느라 조금 걸려요.</p>
     </div>
     <figure class="shot try__stage">
       <img src="/assets/try/sample.webp" alt="돌 부두에 매인 붉은 고깃배와 불 켜진 집들. AI로 만든 영상의 한 장면입니다." loading="lazy" width="1280" height="720">
@@ -199,8 +199,8 @@ ${Object.values(kinds).map((v) => `          <button class="chip" type="button" 
 <section class="proof" aria-labelledby="proof-title">
   <div class="container proof__in">
     <div class="proof__text">
-      <h2 id="proof-title">영상 한 편, 338초에서 165초로</h2>
-      <p class="lead">맥 미니 여러 대를 썬더볼트로 묶어 영상 모델 하나를 나눠 돌렸습니다. 옆 영상이 그렇게 만든 결과물입니다.</p>
+      <h2 id="proof-title">338초 걸리던 걸 165초로 줄였어요</h2>
+      <p class="lead">책상에 있는 맥 미니 세 대를 케이블로 묶어서 영상 모델 하나를 나눠 돌려 봤어요. 옆 영상이 그렇게 뽑은 거예요.</p>
       <a class="btn" href="/work/mesh/">어떻게 했는지 보기</a>
     </div>
     <div class="proof__side">
@@ -214,7 +214,7 @@ ${meshTimes.map(([k, n, v]) => `      <li><span class="bars__k">맥 미니 ${esc
 
 <section class="contact" id="contact" aria-labelledby="contact-title">
   <div class="container contact__in">
-    <h2 id="contact-title">만들고 싶은 게 있으면 연락 주세요</h2>
+    <h2 id="contact-title">같이 만들어 보고 싶은 게 있으면 편하게 연락 주세요</h2>
     <div class="actions">
       <a class="btn" href="${KMONG}" target="_blank" rel="noopener">크몽에서 문의하기</a>
       <a class="btn" href="${X}" target="_blank" rel="noopener">X로 연락하기</a>
