@@ -56,7 +56,7 @@ const foot = () => `</main>
   <div class="container foot__in">
     <div class="foot__about">
       <p class="foot__mark">${NAME}</p>
-      <p>AI로 영상과 앱과 자동화를 직접 만들고 돌립니다. 첫 화면 영상은 맥 미니 4대로 만들었고, 이 페이지의 숫자는 각 프로젝트의 기록에서 확인한 값입니다.</p>
+      <p>AI로 영상과 앱과 자동화를 직접 만들고 돌립니다. 첫 화면 영상은 Grok으로 만들고 깊이는 직접 계산해 입혔습니다. 이 페이지의 숫자는 각 프로젝트의 기록에서 확인한 값입니다.</p>
     </div>
     <nav class="foot__col" aria-label="연락처">
       <p class="foot__head">연락</p>
@@ -114,19 +114,19 @@ const liveCount = projects.filter((p) => p.state === 'in').length;
 
 const index = () => `${head({
   title: `${NAME} | AI로 영상과 앱과 자동화를 만듭니다`,
-  desc: `해커톤 출품작부터 출시한 앱까지, ${NAME}이 직접 만든 결과물 ${projects.length}개를 모았습니다. 첫 화면 영상은 맥 미니 4대로 만들었습니다.`,
+  desc: `해커톤 출품작부터 출시한 앱까지, ${NAME}이 직접 만든 결과물 ${projects.length}개를 모았습니다. 첫 화면의 항구는 AI가 만든 영상입니다.`,
   path: '/',
   image: '/assets/hero/poster.webp',
 })}
 <section class="hero">
   <div class="hero__stage">
-    <img src="/assets/hero/poster.webp" alt="해 질 무렵 항구를 하늘에서 내려다본 장면. AI로 만든 영상의 한 장면입니다." width="672" height="384" fetchpriority="high">
-    <canvas data-src="/assets/hero/harbor-depth.mp4" aria-hidden="true"></canvas>
+    <img src="/assets/hero/poster.webp" alt="새벽 안개가 깔린 돌 항구에 붉은 고깃배가 매여 있는 장면. AI로 만든 영상의 한 장면입니다." width="1280" height="720" fetchpriority="high">
+    <canvas data-src="/assets/hero/harbor-depth.mp4" data-src-small="/assets/hero/harbor-depth-small.mp4" aria-hidden="true"></canvas>
   </div>
   <div class="container hero__in">
-    <h1><span>이 영상은</span> <span>책상 위 맥 미니 4대가</span> <span>만들었습니다.</span></h1>
+    <h1><span>이 항구는</span> <span>세상에 없습니다.</span></h1>
     <div class="hero__side">
-      <p class="lead">움직여 보세요. 영상이 입체로 기웁니다. AI로 영상과 앱과 자동화를 직접 만듭니다.</p>
+      <p class="lead">AI로 만든 영상에 깊이를 입혔습니다. 움직여 보세요. 입체로 기웁니다.</p>
       <div class="actions">
         <a class="btn btn--primary" href="#try">내 사진으로 해보기</a>
         <a class="btn" href="#work">결과물 ${projects.length}개 보기</a>
@@ -148,7 +148,7 @@ const index = () => `${head({
       <p class="try__status" role="status">처음 한 번은 모델을 내려받습니다. 약 50MB입니다.</p>
     </div>
     <figure class="shot try__stage">
-      <img src="/assets/try/sample.webp" alt="부두 말뚝에 감긴 굵은 밧줄과 붉은 배. AI로 만든 영상의 한 장면입니다." loading="lazy" width="672" height="384">
+      <img src="/assets/try/sample.webp" alt="돌 부두에 매인 붉은 고깃배와 불 켜진 집들. AI로 만든 영상의 한 장면입니다." loading="lazy" width="1280" height="720">
       <canvas aria-hidden="true"></canvas>
     </figure>
   </div>
@@ -158,12 +158,15 @@ const index = () => `${head({
   <div class="container proof__in">
     <div class="proof__text">
       <h2 id="proof-title">한 대로 338초, 세 대로 165초</h2>
-      <p class="lead">맥 미니를 썬더볼트로 묶어 영상 모델 하나를 나눠 돌렸습니다. 3초 영상 한 편을 만드는 데 걸린 시간입니다.</p>
+      <p class="lead">책상 위 맥 미니를 썬더볼트로 묶어 영상 모델 하나를 나눠 돌렸습니다. 옆 영상이 그 결과물이고, 막대는 3초 영상 한 편에 걸린 시간입니다.</p>
       <a class="btn" href="/work/mesh/">어떻게 했는지 보기</a>
     </div>
+    <div class="proof__side">
+    <video class="shot proof__film" src="/assets/work/mesh-film.mp4" poster="/assets/work/mesh-film.webp" controls muted loop playsinline preload="none" width="672" height="384" aria-label="맥 미니 4대로 만든 항구 영상"></video>
     <ol class="bars">
 ${meshTimes.map(([k, n, v]) => `      <li><span class="bars__k">맥 미니 ${esc(k)}</span><span class="bars__track"><span class="bars__bar" style="--v:${(n / meshTimes[0][1]).toFixed(3)}"></span></span><span class="bars__v num">${esc(v)}</span></li>`).join('\n')}
     </ol>
+    </div>
   </div>
 </section>
 

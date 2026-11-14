@@ -1,7 +1,7 @@
 /* Hallmark · shape: custom, a demonstration hall (by request) · genre: atmospheric · theme: Ink tokens re-inked dark · job: see what is possible, then try it
- * hero: full-bleed film that tilts in depth under the pointer · nav: slab · footer: colophon block · imagery: the owner's own generated film and real screenshots · signature: the hero film made on four Mac minis, drawn in 3D from a packed depth track · ink: night
+ * hero: full-bleed generated film that tilts in depth under the pointer · nav: slab · footer: colophon block · imagery: the owner's own generated film and real screenshots · signature: a harbour that does not exist, drawn in 3D from a packed depth track · ink: night
  * axes: dark/grotesk-sans/chromatic-teal · posture: immersive · contrast: pass · fold: pass · v2.0.0 */
-/* Hallmark · pre-emit critique: P4 H5 E4 S4 R4 V4 · weakest: P, the source film is 672 wide so the hero leans on motion and depth, not sharpness */
+/* Hallmark · pre-emit critique: P4 H5 E4 S4 R4 V4 · weakest: P, the hero film comes from an outside model, so the owner's own machines are shown beside their measured times */
 /* waive 22 · greys at near-zero chroma · the film supplies the colour */
 /* waive 26b · the only control that waits is marked busy on its section, no disabled state is used */
 /* swap · the owner changed the brief from a client index to a technology demonstration, so the hero is the film and the index moved below */
@@ -80,7 +80,7 @@ h1, h2, h3 { word-break: keep-all; }
 .try__status { color: var(--color-muted); min-height: 3.1em; }
 .try[aria-busy="true"] .try__status { color: var(--color-accent); }
 .try__stage { position: relative; }
-.try__stage canvas { display: none; width: 100%; aspect-ratio: 672 / 384; cursor: crosshair; touch-action: pan-y; }
+.try__stage canvas { display: none; width: 100%; aspect-ratio: 16 / 9; cursor: crosshair; touch-action: pan-y; }
 .try__stage canvas.is-on { display: block; }
 .try__stage:has(canvas.is-on) img { display: none; }
 
@@ -89,6 +89,8 @@ h1, h2, h3 { word-break: keep-all; }
 .proof__in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-2xl); align-items: center; }
 .proof__text { display: grid; gap: var(--space-lg); justify-items: start; }
 .proof h2 { max-width: 10ch; }
+.proof__side { display: grid; gap: var(--space-xl); }
+.proof__film { width: 100%; height: auto; aspect-ratio: 672 / 384; }
 .bars { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-lg); }
 .bars li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) 5.5rem; gap: var(--space-md); align-items: center; }
 .bars__k { color: var(--color-ink-2); }

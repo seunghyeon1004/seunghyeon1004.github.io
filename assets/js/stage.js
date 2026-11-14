@@ -94,7 +94,7 @@ const heroCanvas = document.querySelector('.hero__stage canvas');
 if (heroCanvas && !still) {
   const stage = createStage(heroCanvas, { packed: true, area: document.querySelector('.hero') });
   if (stage) {
-    const video = Object.assign(document.createElement('video'), { muted: true, loop: true, playsInline: true, preload: 'auto', src: heroCanvas.dataset.src });
+    const video = Object.assign(document.createElement('video'), { muted: true, loop: true, playsInline: true, preload: 'auto', src: window.matchMedia('(max-width: 44rem)').matches ? heroCanvas.dataset.srcSmall : heroCanvas.dataset.src });
     video.addEventListener('playing', () => { stage.setVideo(video); heroCanvas.classList.add('is-on'); }, { once: true });
     video.play().catch(() => {});
   }
