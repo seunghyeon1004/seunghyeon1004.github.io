@@ -43,9 +43,9 @@ ${image ? `<meta property="og:image" content="${SITE}${image}">\n` : ''}<link re
   <div class="container nav__in">
     <a class="nav__mark" href="/">${NAME}</a>
     <nav class="nav__links" aria-label="주요 메뉴">
-      <a href="/#try">해보기</a>
-      <a href="/#watch">영상</a>
       <a href="/#work">작업 ${projects.length}</a>
+      <a href="/#try">해보기</a>
+      <a href="/#contact">연락</a>
     </nav>
   </div>
 </header>
@@ -56,7 +56,7 @@ const foot = () => `</main>
   <div class="container foot__in">
     <div class="foot__about">
       <p class="foot__mark">${NAME}</p>
-      <p>AI로 영상과 앱과 자동화를 직접 만들고 돌립니다. 첫 화면 영상은 Grok으로 만들고 깊이는 직접 계산해 입혔습니다. 이 페이지의 숫자는 각 프로젝트의 기록에서 확인한 값입니다.</p>
+      <p>AI로 영상과 앱과 자동화를 직접 만들고 돌립니다. 첫 화면 영상은 Grok으로 만들고 깊이는 직접 계산해 입혔습니다. 질문에 대한 답은 AI 모델을 부르지 않고 이 페이지에 담긴 작업 기록에서 찾습니다. 숫자는 각 프로젝트의 기록에서 확인한 값입니다.</p>
     </div>
     <nav class="foot__col" aria-label="연락처">
       <p class="foot__head">연락</p>
@@ -93,28 +93,29 @@ const yt = (p, big) => `<button class="yt shot" type="button" data-yt="${ytId(p)
       </button>`;
 const mesh = projects.find((p) => p.slug === 'mesh');
 const meshTimes = mesh.facts.filter(([k]) => k.startsWith('3초 영상')).map(([k, v]) => [k.replace('3초 영상, ', ''), parseFloat(v), v]);
-const watch = projects.filter((p) => hasImg(p) && ytId(p)).slice(0, 6);
 
 const tag = (p) => `<span class="tag tag--${p.state}">${esc(p.status)}</span>`;
 
-const row = (p, i) => `
-        <li class="row" data-kind="${p.kind}">
-          <a class="row__link" href="/work/${p.slug}/"${hasImg(p) ? ` data-img="/assets/work/thumb/${p.slug}.webp"` : ''}>
-            <span class="row__num num">${String(i + 1).padStart(2, '0')}</span>
-            <span class="row__name">${esc(p.name)}</span>
-            <span class="row__line">${esc(p.line)}</span>
-            <span class="row__kind">${esc(kinds[p.kind])}</span>
-            <span class="row__year num">${p.year}</span>
-            <span class="row__tag">${tag(p)}</span>
-          </a>
-        </li>`;
+// 작업 화면에 넘기는 자료. 질문에 답할 때도 이 자료만 쓴다(모델 호출 없음).
+const works = projects.map((p) => ({
+  slug: p.slug, name: p.name, line: p.line, lead: p.body[0], k: p.kind, kind: kinds[p.kind], year: p.year, status: p.status, state: p.state,
+  img: hasImg(p), yt: ytId(p), facts: p.facts.slice(0, 3), link: p.links.find(([, u]) => !/youtu\.be/.test(u)) || null,
+  text: [p.name, p.line, ...p.body, ...p.facts.flat()].join(' ').toLowerCase(),
+}));
+const first = projects[0];
+const asks = ['지금 써볼 수 있는 것', '해커톤 출품작', '자동화', '시연 영상'];
 
-const caseP = projects.find((p) => p.slug === 'mureobopseo');
-const liveCount = projects.filter((p) => p.state === 'in').length;
+const pick = (p, i) => `
+        <li><a class="pick" href="/work/${p.slug}/" data-slug="${p.slug}">
+          <span class="pick__num num">${String(i + 1).padStart(2, '0')}</span>
+          <span class="pick__name">${esc(p.name)}</span>
+          ${p.state === 'in' ? tag(p) : '<span></span>'}
+          <span class="pick__kind">${esc(kinds[p.kind])}</span>
+        </a></li>`;
 
 const index = () => `${head({
   title: `${NAME} | AI로 영상과 앱과 자동화를 만듭니다`,
-  desc: `해커톤 출품작부터 출시한 앱까지, ${NAME}이 직접 만든 결과물 ${projects.length}개를 모았습니다. 첫 화면의 항구는 AI가 만든 영상입니다.`,
+  desc: `해커톤 출품작부터 출시한 앱까지, ${NAME}이 직접 만든 결과물 ${projects.length}개를 물어보면 바로 보여 줍니다.`,
   path: '/',
   image: '/assets/hero/poster.webp',
 })}
@@ -124,28 +125,69 @@ const index = () => `${head({
     <canvas data-src="/assets/hero/harbor-depth.mp4" data-src-small="/assets/hero/harbor-depth-small.mp4" aria-hidden="true"></canvas>
   </div>
   <div class="container hero__in">
-    <h1><span>이 항구는</span> <span>세상에 없습니다.</span></h1>
+    <div class="hero__main">
+      <h1>무엇을 보여드릴까요?</h1>
+      <form class="ask" data-ask>
+        <label class="visually-hidden" for="ask-hero">보고 싶은 것</label>
+        <input class="ask__in" id="ask-hero" type="text" autocomplete="off" placeholder="예: 해커톤에 낸 것 보여줘">
+        <button class="btn" type="button" data-mic aria-pressed="false" hidden>말로 묻기</button>
+        <button class="btn btn--primary" type="submit">보기</button>
+      </form>
+      <div class="asks">
+${asks.map((q) => `        <button class="chip" type="button" data-q="${q}">${q}</button>`).join('\n')}
+      </div>
+    </div>
     <div class="hero__side">
-      <p class="lead">AI로 만든 영상에 깊이를 입혔습니다. 움직여 보세요. 입체로 기웁니다.</p>
-      <div class="actions">
-        <a class="btn btn--primary" href="#try">내 사진으로 해보기</a>
-        <a class="btn" href="#work">결과물 ${projects.length}개 보기</a>
+      <p class="lead">${NAME}이 AI로 만든 것 ${projects.length}개가 준비되어 있습니다.</p>
+      <p class="hero__note">뒤의 항구는 AI가 만든 영상입니다. 마우스를 움직이면 입체로 기웁니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="con" id="work" aria-labelledby="work-title">
+  <div class="container">
+    <h2 id="work-title" class="visually-hidden">작업 ${projects.length}개</h2>
+    <p class="con__say" aria-hidden="true">작업 ${projects.length}개를 불러왔습니다. 목록에서 고르거나 물어보세요.</p>
+    <p class="visually-hidden" role="status"></p>
+    <div class="con__in">
+      <div class="con__view">
+        <div class="shot con__media">${hasImg(first) ? `<img src="/assets/work/${first.slug}.webp" alt="${esc(first.name)} 결과 화면">` : `<p>${esc(first.body[0])}</p>`}</div>
+        <div class="con__info">
+          <div class="con__title">
+            <h3 class="con__name">${esc(first.name)}</h3>
+            <p class="con__meta">${tag(first)}<span>${esc(kinds[first.kind])}</span><span class="num">${first.year}</span></p>
+            <p class="con__line">${esc(first.line)}</p>
+            <div class="actions con__acts"><a class="btn btn--primary" href="/work/${first.slug}/">자세히 보기</a></div>
+          </div>
+          <dl class="figures con__facts">
+${first.facts.slice(0, 3).map(([k, v]) => `            <div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('\n')}
+          </dl>
+        </div>
+      </div>
+      <div class="con__side">
+        <div class="filter" role="group" aria-label="종류로 걸러 보기">
+          <button class="chip" type="button" data-q="전체" aria-pressed="true">전체</button>
+${Object.values(kinds).map((v) => `          <button class="chip" type="button" data-q="${v}" aria-pressed="false">${v}</button>`).join('\n')}
+        </div>
+        <ol class="picks ruled">${projects.map(pick).join('')}
+        </ol>
       </div>
     </div>
   </div>
+  <script type="application/json" id="works">${JSON.stringify(works).replace(/</g, '\\u003c')}</script>
 </section>
 
 <section class="try" id="try" aria-labelledby="try-title">
   <div class="container try__in">
     <div class="try__text">
-      <h2 id="try-title">당신 사진도 입체로 만들어 보세요</h2>
-      <p class="lead">AI 모델이 서버가 아니라 지금 이 기기 안에서 돕니다. 사진은 어디에도 보내지 않습니다.</p>
+      <h2 id="try-title">사진 한 장을 올려 보세요</h2>
+      <p class="lead">이 기기 안에서 AI가 깊이를 읽어 입체로 바꿉니다. 사진은 밖으로 나가지 않습니다.</p>
       <div class="actions">
         <button class="btn btn--primary" type="button" data-sample>예시 사진으로 해보기</button>
         <label class="btn try__file">내 사진 고르기<input class="visually-hidden" type="file" accept="image/*"></label>
         <button class="btn" type="button" data-depth aria-pressed="false" hidden>깊이 지도 보기</button>
       </div>
-      <p class="try__status" role="status">처음 한 번은 모델을 내려받습니다. 약 50MB입니다.</p>
+      <p class="try__status" role="status">처음 한 번만 모델 50MB를 내려받습니다.</p>
     </div>
     <figure class="shot try__stage">
       <img src="/assets/try/sample.webp" alt="돌 부두에 매인 붉은 고깃배와 불 켜진 집들. AI로 만든 영상의 한 장면입니다." loading="lazy" width="1280" height="720">
@@ -157,8 +199,8 @@ const index = () => `${head({
 <section class="proof" aria-labelledby="proof-title">
   <div class="container proof__in">
     <div class="proof__text">
-      <h2 id="proof-title">한 대로 338초, 세 대로 165초</h2>
-      <p class="lead">책상 위 맥 미니를 썬더볼트로 묶어 영상 모델 하나를 나눠 돌렸습니다. 옆 영상이 그 결과물이고, 막대는 3초 영상 한 편에 걸린 시간입니다.</p>
+      <h2 id="proof-title">영상 한 편, 338초에서 165초로</h2>
+      <p class="lead">맥 미니 여러 대를 썬더볼트로 묶어 영상 모델 하나를 나눠 돌렸습니다. 옆 영상이 그렇게 만든 결과물입니다.</p>
       <a class="btn" href="/work/mesh/">어떻게 했는지 보기</a>
     </div>
     <div class="proof__side">
@@ -170,55 +212,9 @@ ${meshTimes.map(([k, n, v]) => `      <li><span class="bars__k">맥 미니 ${esc
   </div>
 </section>
 
-<section class="watch" id="watch" aria-labelledby="watch-title">
-  <div class="container">
-    <h2 id="watch-title">누르면 바로 재생됩니다</h2>
-    <ul class="watch__grid">
-${watch.map((p) => `      <li>
-      ${yt(p)}
-      <a class="watch__name" href="/work/${p.slug}/">${esc(p.name)}</a>
-      <p>${esc(p.line)}</p>
-      </li>`).join('\n')}
-    </ul>
-  </div>
-</section>
-
-<section class="work" id="work" aria-labelledby="work-title">
-  <div class="container">
-    <div class="work__head">
-      <h2 id="work-title" class="work__title">작업 <span class="num">${projects.length}</span></h2>
-      <div class="filter" role="group" aria-label="종류로 걸러 보기">
-        <button class="chip" type="button" data-filter="all" aria-pressed="true">전체</button>
-${Object.entries(kinds).map(([k, v]) => `        <button class="chip" type="button" data-filter="${k}" aria-pressed="false">${v}</button>`).join('\n')}
-      </div>
-    </div>
-    <ol class="rows ruled">${projects.map(row).join('')}
-    </ol>
-    <p class="work__note">지금 바로 열어볼 수 있는 것은 ${liveCount}개이고, 청록색으로 표시했습니다.</p>
-  </div>
-</section>
-
-<section class="case" aria-labelledby="case-title">
-  <div class="container case__in">
-    <div class="case__text">
-      <h2 id="case-title">답에 쓴 숫자를 하나씩 검증합니다</h2>
-      <p class="lead">${esc(caseP.name)}는 동네 데이터를 말로 물으면 계산해서 답하고, 그 숫자가 계산값과 맞는지 답 옆에 보여 줍니다.</p>
-      <dl class="figures">
-        <div><dt>예시 답의 숫자</dt><dd class="num">200개 중 200개 일치</dd></div>
-        <div><dt>쓰는 자료</dt><dd class="num">제주데이터허브 8종</dd></div>
-        <div><dt>다루는 범위</dt><dd class="num">읍면동 43곳</dd></div>
-      </dl>
-      <a class="btn" href="/work/${caseP.slug}/">자세히 보기</a>
-    </div>
-    <figure class="shot case__shot">
-      <img src="/assets/work/thumb/${caseP.slug}.webp" alt="물어봅서가 노형동 유동인구 질문에 답하고 숫자 검증 결과를 보여 주는 화면" loading="lazy" ${size(`assets/work/thumb/${caseP.slug}.webp`)}>
-    </figure>
-  </div>
-</section>
-
 <section class="contact" id="contact" aria-labelledby="contact-title">
   <div class="container contact__in">
-    <h2 id="contact-title">같이 만들 일이 있다면</h2>
+    <h2 id="contact-title">만들고 싶은 게 있으면 연락 주세요</h2>
     <div class="actions">
       <a class="btn" href="${KMONG}" target="_blank" rel="noopener">크몽에서 문의하기</a>
       <a class="btn" href="${X}" target="_blank" rel="noopener">X로 연락하기</a>
