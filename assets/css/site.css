@@ -68,6 +68,7 @@ h1, h2, h3 { word-break: keep-all; }
 .hero__stage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, var(--color-scrim) 0%, var(--color-scrim-0) 62%); }
 .hero__in { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--gap-columns); align-items: end; }
 .hero h1 { max-width: none; font-size: clamp(2.5rem, 4.2vw + 0.75rem, 4.75rem); }
+.hero h1 span { display: inline-block; }
 .hero__main { display: grid; gap: var(--space-lg); justify-items: start; }
 .hero__side { display: grid; gap: var(--space-sm); padding-bottom: var(--space-xs); }
 .hero__note { font-size: var(--text-sm); color: var(--color-ink-2); }
