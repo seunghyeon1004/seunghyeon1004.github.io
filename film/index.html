@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Film Lab | Seunghyeon</title>
+<meta name="description" content="Short AI films directed shot by shot and rendered on four Mac minis.">
+<link rel="canonical" href="https://seunghyeon1004.github.io/film/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Film Lab | Seunghyeon">
+<meta property="og:description" content="Short AI films directed shot by shot and rendered on four Mac minis.">
+<meta property="og:url" content="https://seunghyeon1004.github.io/film/">
+<meta property="og:image" content="https://seunghyeon1004.github.io/assets/film/snow.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css">
+<style>
+  .film { padding-block: var(--space-2xl, 48px) var(--section-gap-s, 120px); }
+  .film h1 { font-size: var(--text-display-s); letter-spacing: var(--tracking-display); line-height: 1.02; margin: 0 0 var(--space-lg); max-width: 16ch; }
+  .film .lead { font-size: var(--text-lg); color: var(--color-ink-2); max-width: 46ch; margin: 0; }
+  .film h2 { font-size: var(--text-section); letter-spacing: var(--tracking-display); line-height: 1.05; margin: 0 0 var(--space-lg); }
+  .film section { margin-top: var(--section-gap-s, 120px); }
+  .reel { display: grid; gap: var(--space-xl, 32px); grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .reel { grid-template-columns: 1fr 1fr; } }
+  .reel figure { margin: 0; }
+  .reel video { width: 100%; aspect-ratio: 960 / 544; display: block; background: var(--color-ink); border-radius: var(--radius-card); }
+  .reel figcaption { margin-top: var(--space-md); }
+  .reel h3 { font-size: var(--text-title); margin: 0 0 var(--space-2xs); }
+  .reel p { margin: 0; color: var(--color-muted); max-width: 52ch; }
+  .refs { display: grid; gap: var(--space-md); grid-template-columns: repeat(3, 1fr); margin-top: var(--space-lg); }
+  .refs img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-card); display: block; }
+  .refs span { display: block; font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--space-2xs); }
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-lg); max-width: 70ch; }
+  .steps li { border-top: var(--rule-hair) solid var(--color-rule); padding-top: var(--space-md); }
+  .steps b { display: block; font-size: var(--text-title); margin-bottom: var(--space-2xs); }
+  .steps span { color: var(--color-ink-2); }
+  .nums { display: grid; gap: var(--space-lg); grid-template-columns: repeat(2, 1fr); max-width: 760px; margin-top: var(--space-lg); }
+  @media (min-width: 700px) { .nums { grid-template-columns: repeat(4, 1fr); } }
+  .nums b { display: block; font-size: var(--text-2xl, 2rem); letter-spacing: var(--tracking-display); }
+  .nums span { font-size: var(--text-sm); color: var(--color-muted); }
+  @media (max-width: 600px) { .refs { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav">
+  <div class="container nav__in">
+    <a class="nav__mark" href="/">Seunghyeon</a>
+    <nav class="nav__links" aria-label="Main">
+      <a href="/#work">Work</a>
+      <a href="/work/mesh/">Mac mini cluster</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+<main id="main" class="film">
+  <div class="container">
+    <p class="crumb"><a href="/">Home</a> <span aria-hidden="true">/</span> Film Lab</p>
+    <h1>I direct AI video like a film shoot.</h1>
+    <p class="lead">Every shot gets a written brief: framing, one action, one camera move. Faces, costumes and places are locked with reference images, so the same character survives every cut. These films were rendered on four Mac minis wired together over Thunderbolt.</p>
+
+    <section aria-labelledby="reel">
+      <h2 id="reel">Recent films</h2>
+      <div class="reel">
+        <figure>
+          <video src="/assets/film/snow.mp4" poster="/assets/film/snow.jpg" controls playsinline preload="none"></video>
+          <figcaption>
+            <h3>The Snow Path · 30 s</h3>
+            <p>Six hard cuts, one character. A single reference photo keeps her face, scarf and coat consistent from the forest path to the cabin window. When a costume change happened mid-story, the next shot's brief was rewritten to carry it forward.</p>
+          </figcaption>
+        </figure>
+        <figure>
+          <video src="/assets/film/cabin.mp4" poster="/assets/film/cabin.jpg" controls playsinline preload="none"></video>
+          <figcaption>
+            <h3>Cabin at Dawn · 30 s</h3>
+            <p>A continuous camera: each shot starts from the last frame of the one before, so the descent, the push-in through the window and the sunrise read as one move. Hard cuts only where the story jumps.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section aria-labelledby="next">
+      <h2 id="next">In production: The City Without Time</h2>
+      <p class="lead">A three-minute silent sci-fi fantasy short. At noon the clock tower of a brass city stops, and everyone freezes except a young clockmaker and the mechanical sparrow she built. 28 shots, seven title cards, one score. These three reference sheets lock the cast and the world for every shot.</p>
+      <div class="refs">
+        <figure style="margin:0"><img src="/assets/film/ref-ida.jpg" alt="Reference sheet: young clockmaker with an auburn braid, brass goggles and a leather apron" loading="lazy"><span>Ida, the clockmaker</span></figure>
+        <figure style="margin:0"><img src="/assets/film/ref-bird.jpg" alt="Reference sheet: brass mechanical sparrow with a glowing blue crystal in its chest" loading="lazy"><span>The brass sparrow</span></figure>
+        <figure style="margin:0"><img src="/assets/film/ref-city.jpg" alt="Reference sheet: steampunk city with a giant clock tower and airships" loading="lazy"><span>Orbis, the city</span></figure>
+      </div>
+    </section>
+
+    <section aria-labelledby="how">
+      <h2 id="how">How I work</h2>
+      <ol class="steps">
+        <li><b>Story first, then a shot list</b><span>A beat sheet becomes numbered shots. Each shot does one thing: one action, one camera move, a change of size from the shot before.</span></li>
+        <li><b>Reference-locked continuity</b><span>Character and location sheets are generated first and passed into every shot, so faces, costumes and places stay on model across hard cuts.</span></li>
+        <li><b>Written like a camera brief</b><span>Each prompt leads with the shot: distance, camera height, which side we see, and the move. Static shots are stated as locked-off, so the model never drifts.</span></li>
+        <li><b>Review, log, reshoot</b><span>Every clip is scored against its brief. What the model gets wrong goes into a directing log that shapes the next brief.</span></li>
+      </ol>
+      <div class="nums">
+        <div><b class="num">4</b><span>Mac mini M4 Pro, one render</span></div>
+        <div><b class="num">23 min</b><span>per 5-second shot at 960×544</span></div>
+        <div><b class="num">0</b><span>failed renders across both films</span></div>
+        <div><b class="num">6</b><span>shots per 30-second film</span></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="more">
+      <h2 id="more">More</h2>
+      <p class="lead"><a href="/work/mesh/">How the four-Mac cluster works</a> · <a href="https://github.com/seunghyeon1004/mac-mini-mesh-ai-video">Scripts on GitHub</a></p>
+    </section>
+  </div>
+</main>
+</body>
+</html>
