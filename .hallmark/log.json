@@ -1,5 +1,26 @@
 [
  {
+  "mode": "redesign",
+  "depth": "full",
+  "scope": "page",
+  "shape": "screening programme",
+  "theme": "site Ink dark (shared)",
+  "hero": "Stage",
+  "nav": "slab",
+  "footer": "colophon line",
+  "imagery": "owner films and stills",
+  "signature": "The Snow Path on the first screen; one shot brief beside its frame",
+  "sections": [
+   "hero",
+   "Cabin at Dawn",
+   "One shot, as written",
+   "The City Without Time",
+   "colophon"
+  ],
+  "prompt": "film portfolio page for FLUX contest judges",
+  "date": "2026-11-18"
+ },
+ {
   "shape": "Index-First",
   "theme": "ink",
   "axes": "light/grotesk-sans/chromatic-teal",

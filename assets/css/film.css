@@ -1,0 +1,64 @@
+/* Hallmark · shape: screening programme, a festival booklet for one director (redesign, full, page joins the locked site system) · genre: atmospheric · theme: the site's Ink re-inked dark (shared, by system) · job: watch the films, then judge the director
+ * hero: Stage, head on columns 1 to 4, the film on 5 to 12 · nav: slab (site) · footer: colophon line · imagery: the owner's own rendered films, stills and reference sheets · signature: The Snow Path playing on the first screen, then one shot's written brief set beside the frame it produced
+ * axes: dark/grotesk-sans/chromatic-teal · posture: immersive · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P5 H4 E4 S5 R4 V4 · weakest: H, the hero film is 30 s at 960 wide, so it is held at 8 columns rather than full bleed */
+/* waive 22 · greys at near-zero chroma · the films supply the colour */
+/* waive 26b · the page has no control that can be disabled; the one button is hidden until the film plays */
+
+html, body { overflow-x: clip; }
+
+.fl { padding-bottom: var(--section-gap-s); }
+.fl :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; transition: none; }
+.fl a:not(.btn) { color: var(--color-ink); text-decoration-color: var(--color-accent); text-underline-offset: 0.2em; }
+.fl a:not(.btn):hover { color: var(--color-accent); }
+.fl a:not(.btn):active { color: var(--color-ink-2); }
+.fl h1, .fl h2 { font-weight: var(--display-weight); letter-spacing: var(--tracking-display); line-height: 1.02; text-wrap: balance; overflow-wrap: break-word; min-width: 0; margin: 0; color: var(--color-ink); }
+.fl h1 { font-size: var(--text-display-s); }
+.fl h2 { font-size: var(--text-section); }
+.fl p { margin: 0; }
+.fl figure { margin: 0; }
+.fl video, .fl img { display: block; width: 100%; height: auto; background: var(--color-paper-2); }
+
+/* hero: the film is the page */
+.hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap-columns); align-items: end; padding-block: var(--space-2xl) var(--section-gap-s); }
+.hero__text { grid-column: 1 / span 4; display: grid; gap: var(--space-lg); padding-bottom: var(--space-sm); }
+.hero__line { font-size: var(--text-lg); color: var(--color-ink-2); max-width: 30ch; }
+.hero__film { grid-column: 5 / span 8; }
+.hero__film video { aspect-ratio: 960 / 544; border-radius: var(--radius-card); }
+.credit { margin-top: var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-lg); align-items: center; }
+.credit b { color: var(--color-ink); font-weight: 600; }
+.pause { font: inherit; font-size: var(--text-sm); min-height: 36px; padding: var(--space-2xs) var(--space-md); border-radius: var(--radius-control); border: var(--rule-hair) solid var(--color-rule); background: var(--color-paper-2); color: var(--color-ink); cursor: pointer; transition: border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out); }
+.pause:hover { border-color: var(--color-ink); }
+.pause:active { background: var(--color-paper-3); }
+
+/* a programme entry: the film wide, its credits as a list */
+.entry { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap-columns); padding-top: var(--space-xl); border-top: var(--rule-hair) solid var(--color-rule); }
+.entry + .entry, section + section { margin-top: var(--section-gap-s); }
+.entry__head { grid-column: 1 / span 4; display: grid; gap: var(--space-md); align-content: start; }
+.entry__body { grid-column: 5 / span 8; display: grid; gap: var(--space-lg); }
+.entry__body video { aspect-ratio: 960 / 544; border-radius: var(--radius-card); }
+.entry__note { font-size: var(--text-lg); color: var(--color-ink-2); max-width: 34ch; }
+.facts-list { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--space-xs) var(--space-lg); font-size: var(--text-sm); margin: 0; }
+.facts-list dt { color: var(--color-muted); }
+.facts-list dd { margin: 0; color: var(--color-ink); font-variant-numeric: tabular-nums; }
+
+/* the look book: the city across, the two leads beneath */
+.book { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); }
+.book figure:first-child { grid-column: 1 / -1; }
+.book img { aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-card); }
+.book figcaption { margin-top: var(--space-xs); font-size: var(--text-sm); color: var(--color-muted); }
+
+/* one shot: the brief as written, the frame it made */
+.brief { grid-column: 1 / span 5; font-size: var(--text-md); line-height: 1.6; color: var(--color-ink-2); padding: var(--space-lg); border-radius: var(--radius-card); background: var(--color-paper-2); align-self: start; }
+.brief__frame { grid-column: 6 / span 7; }
+.brief__frame img { border-radius: var(--radius-card); aspect-ratio: 960 / 544; object-fit: cover; }
+
+.colophon { margin-top: var(--section-gap-s); padding-top: var(--space-lg); border-top: var(--rule-hair) solid var(--color-rule); font-size: var(--text-sm); color: var(--color-muted); display: flex; flex-wrap: wrap; gap: var(--space-md) var(--space-xl); justify-content: space-between; }
+
+@media (max-width: 900px) {
+  .hero__text, .hero__film, .entry__head, .entry__body, .brief, .brief__frame { grid-column: 1 / -1; }
+  .hero { align-items: start; padding-block: var(--space-xl) var(--space-3xl, 96px); }
+}
+@media (max-width: 600px) { .book { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .pause, .fl a { transition: none; } }
+.entry__head--full { grid-column: 1 / -1; }
